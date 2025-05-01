@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D&D 5e - Sistema de Criação de Personagem</title>
+  <style>
+    :root {
+      --primary-color: #7b2cbf;
+      --secondary-color: #e0aaff;
+      --dark-color: #240046;
+      --light-color: #f8f9fa;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+      background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-top: 40px;
+    }
+    
+    .header h1 {
+      color: var(--dark-color);
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header p {
+      font-size: 1.2rem;
+      color: #666;
+    }
+    
+    .main-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .option-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 300px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .option-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .card-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .card-body {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .card-body p {
+      margin-bottom: 20px;
+      color: #666;
+      min-height: 80px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--dark-color);
+    }
+    
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    
+    .saved-characters {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .saved-characters h2 {
+      color: var(--dark-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .character-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .character-card {
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      padding: 15px;
+      border-left: 4px solid var(--primary-color);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .character-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .character-name {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+      color: var(--dark-color);
+    }
+    
+    .character-details {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    
+    .character-date {
+      font-size: 0.8rem;
+      color: #999;
+    }
+    
+    .empty-message {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .features-section {
+      margin-top: 50px;
+    }
+    
+    .features-section h2 {
+      text-align: center;
+      color: var(--dark-color);
+      margin-bottom: 30px;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    
+    .feature-item {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+    
+    .feature-title {
+      font-size: 1.3rem;
+      color: var(--dark-color);
+      margin-bottom: 10px;
+    }
+    
+    .feature-description {
+      color: #666;
+    }
+    
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+    }
+    
+    .footer p {
+      margin: 5px 0;
+    }
+    
+    .footer a {
+      color: var(--secondary-color);
+      text-decoration: none;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .modal-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    
+    .modal-header h3 {
+      margin: 0;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .modal-footer {
+      padding: 15px 20px;
+      text-align: right;
+      border-top: 1px solid #ddd;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .main-options {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .option-card {
+        width: 100%;
+        max-width: 350px;
+      }
+      
+      .header h1 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>D&D 5e - Criação de Personagem</h1>
+      <p>Crie, gerencie e jogue com seus personagens de Dungeons & Dragons 5ª Edição</p>
+    </div>
+    
+    <div class="main-options">
+      <div class="option-card">
+        <div class="card-header">
+          <h2>Novo Personagem</h2>
+        </div>
+        <div class="card-body">
+          <p>Crie um novo personagem para sua próxima aventura, escolhendo raça, classe e outros detalhes.</p>
+          <a href="personagem.html" class="btn btn-primary">Criar Personagem</a>
+        </div>
+      </div>
+      
+      <div class="option-card">
+        <div class="card-header">
+          <h2>Aventura</h2>
+        </div>
+        <div class="card-body">
+          <p>Inicie uma aventura com seu personagem, enfrente monstros e ganhe recompensas.</p>
+          <a href="#" class="btn btn-success" onclick="startAdventure()">Iniciar Aventura</a>
+        </div>
+      </div>
+      
+      <div class="option-card">
+        <div class="card-header">
+          <h2>Habilidades</h2>
+        </div>
+        <div class="card-body">
+          <p>Explore todas as habilidades e magias disponíveis para seu personagem.</p>
+          <a href="#" class="btn btn-secondary" onclick="viewAbilities()">Ver Habilidades</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="saved-characters">
+      <h2>Personagens Salvos</h2>
+      <div id="character-list" class="character-list">
+        <!-- Personagens salvos serão exibidos aqui -->
+        <p class="empty-message">Carregando personagens salvos...</p>
+      </div>
+    </div>
+    
+    <div class="features-section">
+      <h2>Recursos do Sistema</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Sistema de Progressão</h3>
+          <p class="feature-description">Ganhe experiência, suba de nível e desbloqueie novas habilidades e magias para seu personagem.</p>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">⚔️</div>
+          <h3 class="feature-title">Combate Dinâmico</h3>
+          <p class="feature-description">Enfrente monstros em um sistema de combate por turnos com ações variadas e recompensas.</p>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">📜</div>
+          <h3 class="feature-title">Exportação de Ficha</h3>
+          <p class="feature-description">Exporte a ficha do seu personagem para PDF e compartilhe com seu mestre ou grupo de jogo.</p>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">💾</div>
+          <h3 class="feature-title">Salvamento Local</h3>
+          <p class="feature-description">Salve seus personagens localmente no navegador para continuar suas aventuras depois.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>D&D 5e - Sistema de Criação de Personagem</p>
+    <p>Desenvolvido com ❤️ para amantes de RPG</p>
+    <p>Baseado nas regras de <a href="https://dnd.wizards.com/" target="_blank">Dungeons & Dragons 5ª Edição</a></p>
+  </div>
+  
+  <div id="character-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Selecionar Personagem</h3>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Selecione um personagem para continuar:</p>
+        <div id="modal-character-list">
+          <!-- Lista de personagens no modal -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Função para carregar personagens salvos
+    function loadSavedCharacters() {
+      const characterList = document.getElementById('character-list');
+      
+      try {
+        // Verificar se há personagens salvos
+        const savedCharacters = localStorage.getItem('characterHistory');
+        
+        if (savedCharacters) {
+          const characters = JSON.parse(savedCharacters);
+          
+          if (characters.length > 0) {
+            // Limpar mensagem de carregamento
+            characterList.innerHTML = '';
+            
+            // Adicionar cada personagem à lista
+            characters.forEach(character => {
+              const characterCard = document.createElement('div');
+              characterCard.className = 'character-card';
+              characterCard.onclick = () => loadCharacter(character);
+              
+              characterCard.innerHTML = `
+                <div class="character-name">${character.name}</div>
+                <div class="character-details">${character.race} ${character.class} (Nível ${character.level})</div>
+                <div class="character-date">Criado em: ${character.created_at}</div>
+              `;
+              
+              characterList.appendChild(characterCard);
+            });
+          } else {
+            characterList.innerHTML = '<p class="empty-message">Nenhum personagem salvo encontrado.</p>';
+          }
+        } else {
+          characterList.innerHTML = '<p class="empty-message">Nenhum personagem salvo encontrado.</p>';
+        }
+      } catch (error) {
+        console.error('Erro ao carregar personagens:', error);
+        characterList.innerHTML = '<p class="empty-message">Erro ao carregar personagens.</p>';
+      }
+    }
+    
+    // Função para carregar um personagem
+    function loadCharacter(character) {
+      // Salvar o personagem atual no localStorage
+      localStorage.setItem('currentCharacter', JSON.stringify(character));
+      
+      // Redirecionar para a página de personagem
+      window.location.href = 'personagem.html';
+    }
+    
+    // Função para iniciar aventura
+    function startAdventure() {
+      // Verificar se há um personagem atual
+      const currentCharacter = localStorage.getItem('currentCharacter');
+      
+      if (currentCharacter) {
+        // Redirecionar para a página de aventura
+        window.location.href = 'adventure.html';
+      } else {
+        // Mostrar modal para selecionar personagem
+        showCharacterSelectionModal('adventure');
+      }
+    }
+    
+    // Função para visualizar habilidades
+    function viewAbilities() {
+      // Verificar se há um personagem atual
+      const currentCharacter = localStorage.getItem('currentCharacter');
+      
+      if (currentCharacter) {
+        // Redirecionar para a página de habilidades
+        window.location.href = 'abilities.html';
+      } else {
+        // Mostrar modal para selecionar personagem
+        showCharacterSelectionModal('abilities');
+      }
+    }
+    
+    // Função para mostrar modal de seleção de personagem
+    function showCharacterSelectionModal(destination) {
+      const modal = document.getElementById('character-modal');
+      const modalList = document.getElementById('modal-character-list');
+      
+      try {
+        // Verificar se há personagens salvos
+        const savedCharacters = localStorage.getItem('characterHistory');
+        
+        if (savedCharacters) {
+          const characters = JSON.parse(savedCharacters);
+          
+          if (characters.length > 0) {
+            // Limpar lista
+            modalList.innerHTML = '';
+            
+            // Adicionar cada personagem à lista
+            characters.forEach(character => {
+              const characterCard = document.createElement('div');
+              characterCard.className = 'character-card';
+              characterCard.onclick = () => {
+                // Salvar o personagem selecionado
+                localStorage.setItem('currentCharacter', JSON.stringify(character));
+                
+                // Redirecionar para o destino apropriado
+                if (destination === 'adventure') {
+                  window.location.href = 'adventure.html';
+                } else if (destination === 'abilities') {
+                  window.location.href = 'abilities.html';
+                } else if (destination === 'equipment') {
+                  window.location.href = 'equipment.html';
+                }
+                
+                // Fechar o modal
+                closeModal();
+              };
+              
+              characterCard.innerHTML = `
+                <div class="character-name">${character.name}</div>
+                <div class="character-details">${character.race} ${character.class} (Nível ${character.level})</div>
+                <div class="character-date">Criado em: ${character.created_at}</div>
+              `;
+              
+              modalList.appendChild(characterCard);
+            });
+          } else {
+            modalList.innerHTML = '<p class="empty-message">Nenhum personagem salvo encontrado. Crie um personagem primeiro.</p>';
+          }
+        } else {
+          modalList.innerHTML = '<p class="empty-message">Nenhum personagem salvo encontrado. Crie um personagem primeiro.</p>';
+        }
+      } catch (error) {
+        console.error('Erro ao carregar personagens:', error);
+        modalList.innerHTML = '<p class="empty-message">Erro ao carregar personagens.</p>';
+      }
+      
+      // Mostrar o modal
+      modal.style.display = 'flex';
+    }
+    
+    // Função para fechar o modal
+    function closeModal() {
+      const modal = document.getElementById('character-modal');
+      modal.style.display = 'none';
+    }
+    
+    // Fechar o modal se o usuário clicar fora dele
+    window.onclick = function(event) {
+      const modal = document.getElementById('character-modal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+    
+    // Carregar personagens salvos quando a página carregar
+    document.addEventListener('DOMContentLoaded', loadSavedCharacters);
+  </script>
+</body>
+</html>

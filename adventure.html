@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aventura D&D 5e</title>
+  <style>
+    :root {
+      --primary-color: #7b2cbf;
+      --secondary-color: #e0aaff;
+      --dark-color: #240046;
+      --light-color: #f8f9fa;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --monster-color: #8b0000;
+      --player-color: #0056b3;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+      background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+      color: #333;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .header {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 10px;
+    }
+    
+    .header h1 {
+      color: var(--dark-color);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .combat-area {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .combat-area {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .character-card, .monster-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      position: relative;
+    }
+    
+    .character-card {
+      border-left: 5px solid var(--player-color);
+    }
+    
+    .monster-card {
+      border-left: 5px solid var(--monster-color);
+    }
+    
+    .card-header {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .character-card .card-header h2 {
+      color: var(--player-color);
+    }
+    
+    .monster-card .card-header h2 {
+      color: var(--monster-color);
+    }
+    
+    .health-bar {
+      height: 20px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    
+    .health-bar-fill {
+      height: 100%;
+      background-color: var(--success-color);
+      transition: width 0.3s ease;
+    }
+    
+    .monster-card .health-bar-fill {
+      background-color: var(--monster-color);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .stat-box {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+    
+    .stat-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--dark-color);
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .monster-image {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+    
+    .combat-log {
+      grid-column: 1 / -1;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+    }
+    
+    .combat-log h3 {
+      color: var(--dark-color);
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    
+    .log-entry {
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      font-size: 0.95rem;
+    }
+    
+    .log-entry:last-child {
+      margin-bottom: 0;
+    }
+    
+    .log-entry.player {
+      background-color: rgba(0, 86, 179, 0.1);
+      border-left: 3px solid var(--player-color);
+    }
+    
+    .log-entry.monster {
+      background-color: rgba(139, 0, 0, 0.1);
+      border-left: 3px solid var(--monster-color);
+    }
+    
+    .log-entry.system {
+      background-color: rgba(52, 58, 64, 0.1);
+      border-left: 3px solid #343a40;
+    }
+    
+    .log-timestamp {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-right: 5px;
+    }
+    
+    .action-bar {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .action-button {
+      flex: 1;
+      min-width: 120px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: 600;
+    }
+    
+    .action-button:hover {
+      background-color: #5a189a;
+    }
+    
+    .action-button.attack {
+      background-color: var(--danger-color);
+    }
+    
+    .action-button.attack:hover {
+      background-color: #c82333;
+    }
+    
+    .action-button.spell {
+      background-color: #17a2b8;
+    }
+    
+    .action-button.spell:hover {
+      background-color: #138496;
+    }
+    
+    .action-button.item {
+      background-color: var(--warning-color);
+      color: #212529;
+    }
+    
+    .action-button.item:hover {
+      background-color: #e0a800;
+    }
+    
+    .action-button.flee {
+      background-color: #6c757d;
+    }
+    
+    .action-button.flee:hover {
+      background-color: #5a6268;
+    }
+    
+    .action-button.disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    
+    .action-button.next-encounter {
+      background-color: var(--success-color);
+    }
+    
+    .action-button.next-encounter:hover {
+      background-color: #218838;
+    }
+    
+    .action-button.return {
+      background-color: #6c757d;
+    }
+    
+    .action-button.return:hover {
+      background-color: #5a6268;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .attacks-list, .spells-list {
+      margin-top: 15px;
+    }
+    
+    .attacks-list h4, .spells-list h4 {
+      color: var(--dark-color);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    
+    .attack-item, .spell-item {
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .attack-item:hover, .spell-item:hover {
+      background-color: #e9ecef;
+    }
+    
+    .attack-item strong, .spell-item strong {
+      color: var(--dark-color);
+    }
+    
+    .dice-result {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      margin: 0 2px;
+    }
+    
+    .dice-result.hit {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
+    
+    .dice-result.miss {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+    }
+    
+    .dice-result.critical {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+      font-weight: bold;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .modal-header h3 {
+      color: var(--dark-color);
+      margin: 0;
+    }
+    
+    .close-modal {
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+      transition: color 0.2s;
+    }
+    
+    .close-modal:hover {
+      color: #333;
+    }
+    
+    .modal-body {
+      margin-bottom: 15px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .result-message {
+      text-align: center;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .result-message.victory {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+      border: 1px solid #28a745;
+    }
+    
+    .result-message.defeat {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+    
+    .result-message.flee {
+      background-color: rgba(108, 117, 125, 0.2);
+      color: #6c757d;
+      border: 1px solid #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Aventura D&D 5e</h1>
+      <p>Prepare-se para o combate!</p>
+    </div>
+    
+    <div class="combat-area">
+      <div class="character-card" id="character-card">
+        <div class="card-header">
+          <h2 id="character-name">Carregando...</h2>
+          <div>
+            <span id="character-level">Nível 1</span>
+            <span id="character-class-race">Humano Guerreiro</span>
+          </div>
+        </div>
+        
+        <div>
+          <div class="health-info">
+            <div class="health-label">Pontos de Vida: <span id="character-hp-current">20</span>/<span id="character-hp-max">20</span></div>
+            <div class="health-bar">
+              <div class="health-bar-fill" id="character-hp-bar" style="width: 100%;"></div>
+            </div>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-name">CA</div>
+              <div class="stat-value" id="character-ac">15</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Iniciativa</div>
+              <div class="stat-value" id="character-initiative">+2</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Força</div>
+              <div class="stat-value" id="character-str">16</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Destreza</div>
+              <div class="stat-value" id="character-dex">14</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Constituição</div>
+              <div class="stat-value" id="character-con">15</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Inteligência</div>
+              <div class="stat-value" id="character-int">10</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Sabedoria</div>
+              <div class="stat-value" id="character-wis">12</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Carisma</div>
+              <div class="stat-value" id="character-cha">8</div>
+            </div>
+          </div>
+          
+          <div class="attacks-list" id="attacks-list">
+            <h4>Ataques</h4>
+            <!-- Ataques serão preenchidos via JavaScript -->
+          </div>
+          
+          <div class="spells-list" id="spells-list">
+            <h4>Magias</h4>
+            <!-- Magias serão preenchidas via JavaScript -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="monster-card" id="monster-card">
+        <div class="card-header">
+          <h2 id="monster-name">Carregando...</h2>
+          <div>
+            <span id="monster-challenge">Nível de Desafio (ND): 1</span>
+          </div>
+        </div>
+        
+        <div>
+          <div class="health-info">
+            <div class="health-label">Pontos de Vida: <span id="monster-hp-current">30</span>/<span id="monster-hp-max">30</span></div>
+            <div class="health-bar">
+              <div class="health-bar-fill" id="monster-hp-bar" style="width: 100%;"></div>
+            </div>
+          </div>
+          
+          <img id="monster-image" class="monster-image" src="https://www.dndbeyond.com/avatars/thumbnails/0/349/1000/1000/636252777818652432.jpeg" alt="Monstro">
+          
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-name">CA</div>
+              <div class="stat-value" id="monster-ac">13</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Iniciativa</div>
+              <div class="stat-value" id="monster-initiative">+1</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Força</div>
+              <div class="stat-value" id="monster-str">14</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Destreza</div>
+              <div class="stat-value" id="monster-dex">12</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Constituição</div>
+              <div class="stat-value" id="monster-con">13</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Inteligência</div>
+              <div class="stat-value" id="monster-int">7</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Sabedoria</div>
+              <div class="stat-value" id="monster-wis">10</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">Carisma</div>
+              <div class="stat-value" id="monster-cha">8</div>
+            </div>
+          </div>
+          
+          <div id="monster-description" class="monster-description">
+            <p>Carregando descrição do monstro...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="combat-log" id="combat-log">
+      <h3>Log de Combate</h3>
+      <div id="log-entries">
+        <!-- Entradas de log serão preenchidas via JavaScript -->
+        <div class="log-entry system">
+          <span class="log-timestamp">[00:00:00]</span>
+          <span>Carregando combate...</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="action-bar" id="action-bar">
+      <button class="action-button attack" id="attack-btn">Atacar</button>
+      <button class="action-button spell" id="spell-btn">Usar Magia</button>
+      <button class="action-button item" id="item-btn">Usar Item</button>
+      <button class="action-button flee" id="flee-btn">Fugir</button>
+    </div>
+    
+    <div class="action-bar" id="post-combat-actions" style="display: none;">
+      <button class="action-button next-encounter" id="next-encounter-btn">Próximo Encontro</button>
+      <button class="action-button return" id="return-btn">Voltar à Ficha</button>
+    </div>
+    
+    <div class="result-message victory hidden" id="victory-message">
+      Vitória! Você derrotou o monstro!
+    </div>
+    
+    <div class="result-message defeat hidden" id="defeat-message">
+      Derrota! Você foi derrotado pelo monstro!
+    </div>
+    
+    <div class="result-message flee hidden" id="flee-message">
+      Você fugiu do combate!
+    </div>
+  </div>
+  
+  <!-- Modal de Ataque -->
+  <div class="modal" id="attack-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Escolha seu Ataque</h3>
+        <span class="close-modal" id="close-attack-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="attack-options">
+        <!-- Opções de ataque serão preenchidas via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button class="action-button" id="cancel-attack-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de Magia -->
+  <div class="modal" id="spell-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Escolha sua Magia</h3>
+        <span class="close-modal" id="close-spell-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="spell-options">
+        <!-- Opções de magia serão preenchidas via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button class="action-button" id="cancel-spell-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de Item -->
+  <div class="modal" id="item-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Escolha seu Item</h3>
+        <span class="close-modal" id="close-item-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="item-options">
+        <!-- Opções de item serão preenchidas via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button class="action-button" id="cancel-item-btn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="monsters.js"></script>
+  <script src="rewards.js"></script>
+  <script src="combat.js"></script>
+  <script>
+    // Código inicial para carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar se há um personagem salvo
+      const currentCharacter = JSON.parse(localStorage.getItem('currentCharacter'));
+      if (!currentCharacter) {
+        alert('Nenhum personagem encontrado. Retornando à ficha de personagem.');
+        window.location.href = 'improved_character_sheet.html';
+        return;
+      }
+      
+      // Inicializar o combate
+      initializeCombat(currentCharacter);
+      setupReturnButton();
+    });
+
+    // Atualizar o botão "Voltar à Ficha"
+    function setupReturnButton() {
+      document.getElementById('return-btn').addEventListener('click', () => {
+        window.location.href = 'personagem.html';
+      });
+    }
+
+    // Configurar o botão de "Voltar à Ficha"
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar se o elemento existe antes de adicionar o evento
+      const returnBtn = document.getElementById('return-btn');
+      if (returnBtn) {
+        returnBtn.addEventListener('click', () => {
+          window.location.href = 'personagem.html';
+        });
+      }
+    });
+
+    // Simple check directly in adventure.html
+    document.addEventListener('DOMContentLoaded', () => {
+      const directCheckButton = document.getElementById('return-btn');
+      if (directCheckButton) {
+        console.log('[Adventure.html Direct Check] Button #return-btn FOUND.');
+      } else {
+        console.error('[Adventure.html Direct Check] Button #return-btn NOT FOUND.');
+      }
+    });
+  </script>
+</body>
+</html>

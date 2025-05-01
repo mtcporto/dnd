@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficha de Personagem D&D 5e</title>
+  <style>
+    :root {
+      --primary-color: #7b2cbf;
+      --secondary-color: #e0aaff;
+      --dark-color: #240046;
+      --light-color: #f8f9fa;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+      background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+      color: #333;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .header {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .header h1 {
+      color: var(--dark-color);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-section {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .character-sheet {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      position: relative;
+      min-height: 400px;
+    }
+    
+    .loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      z-index: 10;
+    }
+    
+    .loading-spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: var(--dark-color);
+    }
+    
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    
+    .character-header {
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .character-name {
+      font-size: 2rem;
+      color: var(--dark-color);
+      margin-bottom: 5px;
+    }
+    
+    .character-subtitle {
+      font-size: 1.2rem;
+      color: #666;
+    }
+    
+    .attributes-section {
+      margin-bottom: 20px;
+    }
+    
+    .attributes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 10px;
+      text-align: center;
+    }
+    
+    .attribute-box {
+      background-color: #f8f9fa;
+    }
+    
+    .attribute-box.primary-attribute {
+      background-color: var(--secondary-color);
+      box-shadow: 0 0 5px rgba(123, 44, 191, 0.5);
+    }
+    
+    .attribute-name {
+      font-weight: bold;
+      color: var(--dark-color);
+    }
+    
+    .attribute-value {
+      font-size: 1.5rem;
+      margin: 5px 0;
+    }
+    
+    .attribute-modifier {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+    }
+    
+    .attribute-tips {
+      background-color: #f0f8ff;
+      border-left: 4px solid var(--primary-color);
+      padding: 10px;
+      margin-bottom: 20px;
+      font-style: italic;
+      color: #555;
+    }
+    
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-box {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .stat-name {
+      font-weight: bold;
+      color: var(--dark-color);
+    }
+    
+    .stat-value {
+      font-size: 1.2rem;
+      margin: 5px 0;
+    }
+    
+    .section-title {
+      color: var(--dark-color);
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+      margin: 20px 0 10px;
+    }
+    
+    .proficiencies-list, .equipment-list, .features-list, .spells-list {
+      list-style: none;
+      margin-left: 0;
+    }
+    
+    .proficiencies-list li, .equipment-list li, .features-list li, .spells-list li {
+      background-color: #f8f9fa;
+      margin-bottom: 5px;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    
+    .spell-level {
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-top: 10px;
+    }
+    
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .save-btn, .export-btn {
+      background-color: #6c757d;
+    }
+    
+    .save-btn:hover, .export-btn:hover {
+      background-color: #5a6268;
+    }
+    
+    .history-section {
+      grid-column: 1 / -1;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .history-section h3 {
+      color: var(--dark-color);
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+    
+    .character-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    
+    .character-card {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 15px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .character-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .character-card h4 {
+      color: var(--dark-color);
+      margin-bottom: 5px;
+    }
+    
+    .character-card p {
+      margin: 5px 0;
+      color: #666;
+    }
+    
+    .character-card .date {
+      font-size: 0.8rem;
+      color: #999;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .xp-progress-container {
+      margin: 20px 0;
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .xp-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--dark-color);
+    }
+    
+    .xp-bar {
+      height: 10px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+    
+    .xp-progress {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 5px;
+    }
+    
+    .xp-values {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .character-card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.character-card-actions button {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+}
+
+.load-btn {
+  background-color: var(--primary-color);
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+  </style>
+  <!-- Add this BEFORE loading attribute_highlighter.js -->
+  <script>
+    // Define attribute display names for the highlighter
+    window.attributeDisplayNames = {
+      'STR': 'Strength',
+      'DEX': 'Dexterity',
+      'CON': 'Constitution', 
+      'INT': 'Intelligence',
+      'WIS': 'Wisdom',
+      'CHA': 'Charisma'
+    };
+  </script>
+  <!-- Scripts externos -->
+  <script src="attribute_highlighter.js"></script>
+  <script src="pdf_export.js"></script>
+  <script src="rewards.js"></script>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">← Voltar para Página Inicial</a>
+    
+    <div class="header">
+      <h1>Criador de Personagem D&D 5e</h1>
+      <p>Crie seu personagem para Dungeons & Dragons 5ª Edição</p>
+    </div>
+    
+    <div class="form-section">
+      <div class="form-group">
+        <label for="name">Nome do Personagem:</label>
+        <input type="text" id="name" placeholder="Digite o nome do seu personagem">
+        <div id="name-error" class="error-message hidden">Nome é obrigatório</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="race">Raça:</label>
+        <select id="race">
+          <option value="">Selecione uma raça</option>
+          <!-- Opções serão preenchidas via JavaScript -->
+        </select>
+        <div id="race-error" class="error-message hidden">Raça é obrigatória</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="class">Classe:</label>
+        <select id="class">
+          <option value="">Selecione uma classe</option>
+          <!-- Opções serão preenchidas via JavaScript -->
+        </select>
+        <div id="class-error" class="error-message hidden">Classe é obrigatória</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="level">Nível:</label>
+        <select id="level">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="background">Antecedente:</label>
+        <select id="background">
+          <option value="">Selecione um antecedente</option>
+          <option value="acolyte">Acólito</option>
+          <option value="charlatan">Charlatão</option>
+          <option value="criminal">Criminoso</option>
+          <option value="entertainer">Artista</option>
+          <option value="folk-hero">Herói do Povo</option>
+          <option value="guild-artisan">Artesão de Guilda</option>
+          <option value="hermit">Eremita</option>
+          <option value="noble">Nobre</option>
+          <option value="outlander">Forasteiro</option>
+          <option value="sage">Sábio</option>
+          <option value="sailor">Marinheiro</option>
+          <option value="soldier">Soldado</option>
+          <option value="urchin">Órfão</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="alignment">Tendência:</label>
+        <select id="alignment">
+          <option value="">Selecione uma tendência</option>
+          <option value="lawful-good">Leal e Bom</option>
+          <option value="neutral-good">Neutro e Bom</option>
+          <option value="chaotic-good">Caótico e Bom</option>
+          <option value="lawful-neutral">Leal e Neutro</option>
+          <option value="true-neutral">Neutro</option>
+          <option value="chaotic-neutral">Caótico e Neutro</option>
+          <option value="lawful-evil">Leal e Mau</option>
+          <option value="neutral-evil">Neutro e Mau</option>
+          <option value="chaotic-evil">Caótico e Mau</option>
+        </select>
+      </div>
+      
+      <button id="generate-btn" onclick="createCharacterSheet()">Gerar Personagem</button>
+      
+      <div class="actions-row">
+        <button id="save-btn" class="save-btn" onclick="saveCharacter()">Salvar Personagem</button>
+        <button id="export-btn" class="export-btn" onclick="exportCharacter()">Exportar Ficha</button>
+        <button id="adventure-btn" style="background-color: #8b0000; margin-top: 10px;" onclick="startAdventure()">Iniciar Aventura</button>
+        <button id="abilities-btn" style="background-color: #006400; margin-top: 10px;" onclick="viewAbilities()">Ver Habilidades</button>
+        <button id="equipment-btn" style="background-color: #b8860b; margin-top: 10px;" onclick="viewEquipment()">Gerenciar Equipamentos</button>
+      </div>
+    </div>
+    
+    <div class="character-sheet" id="character">
+      <div id="loading" class="loading hidden">
+        <div class="loading-spinner"></div>
+      </div>
+      <!-- A ficha de personagem será preenchida via JavaScript -->
+    </div>
+    
+    <div class="history-section" id="history-section">
+      <h3>Histórico de Personagens</h3>
+      <div class="character-list" id="character-list">
+        <!-- Personagens salvos serão exibidos aqui -->
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" class="loading hidden">
+    <div class="loading-spinner"></div>
+    <p>Carregando...</p>
+  </div>
+
+  <script>
+    // Cache para armazenar dados da API e evitar requisições repetidas
+    const apiCache = {
+      races: null,
+      classes: null,
+      raceDetails: {},
+      classDetails: {}
+    };
+    
+    // Função para mostrar o indicador de carregamento
+    function showLoading() {
+      const loadingElement = document.getElementById('loading');
+      if (loadingElement) {
+        loadingElement.classList.remove('hidden');
+      } else {
+        console.warn('Elemento de loading não encontrado');
+        // Criar elemento de loading se não existir
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loading';
+        loadingDiv.className = 'loading';
+        loadingDiv.innerHTML = '<div class="loading-spinner"></div><p>Gerando personagem...</p>';
+        document.body.appendChild(loadingDiv);
+      }
+    }
+    
+    // Função para esconder o indicador de carregamento
+    function hideLoading() {
+      const loadingElement = document.getElementById('loading');
+      if (loadingElement) {
+        loadingElement.classList.add('hidden');
+      }
+    }
+    
+    // Função para exibir mensagens de erro
+    function showError(elementId, show = true) {
+      const element = document.getElementById(elementId);
+      if (element) {
+        if (show) {
+          element.classList.remove('hidden');
+        } else {
+          element.classList.add('hidden');
+        }
+      }
+    }
+    
+    // Função para validar o formulário
+    function validateForm() {
+      let isValid = true;
+      
+      // Validar nome
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        showError('name-error');
+        isValid = false;
+      } else {
+        showError('name-error', false);
+      }
+      
+      // Validar raça
+      const race = document.getElementById('race').value;
+      if (!race) {
+        showError('race-error');
+        isValid = false;
+      } else {
+        showError('race-error', false);
+      }
+      
+      // Validar classe
+      const characterClass = document.getElementById('class').value;
+      if (!characterClass) {
+        showError('class-error');
+        isValid = false;
+      } else {
+        showError('class-error', false);
+      }
+      
+      return isValid;
+    }
+    
+    // Função para buscar dados da API com tratamento de erros e cache
+    async function fetchAPI(endpoint) {
+      try {
+        const response = await fetch(`https://www.dnd5eapi.co/api/${endpoint}`);
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar dados: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error(`Erro na API: ${error.message}`);
+        return null;
+      }
+    }
+    
+    // Função para carregar raças e classes da API
+    async function loadRacesAndClasses() {
+      try {
+        // Carregar raças
+        if (!apiCache.races) {
+          const racesData = await fetchAPI('races');
+          if (racesData && racesData.results) {
+            apiCache.races = racesData.results;
+          }
+        }
+        
+        if (apiCache.races) {
+          const raceSelect = document.getElementById('race');
+          apiCache.races.forEach(race => {
+            const option = document.createElement('option');
+            option.value = race.index;
+            option.textContent = race.name;
+            raceSelect.appendChild(option);
+          });
+        }
+        
+        // Carregar classes
+        if (!apiCache.classes) {
+          const classesData = await fetchAPI('classes');
+          if (classesData && classesData.results) {
+            apiCache.classes = classesData.results;
+          }
+        }
+        
+        if (apiCache.classes) {
+          const classSelect = document.getElementById('class');
+          apiCache.classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls.index;
+            option.textContent = cls.name;
+            classSelect.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.error('Erro ao carregar raças e classes:', error);
+      }
+    }
+    
+    // Função para gerar atributos aleatórios
+    function generateAttributes() {
+      const attributes = {
+        STR: 0,  // Em vez de FOR
+        DEX: 0,  // Em vez de DES
+        CON: 0,  // Em vez de CON
+        INT: 0,  // Mantido como INT
+        WIS: 0,  // Em vez de SAB
+        CHA: 0   // Em vez de CAR
+      };
+      
+      // Gerar 6 valores de atributos (4d6, descartar o menor)
+      const attributeValues = [];
+      for (let i = 0; i < 6; i++) {
+        const rolls = [];
+        for (let j = 0; j < 4; j++) {
+          rolls.push(Math.floor(Math.random() * 6) + 1);
+        }
+        rolls.sort((a, b) => a - b);
+        rolls.shift(); // Descartar o menor valor
+        attributeValues.push(rolls.reduce((sum, roll) => sum + roll, 0));
+      }
+      
+      // Ordenar os valores em ordem decrescente
+      attributeValues.sort((a, b) => b - a);
+      
+      // Atribuir os valores aos atributos
+      const attributeKeys = Object.keys(attributes);
+      attributeKeys.forEach((key, index) => {
+        attributes[key] = attributeValues[index];
+      });
+      
+      return attributes;
+    }
+    
+    // Função para aplicar bônus raciais aos atributos
+    function applyRacialBonuses(attributes, raceData) {
+      if (raceData && raceData.ability_bonuses) {
+        raceData.ability_bonuses.forEach(bonus => {
+          // Mapeamento direto, sem tradução
+          const abilityKey = bonus.ability_score.index.toUpperCase();
+          if (attributes[abilityKey] !== undefined) {
+            attributes[abilityKey] += bonus.bonus;
+          }
+        });
+      }
+      
+      return attributes;
+    }
+    
+    // Função para calcular modificadores de atributos
+    function calculateModifiers(attributes) {
+      // Os nomes dos modificadores devem corresponder aos nomes dos atributos
+      const modifiers = {};
+      
+      Object.keys(attributes).forEach(key => {
+        modifiers[key.toLowerCase()] = Math.floor((attributes[key] - 10) / 2);
+      });
+      
+      return modifiers;
+    }
+    
+    // Função para obter o dado de vida da classe
+    function getHitDice(className) {
+      const hitDiceMap = {
+        'Barbarian': 12,
+        'Fighter': 10,
+        'Paladin': 10,
+        'Ranger': 10,
+        'Monk': 8,
+        'Rogue': 8,
+        'Bard': 8,
+        'Cleric': 8,
+        'Druid': 8,
+        'Warlock': 8,
+        'Wizard': 6,
+        'Sorcerer': 6
+      };
+      
+      return hitDiceMap[className] || 8;
+    }
+    
+    // Função para calcular pontos de vida
+    function calculateHP(hitDice, level, conModifier) {
+      // Usar conModifier diretamente (vindo de character.modifiers.con)
+      // No nível 1, HP = máximo do dado de vida + modificador de CON
+      let hp = hitDice + conModifier;
+      
+      // Para cada nível adicional, HP = média do dado de vida + modificador de CON
+      if (level > 1) {
+        const averageRoll = Math.floor(hitDice / 2) + 1;
+        hp += (averageRoll + conModifier) * (level - 1);
+      }
+      
+      return Math.max(1, hp); // HP mínimo é 1
+    }
+    
+    // Função para obter proficiências
+    function getProficiencies(raceData, classData) {
+      const proficiencies = {
+        armor: [],
+        weapons: [],
+        tools: [],
+        savingThrows: [],
+        skills: []
+      };
+      
+      // Adicionar proficiências raciais
+      if (raceData && raceData.starting_proficiencies) {
+        raceData.starting_proficiencies.forEach(prof => {
+          const profName = prof.name;
+          
+          if (profName.includes('Armor')) {
+            proficiencies.armor.push(profName);
+          } else if (profName.includes('Saving Throw')) {
+            proficiencies.savingThrows.push(profName.replace('Saving Throw: ', ''));
+          } else if (profName.includes('Skill')) {
+            proficiencies.skills.push(profName.replace('Skill: ', ''));
+          } else if (profName.includes('Weapons')) {
+            proficiencies.weapons.push(profName);
+          } else {
+            proficiencies.tools.push(profName);
+          }
+        });
+      }
+      
+      // Adicionar proficiências de classe
+      if (classData && classData.proficiencies) {
+        classData.proficiencies.forEach(prof => {
+          const profName = prof.name;
+          
+          if (profName.includes('Armor')) {
+            proficiencies.armor.push(profName);
+          } else if (profName.includes('Saving Throw')) {
+            proficiencies.savingThrows.push(profName.replace('Saving Throw: ', ''));
+          } else if (profName.includes('Skill')) {
+            proficiencies.skills.push(profName.replace('Skill: ', ''));
+          } else if (profName.includes('Weapons')) {
+            proficiencies.weapons.push(profName);
+          } else {
+            proficiencies.tools.push(profName);
+          }
+        });
+      }
+      
+      return proficiencies;
+    }
+    
+    // Função para obter equipamentos
+    async function getEquipment(classData, raceData, level) {
+      try {
+        const equipment = [];
+        
+        // Equipamento baseado na classe
+        if (classData && classData.starting_equipment) {
+          classData.starting_equipment.forEach(item => {
+            if (item && item.equipment && item.equipment.name) {
+              equipment.push(item.equipment.name);
+            }
+          });
+        }
+        
+        // Armas baseadas na classe
+        const classWeapons = getClassWeapons(classData.index);
+        if (Array.isArray(classWeapons)) {
+          classWeapons.forEach(weapon => {
+            equipment.push(weapon);
+          });
+        }
+        
+        // Roupas baseadas na raça
+        const racialClothing = getRacialClothing(raceData.index);
+        if (Array.isArray(racialClothing)) {
+          racialClothing.forEach(clothing => {
+            equipment.push(clothing);
+          });
+        }
+        
+        // Adicionar moedas iniciais
+        equipment.push('Bolsa com 10 peças de ouro');
+        
+        return equipment;
+      } catch (error) {
+        console.error('Erro ao obter equipamentos:', error);
+        return ['Equipamento padrão'];
+      }
+    }
+    
+    // Função para determinar o tipo de equipamento
+    function getEquipmentType(equipmentName) {
+      const lowerName = equipmentName.toLowerCase();
+      
+      if (lowerName.includes('sword') || lowerName.includes('axe') || lowerName.includes('bow') || 
+          lowerName.includes('dagger') || lowerName.includes('mace') || lowerName.includes('staff') ||
+          lowerName.includes('hammer') || lowerName.includes('spear') || lowerName.includes('javelin')) {
+        return 'weapon';
+      } else if (lowerName.includes('armor') || lowerName.includes('shield') || 
+                lowerName.includes('plate') || lowerName.includes('mail') || 
+                lowerName.includes('leather') || lowerName.includes('scale')) {
+        return 'armor';
+      } else if (lowerName.includes('potion') || lowerName.includes('scroll') || 
+                lowerName.includes('wand') || lowerName.includes('ring') || 
+                lowerName.includes('amulet') || lowerName.includes('cloak')) {
+        return 'magic';
+      } else {
+        return 'gear';
+      }
+    }
+    
+    // Função para obter descrição de equipamento
+    function getEquipmentDescription(equipmentName) {
+      const descriptions = {
+        'Leather Armor': 'Armadura leve feita de couro tratado. Oferece proteção básica sem sacrificar a mobilidade.',
+        'Scale Mail': 'Armadura média feita de pequenas placas de metal sobrepostas. Oferece boa proteção contra ataques cortantes.',
+        'Chain Mail': 'Armadura pesada feita de anéis de metal entrelaçados. Oferece excelente proteção, mas reduz a mobilidade.',
+        'Shield': 'Um escudo de madeira ou metal usado para bloquear ataques. Concede +2 à CA.',
+        'Longsword': 'Uma espada longa e afiada, versátil e equilibrada. Dano: 1d8 cortante (uma mão) ou 1d10 cortante (duas mãos).',
+        'Shortsword': 'Uma espada curta e leve, ideal para ataques rápidos. Dano: 1d6 perfurante.',
+        'Dagger': 'Uma adaga pequena e afiada, fácil de esconder. Dano: 1d4 perfurante.',
+        'Quarterstaff': 'Um bastão de madeira resistente, versátil e simples. Dano: 1d6 contundente (uma mão) ou 1d8 contundente (duas mãos).',
+        'Longbow': 'Um arco grande e poderoso que requer força considerável. Dano: 1d8 perfurante, alcance 150/600 pés.',
+        'Shortbow': 'Um arco pequeno e manobrável, ideal para uso montado. Dano: 1d6 perfurante, alcance 80/320 pés.',
+        'Crossbow, light': 'Uma besta leve que pode ser carregada com uma mão. Dano: 1d8 perfurante, alcance 80/320 pés.',
+        'Backpack': 'Uma mochila de couro para carregar equipamentos e suprimentos.',
+        'Bedroll': 'Um saco de dormir para descansar durante viagens.',
+        'Rations (1 day)': 'Alimentos preservados suficientes para um dia de viagem.',
+        'Waterskin': 'Um recipiente de couro para armazenar água potável.',
+        'Rope, hempen (50 feet)': 'Uma corda resistente de cânhamo com 15 metros de comprimento.',
+        'Tinderbox': 'Um conjunto de pederneira, aço e material inflamável para acender fogueiras.',
+        'Torch': 'Uma tocha que queima por 1 hora, iluminando um raio de 20 pés.',
+        'Holy Symbol': 'Um símbolo sagrado representando uma divindade ou panteão.',
+        'Spellbook': 'Um livro onde magos registram suas magias e fórmulas arcanas.',
+        'Component Pouch': 'Uma pequena bolsa contendo componentes materiais para lançar magias.',
+        'Herbalism Kit': 'Um conjunto de ferramentas para colher e preparar ervas medicinais.',
+        'Thieves\' Tools': 'Um conjunto de ferramentas para abrir fechaduras e desarmar armadilhas.'
+      };
+      
+      return descriptions[equipmentName] || 'Sem descrição disponível.';
+    }
+    
+    // Função para obter roupas baseadas na raça
+    function getRacialClothing(raceIndex) {
+      const racialClothing = {
+        'dragonborn': {
+          name: 'Vestes Dracônicas',
+          description: 'Roupas resistentes feitas de tecido tratado com escamas, decoradas com símbolos de clãs dracônicos.'
+        },
+        'dwarf': {
+          name: 'Trajes Anões Tradicionais',
+          description: 'Roupas robustas e duráveis com detalhes em metal e padrões geométricos, típicas dos anões.'
+        },
+        'elf': {
+          name: 'Vestes Élficas',
+          description: 'Roupas leves e elegantes feitas de tecidos finos com padrões naturais e detalhes em prata.'
+        },
+        'gnome': {
+          name: 'Trajes Gnômicos',
+          description: 'Roupas coloridas e práticas com muitos bolsos e compartimentos para guardar bugigangas.'
+        },
+        'half-elf': {
+          name: 'Vestes Meio-Élficas',
+          description: 'Roupas que combinam a elegância élfica com praticidade humana, adaptáveis a diversos ambientes.'
+        },
+        'half-orc': {
+          name: 'Trajes Meio-Orcs',
+          description: 'Roupas resistentes feitas de couro e pele, decoradas com símbolos tribais e troféus de caça.'
+        },
+        'halfling': {
+          name: 'Trajes Halfling',
+          description: 'Roupas confortáveis e práticas, feitas sob medida para halflings, com cores terrosas e botões brilhantes.'
+        },
+        'human': {
+          name: 'Trajes Regionais Humanos',
+          description: 'Roupas versáteis que refletem a diversidade cultural humana, adaptadas ao clima e costumes locais.'
+        },
+        'tiefling': {
+          name: 'Vestes Infernais',
+          description: 'Roupas escuras e dramáticas com detalhes em vermelho e dourado, projetadas para acomodar chifres e caudas.'
+        }
+      };
+      
+      return racialClothing[raceIndex] || {
+        name: 'Roupas Comuns',
+        description: 'Roupas simples e funcionais, adequadas para aventuras.'
+      };
+    }
+    
+    // Função para obter armas baseadas na classe
+    function getClassWeapons(classIndex) {
+      const classWeapons = {
+        'barbarian': [
+          {
+            name: 'Machado Grande Tribal',
+            damage: '1d12',
+            damageType: 'cortante',
+            properties: 'Pesada, duas mãos',
+            description: 'Um enorme machado decorado com símbolos tribais e troféus de batalha.'
+          }
+        ],
+        'bard': [
+          {
+            name: 'Rapieira Elegante',
+            damage: '1d8',
+            damageType: 'perfurante',
+            properties: 'Acuidade, leve',
+            description: 'Uma espada fina e elegante com empunhadura decorada, perfeita para um bardo.'
+          }
+        ],
+        'cleric': [
+          {
+            name: 'Maça Consagrada',
+            damage: '1d6',
+            damageType: 'contundente',
+            properties: 'Versátil (1d8)',
+            description: 'Uma maça abençoada com símbolos sagrados de sua divindade.'
+          }
+        ],
+        'druid': [
+          {
+            name: 'Cajado da Natureza',
+            damage: '1d6',
+            damageType: 'contundente',
+            properties: 'Versátil (1d8)',
+            description: 'Um cajado de madeira entalhado com símbolos da natureza, com vinhas vivas entrelaçadas.'
+          }
+        ],
+        'fighter': [
+          {
+            name: 'Espada Longa de Qualidade',
+            damage: '1d8',
+            damageType: 'cortante',
+            properties: 'Versátil (1d10)',
+            description: 'Uma espada longa perfeitamente balanceada, forjada por um mestre armeiro.'
+          }
+        ],
+        'monk': [
+          {
+            name: 'Bastão Bo',
+            damage: '1d6',
+            damageType: 'contundente',
+            properties: 'Versátil (1d8)',
+            description: 'Um bastão longo e leve, usado em artes marciais para ataques precisos.'
+          }
+        ],
+        'paladin': [
+          {
+            name: 'Espada Longa Consagrada',
+            damage: '1d8',
+            damageType: 'cortante',
+            properties: 'Versátil (1d10)',
+            description: 'Uma espada longa abençoada com símbolos sagrados gravados na lâmina.'
+          }
+        ],
+        'ranger': [
+          {
+            name: 'Arco Longo de Caçador',
+            damage: '1d8',
+            damageType: 'perfurante',
+            properties: 'Munição, pesada, duas mãos',
+            description: 'Um arco longo feito de madeira flexível, decorado com motivos da natureza.'
+          }
+        ],
+        'rogue': [
+          {
+            name: 'Adaga de Assassino',
+            damage: '1d4',
+            damageType: 'perfurante',
+            properties: 'Acuidade, leve, arremesso (20/60)',
+            description: 'Uma adaga afiada e bem balanceada, perfeita para ataques furtivos.'
+          }
+        ],
+        'sorcerer': [
+          {
+            name: 'Adaga Arcana',
+            damage: '1d4',
+            damageType: 'perfurante',
+            properties: 'Acuidade, leve, arremesso (20/60)',
+            description: 'Uma adaga com runas arcanas gravadas na lâmina, que brilha levemente com magia.'
+          }
+        ],
+        'warlock': [
+          {
+            name: 'Adaga do Pacto',
+            damage: '1d4',
+            damageType: 'perfurante',
+            properties: 'Acuidade, leve, arremesso (20/60)',
+            description: 'Uma adaga sinistra com símbolos do seu patrono, que parece absorver a luz ao redor.'
+          }
+        ],
+        'wizard': [
+          {
+            name: 'Adaga de Mago',
+            damage: '1d4',
+            damageType: 'perfurante',
+            properties: 'Acuidade, leve, arremesso (20/60)',
+            description: 'Uma adaga com símbolos arcanos gravados na lâmina, usada em rituais mágicos.'
+          }
+        ]
+      };
+      
+      return classWeapons[classIndex] || [
+        {
+          name: 'Adaga Simples',
+          damage: '1d4',
+          damageType: 'perfurante',
+          properties: 'Acuidade, leve, arremesso (20/60)',
+          description: 'Uma adaga simples mas funcional, útil como ferramenta e arma.'
+        }
+      ];
+    }
+    
+    // Função para obter características raciais
+    function getRaceTraits(raceData) {
+      const traits = [];
+      
+      if (raceData && raceData.traits) {
+        raceData.traits.forEach(trait => {
+          traits.push({
+            name: trait.name,
+            description: trait.desc || 'Sem descrição disponível.'
+          });
+        });
+      }
+      
+      return traits;
+    }
+    
+    // Função para obter características de classe
+    async function getClassFeatures(classData, level) {
+      try {
+        if (!classData || !classData.index) {
+          return [];
+        }
+        
+        // Buscar níveis da classe
+        const classLevels = await fetchAPI(`classes/${classData.index}/levels`);
+        
+        if (!classLevels || !Array.isArray(classLevels)) {
+          return [];
+        }
+        
+        // Filtrar níveis até o nível atual do personagem
+        const relevantLevels = classLevels.filter(lvl => lvl.level <= level);
+        
+        // Extrair características de cada nível
+        const features = [];
+        
+        for (const lvl of relevantLevels) {
+          if (lvl.features && Array.isArray(lvl.features)) {
+            for (const feature of lvl.features) {
+              // Buscar detalhes da característica
+              try {
+                const featureDetails = await fetchAPI(feature.url.replace('/api/', ''));
+                
+                if (featureDetails) {
+                  features.push({
+                    name: featureDetails.name,
+                    level: lvl.level,
+                    description: featureDetails.desc ? featureDetails.desc.join(' ') : 'Sem descrição disponível.'
+                  });
+                }
+              } catch (error) {
+                console.error(`Erro ao buscar detalhes da característica ${feature.name}:`, error);
+              }
+            }
+          }
+        }
+        
+        return features;
+      } catch (error) {
+        console.error('Erro ao obter características de classe:', error);
+        return [];
+      }
+    }
+    
+    // Função para obter magias
+    async function getSpells(characterClass, level) {
+      try {
+        // Verificar se a classe usa magias
+        const spellcastingClasses = ['bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard'];
+        const lowerClass = characterClass.toLowerCase();
+        
+        if (!spellcastingClasses.includes(lowerClass)) {
+          return []; // Retornar array vazio para classes sem magias
+        }
+        
+        // Buscar magias da classe
+        const spellsData = await fetchAPI(`classes/${lowerClass}/spells`);
+        if (!spellsData || !spellsData.results) {
+          console.error('Não foi possível carregar as magias da classe.');
+          return [];
+        }
+        
+        // Determinar níveis de magia disponíveis baseado no nível do personagem
+        let maxSpellLevel = 0;
+        if (level >= 1) maxSpellLevel = 1;
+        if (level >= 3) maxSpellLevel = 2;
+        if (level >= 5) maxSpellLevel = 3;
+        if (level >= 7) maxSpellLevel = 4;
+        if (level >= 9) maxSpellLevel = 5;
+        if (level >= 11) maxSpellLevel = 6;
+        if (level >= 13) maxSpellLevel = 7;
+        if (level >= 15) maxSpellLevel = 8;
+        if (level >= 17) maxSpellLevel = 9;
+        
+        // Selecionar apenas algumas magias para o personagem inicial
+        const availableSpells = [];
+        
+        // Limitar o número de magias consultadas para melhorar a performance
+        const maxSpellsToCheck = 10;
+        const spellsToCheck = spellsData.results.slice(0, maxSpellsToCheck);
+        
+        // Buscar detalhes apenas das magias selecionadas
+        for (const spell of spellsToCheck) {
+          try {
+            const spellDetails = await fetchAPI(spell.url.replace('/api/', ''));
+            if (spellDetails && spellDetails.level <= maxSpellLevel) {
+              availableSpells.push({
+                name: spellDetails.name,
+                level: spellDetails.level,
+                description: spellDetails.desc.join(' ')
+              });
+            }
+          } catch (error) {
+            console.error(`Erro ao buscar detalhes da magia ${spell.name}:`, error);
+          }
+        }
+        
+        return availableSpells;
+      } catch (error) {
+        console.error('Erro ao carregar magias:', error);
+        return [];
+      }
+    }
+    
+    // Função para obter informações de antecedente
+    function getBackgroundInfo(backgroundId) {
+      const backgrounds = {
+        'acolyte': {
+          name: 'Acólito',
+          feature: 'Abrigo dos Fiéis',
+          description: 'Como acólito, você comanda o respeito daqueles que compartilham sua fé, e pode realizar cerimônias religiosas.',
+          skills: ['Intuição', 'Religião'],
+          languages: 2,
+          equipment: ['Símbolo sagrado', 'Livro de preces', 'Incenso (5)', 'Vestimentas', '15 po']
+        },
+        'charlatan': {
+          name: 'Charlatão',
+          feature: 'Identidade Falsa',
+          description: 'Você criou uma segunda identidade que inclui documentos, conhecidos estabelecidos e disfarces.',
+          skills: ['Enganação', 'Prestidigitação'],
+          tools: ['Kit de disfarce', 'Kit de falsificação'],
+          equipment: ['Roupas finas', 'Kit de disfarce', 'Ferramentas de trapaça', '15 po']
+        },
+        'criminal': {
+          name: 'Criminoso',
+          feature: 'Contato Criminal',
+          description: 'Você tem um contato confiável que age como seu informante no submundo criminal.',
+          skills: ['Enganação', 'Furtividade'],
+          tools: ['Um tipo de kit de jogo', 'Ferramentas de ladrão'],
+          equipment: ['Pé de cabra', 'Roupas escuras com capuz', '15 po']
+        },
+        'entertainer': {
+          name: 'Artista',
+          feature: 'Pela Popularidade',
+          description: 'Você sempre encontra um lugar para se apresentar, geralmente em tavernas ou estalagens, em troca de comida e hospedagem.',
+          skills: ['Acrobacia', 'Atuação'],
+          tools: ['Kit de disfarce', 'Um tipo de instrumento musical'],
+          equipment: ['Instrumento musical', 'Presente de um admirador', 'Roupas de viajante', '15 po']
+        },
+        'folk-hero': {
+          name: 'Herói do Povo',
+          feature: 'Hospitalidade Rural',
+          description: 'Por ser próximo às pessoas comuns, você encontra lugares para se esconder, descansar ou se recuperar entre eles.',
+          skills: ['Adestrar Animais', 'Sobrevivência'],
+          tools: ['Um tipo de ferramenta de artesão', 'Veículos terrestres'],
+          equipment: ['Ferramentas de artesão', 'Pá', 'Pote de ferro', 'Roupas comuns', '10 po']
+        },
+        'guild-artisan': {
+          name: 'Artesão de Guilda',
+          feature: 'Associação de Guilda',
+          description: 'Como membro de uma guilda, você pode contar com certos benefícios que a associação proporciona.',
+          skills: ['Intuição', 'Persuasão'],
+          tools: ['Um tipo de ferramenta de artesão'],
+          languages: 1,
+          equipment: ['Ferramentas de artesão', 'Carta de apresentação da guilda', 'Roupas de viajante', '15 po']
+        },
+        'hermit': {
+          name: 'Eremita',
+          feature: 'Descoberta',
+          description: 'Seu isolamento lhe deu acesso a uma descoberta única e poderosa.',
+          skills: ['Medicina', 'Religião'],
+          tools: ['Kit de herbalismo'],
+          languages: 1,
+          equipment: ['Kit de herbalismo', 'Pergaminho com anotações', 'Manta de inverno', 'Roupas comuns', '5 po']
+        },
+        'noble': {
+          name: 'Nobre',
+          feature: 'Posição Privilegiada',
+          description: 'Graças à sua origem nobre, as pessoas tendem a pensar o melhor de você.',
+          skills: ['História', 'Persuasão'],
+          tools: ['Um tipo de kit de jogo'],
+          languages: 1,
+          equipment: ['Roupas finas', 'Anel de sinete', 'Pergaminho de linhagem', '25 po']
+        },
+        'outlander': {
+          name: 'Forasteiro',
+          feature: 'Andarilho',
+          description: 'Você tem excelente memória para mapas e geografia, e sempre pode se lembrar das características gerais de terrenos, assentamentos e outras características ao seu redor.',
+          skills: ['Atletismo', 'Sobrevivência'],
+          tools: ['Um tipo de instrumento musical'],
+          languages: 1,
+          equipment: ['Cajado', 'Armadilha de caça', 'Troféu de animal', 'Roupas de viajante', '10 po']
+        },
+        'sage': {
+          name: 'Sábio',
+          feature: 'Pesquisador',
+          description: 'Quando tentar obter ou recuperar um conhecimento que não sabe, você sabe onde e de quem obter essa informação.',
+          skills: ['Arcanismo', 'História'],
+          languages: 2,
+          equipment: ['Livro de estudos', 'Tinteiro e pena', 'Pequena faca', 'Carta de um colega falecido', '10 po']
+        },
+        'sailor': {
+          name: 'Marinheiro',
+          feature: 'Passagem de Navio',
+          description: 'Quando precisar, você pode conseguir passagem gratuita em um navio para você e seus companheiros.',
+          skills: ['Atletismo', 'Percepção'],
+          tools: ['Ferramentas de navegador', 'Veículos aquáticos'],
+          equipment: ['Corda de seda (15m)', 'Amuleto da sorte', 'Roupas comuns', '10 po']
+        },
+        'soldier': {
+          name: 'Soldado',
+          feature: 'Patente Militar',
+          description: 'Você tem uma patente militar da sua época como soldado. Soldados leais à sua antiga organização ainda reconhecem sua autoridade e influência.',
+          skills: ['Atletismo', 'Intimidação'],
+          tools: ['Um tipo de kit de jogo', 'Veículos terrestres'],
+          equipment: ['Insígnia de patente', 'Troféu de inimigo', 'Baralho', 'Roupas comuns', '10 po']
+        },
+        'urchin': {
+          name: 'Órfão',
+          feature: 'Segredos da Cidade',
+          description: 'Você conhece os padrões e fluxos secretos das cidades e pode encontrar passagens através da área urbana que outros normalmente não conheceriam.',
+          skills: ['Furtividade', 'Prestidigitação'],
+          tools: ['Kit de disfarce', 'Ferramentas de ladrão'],
+          equipment: ['Pequena faca', 'Mapa da cidade', 'Rato de estimação', 'Lembrança dos pais', '10 po']
+        }
+      };
+      
+      return backgrounds[backgroundId] || {
+        name: 'Personalizado',
+        feature: 'Característica Personalizada',
+        description: 'Você tem um antecedente personalizado com características únicas.',
+        skills: ['Escolha duas perícias'],
+        equipment: ['Equipamento personalizado']
+      };
+    }
+    
+    // Função para renderizar a ficha de personagem
+    function renderCharacterSheet(character) {
+      console.log('>>> renderCharacterSheet CALLED');
+      // Obter o elemento da ficha
+      const characterSheetElement = document.getElementById('character');
+      if (!characterSheetElement) {
+        console.error("Elemento #character não encontrado no DOM!");
+        return;
+      }
+    
+      // Definir variáveis no escopo da função inteira
+      const xp = character.xp || 0; // Usar nome diferente para evitar conflitos
+      console.log(`Renderizando ficha com XP: ${xp}`);
+      const nextLevelXP = getXPForNextLevel(character.level);
+      const xpProgress = calculateXPProgress(xp, character.level);
+      console.log(`Progresso calculado: ${xpProgress}% (${xp}/${nextLevelXP})`);
+    
+      // Construir o HTML da ficha
+      let html = `
+        <div class="character-header">
+          <h2 class="character-name">${character.name}</h2>
+          <div class="character-subtitle">${character.race} ${character.class} (Level ${character.level}) - ${character.background}</div>
+        </div>
+        
+        <div id="attribute-tips" class="attribute-tips"></div>
+        
+        <!-- === ATTRIBUTES SECTION === -->
+        <div class="attributes-section">
+          <h3 class="section-title">Attributes</h3>
+          <div class="attributes-grid">
+            ${Object.entries(character.attributes || {}).map(([key, value]) => {
+              // Nenhum mapeamento necessário, usar o nome do atributo diretamente
+              const modifier = character.modifiers[key.toLowerCase()];
+              
+              return `
+                <div class="attribute-box" data-attribute="${key}">
+                  <div class="attribute-name">${key}</div>
+                  <div class="attribute-value">${value}</div>
+                  <div class="attribute-modifier">${getModifierSign(modifier)}${modifier}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        
+    
+        <div class="xp-progress-container">
+          <div class="xp-label">Progress to Level ${character.level + 1}</div>
+          <div class="xp-bar">
+            <div class="xp-progress" style="width: ${xpProgress}%"></div>
+          </div>
+          <div class="xp-values">${xp} / ${nextLevelXP}</div> <!-- Usar a variável xp, não currentXP -->
+        </div>
+    
+        <!-- === PROFICIENCIES SECTION === -->
+        <div class="proficiencies-section">
+          <h3 class="section-title">Proficiencies</h3>
+          <p><strong>Saving Throws:</strong> ${character.proficiencies?.savingThrows?.join(', ') || 'None'}</p>
+          <p><strong>Skills:</strong> ${character.proficiencies?.skills?.join(', ') || 'None'}</p>
+          <p><strong>Armor:</strong> ${character.proficiencies?.armor?.join(', ') || 'None'}</p>
+          <p><strong>Weapons:</strong> ${character.proficiencies?.weapons?.join(', ') || 'None'}</p>
+          <p><strong>Tools:</strong> ${character.proficiencies?.tools?.join(', ') || 'None'}</p>
+        </div>
+        
+
+      `;
+    
+      // Atualizar o conteúdo do elemento do character sheet
+      characterSheetElement.innerHTML = html;
+    
+      // Destacar atributos (se a função existir)
+      if (window.attributeHighlighter && typeof window.attributeHighlighter.highlightPrimaryAttributes === 'function') {
+        window.attributeHighlighter.highlightPrimaryAttributes(character.class);
+      }
+    }
+    
+    // Função para calcular a porcentagem de progresso de XP para o próximo nível
+    function calculateXPProgress(currentXP, level) {
+      const currentLevelXP = getXPForLevel(level);
+      const nextLevelXP = getXPForNextLevel(level);
+      
+      // Total XP progress approach (from 0 to nextLevelXP)
+      return Math.min(100, Math.max(0, (currentXP / nextLevelXP) * 100));
+    }
+    
+    // Função para obter XP necessário para o próximo nível
+    function getXPForNextLevel(level) {
+      const xpLevels = {
+        1: 300,
+        2: 900,
+        3: 2700,
+        4: 6500,
+        5: 14000,
+        6: 23000,
+        7: 34000,
+        8: 48000,
+        9: 64000,
+        10: 85000,
+        11: 100000,
+        12: 120000,
+        13: 140000,
+        14: 165000,
+        15: 195000,
+        16: 225000,
+        17: 265000,
+        18: 305000,
+        19: 355000,
+        20: Infinity
+      };
+      
+      return xpLevels[level] || Infinity;
+    }
+    
+    // Função para obter XP necessário para o nível atual
+    function getXPForLevel(level) {
+      if (level <= 1) return 0;
+      
+      const xpLevels = {
+        1: 0,
+        2: 300,
+        3: 900,
+        4: 2700,
+        5: 6500,
+        6: 14000,
+        7: 23000,
+        8: 34000,
+        9: 48000,
+        10: 64000,
+        11: 85000,
+        12: 100000,
+        13: 120000,
+        14: 140000,
+        15: 165000,
+        16: 195000,
+        17: 225000,
+        18: 265000,
+        19: 305000,
+        20: 355000
+      };
+      
+      return xpLevels[level] || 0;
+    }
+    
+    // Função para criar a ficha de personagem
+    async function createCharacterSheet() {
+      console.log('>>> createCharacterSheet CALLED'); // Log entry point
+      try {
+        if (!validateForm()) {
+          return;
+        }
+        
+        showLoading();
+        
+        // Obter valores do formulário
+        const name = document.getElementById('name').value.trim();
+        const race = document.getElementById('race').value;
+        const characterClass = document.getElementById('class').value;
+        const level = parseInt(document.getElementById('level').value) || 1;
+        const background = document.getElementById('background').value || 'Acólito';
+        const alignment = document.getElementById('alignment').value || 'Neutro';
+        
+        // Buscar detalhes da raça
+        let raceData = apiCache.raceDetails[race];
+        if (!raceData) {
+          raceData = await fetchAPI(`races/${race}`);
+          if (raceData) {
+            apiCache.raceDetails[race] = raceData;
+          } else {
+            hideLoading();
+            alert('Erro ao buscar detalhes da raça. Por favor, tente novamente.');
+            return;
+          }
+        }
+        
+        // Buscar detalhes da classe
+        let classData = apiCache.classDetails[characterClass];
+        if (!classData) {
+          classData = await fetchAPI(`classes/${characterClass}`);
+          if (classData) {
+            apiCache.classDetails[characterClass] = classData;
+          } else {
+            hideLoading();
+            alert('Erro ao buscar detalhes da classe. Por favor, tente novamente.');
+            return;
+          }
+        }
+        
+        // Gerar atributos
+        const attributes = generateAttributes();
+        
+        // Aplicar bônus raciais
+        applyRacialBonuses(attributes, raceData);
+        
+        // Calcular modificadores
+        const modifiers = calculateModifiers(attributes);
+        
+        // Calcular pontos de vida
+        const hitDice = getHitDice(classData.name);
+        const conModifier = modifiers.CON;
+        const maxHp = calculateHP(hitDice, level, conModifier);
+        
+        // Obter proficiências
+        const proficiencies = getProficiencies(raceData, classData);
+        
+        // Obter equipamentos
+        const equipment = await getEquipment(classData, raceData, level);
+        
+        // Obter características raciais
+        const raceTraits = getRaceTraits(raceData);
+        
+        // Obter características de classe
+        const classFeatures = await getClassFeatures(classData, level);
+        
+        // Obter magias (se aplicável)
+        const spells = await getSpells(characterClass, level);
+        
+        // Calcular CA base
+        const ac = 10 + modifiers.DES;
+        
+        // Criar objeto do personagem
+        const character = {
+          name,
+          race: raceData.name,
+          class: classData.name,
+          level,
+          background,
+          alignment,
+          attributes,
+          modifiers,
+          hp_max: maxHp,
+          hp_current: maxHp,
+          ac,
+          initiative: modifiers.DES,
+          speed: raceData.speed,
+          proficiencies,
+          equipment,
+          race_traits: raceTraits,
+          class_features: classFeatures,
+          spells,
+          xp: 0,
+          coins: {
+            copper: 0,
+            silver: 0,
+            gold: 10
+          },
+          created_at: new Date().toLocaleString('pt-BR')
+        };
+        
+        // Salvar o personagem atual
+        window.currentCharacter = character;
+        
+        // Salvar no localStorage para uso em outras páginas
+        localStorage.setItem('currentCharacter', JSON.stringify(character));
+        
+        // Salvar no histórico
+        saveCharacterToHistory(character);
+        
+        // Renderizar a ficha
+        renderCharacterSheet(character);
+        
+        // Destacar atributos principais
+        if (window.attributeHighlighter) {
+          window.attributeHighlighter.highlightPrimaryAttributes(character.class);
+        }
+        
+        hideLoading();
+      } catch (error) {
+        console.error('Erro ao criar personagem:', error);
+        hideLoading();
+        alert('Ocorreu um erro ao criar o personagem. Por favor, tente novamente.');
+      }
+    }
+    
+    // Função para salvar personagem no histórico
+    function saveCharacterToHistory(character) {
+      try {
+        // Obter histórico existente
+        let characterHistory = [];
+        const savedHistory = localStorage.getItem('characterHistory');
+        
+        if (savedHistory) {
+          characterHistory = JSON.parse(savedHistory);
+        }
+        
+        // Verificar se o personagem já existe no histórico
+        const existingIndex = characterHistory.findIndex(char => char.name === character.name);
+        
+        if (existingIndex !== -1) {
+          // Atualizar personagem existente
+          characterHistory[existingIndex] = character;
+        } else {
+          // Adicionar novo personagem
+          characterHistory.push(character);
+        }
+        
+        // Salvar histórico atualizado
+        localStorage.setItem('characterHistory', JSON.stringify(characterHistory));
+        
+        // Atualizar a exibição do histórico
+        updateCharacterHistory();
+      } catch (error) {
+        console.error('Erro ao salvar personagem no histórico:', error);
+      }
+    }
+    
+    // Função para atualizar a exibição do histórico de personagens
+    function updateCharacterHistory() {
+      const characterList = document.getElementById('character-list');
+      
+      try {
+        // Obter histórico existente
+        const savedHistory = localStorage.getItem('characterHistory');
+        
+        if (savedHistory) {
+          const characterHistory = JSON.parse(savedHistory);
+          
+          if (characterHistory.length > 0) {
+            // Limpar lista atual
+            characterList.innerHTML = '';
+            
+            // Adicionar cada personagem à lista
+            characterHistory.forEach(character => {
+              const characterCard = document.createElement('div');
+              characterCard.className = 'character-card';
+              
+              characterCard.innerHTML = `
+                <h4>${character.name}</h4>
+                <p>${character.race} ${character.class} (Nível ${character.level})</p>
+                <p class="date">Criado em: ${character.created_at}</p>
+                <div class="character-card-actions">
+                  <button class="load-btn">Carregar</button>
+                  <button class="delete-btn">Excluir</button>
+                </div>
+              `;
+              
+              // Adicionar evento para carregar personagem
+              const loadBtn = characterCard.querySelector('.load-btn');
+              loadBtn.addEventListener('click', () => loadCharacterByName(character.name));
+              
+              // Adicionar evento para excluir personagem
+              const deleteBtn = characterCard.querySelector('.delete-btn');
+              deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevenir clique no card
+                deleteCharacter(character.name);
+              });
+              
+              characterList.appendChild(characterCard);
+            });
+          } else {
+            characterList.innerHTML = '<p>Nenhum personagem salvo.</p>';
+          }
+        } else {
+          characterList.innerHTML = '<p>Nenhum personagem salvo.</p>';
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar histórico de personagens:', error);
+        characterList.innerHTML = '<p>Erro ao carregar personagens.</p>';
+      }
+    }
+    
+    // Função para deletar um personagem do histórico
+    function deleteCharacter(characterName) {
+      try {
+        // Confirmar exclusão
+        if (!confirm(`Tem certeza de que deseja excluir o personagem "${characterName}"?`)) {
+          return;
+        }
+        
+        // Obter histórico existente
+        const savedHistory = localStorage.getItem('characterHistory');
+        if (!savedHistory) return;
+        
+        let characterHistory = JSON.parse(savedHistory);
+        
+        // Encontrar e remover o personagem
+        characterHistory = characterHistory.filter(char => char.name !== characterName);
+        
+        // Salvar histórico atualizado
+        localStorage.setItem('characterHistory', JSON.stringify(characterHistory));
+        
+        // Atualizar exibição
+        updateCharacterHistory();
+        
+        alert(`Personagem "${characterName}" foi excluído.`);
+      } catch (error) {
+        console.error('Erro ao excluir personagem:', error);
+        alert('Ocorreu um erro ao excluir o personagem.');
+      }
+    }
+    
+    // Nova função para carregar personagem pelo nome
+    function loadCharacterByName(name) {
+      console.log(`Tentando carregar personagem pelo nome: "${name}"`);
+      try {
+        // Obter histórico existente
+        const savedHistory = localStorage.getItem('characterHistory');
+        
+        if (savedHistory) {
+          const characterHistory = JSON.parse(savedHistory);
+          // Encontrar o personagem pelo nome
+          const character = characterHistory.find(char => char.name === name);
+          
+          if (character) {
+            // Salvar o personagem atual no localStorage e na variável global
+            window.currentCharacter = character;
+            localStorage.setItem('currentCharacter', JSON.stringify(character));
+            
+            // Renderizar a ficha
+            renderCharacterSheet(character);
+            
+            alert(`Personagem ${name} carregado com sucesso.`);
+          } else {
+            console.error(`Personagem "${name}" não encontrado no histórico.`);
+            alert(`Erro: Personagem "${name}" não encontrado.`);
+          }
+        } else {
+          alert('Nenhum histórico de personagens encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao carregar personagem:', error);
+        alert('Ocorreu um erro ao carregar o personagem. Por favor, tente novamente.');
+      }
+    }
+    
+    // Função para carregar um personagem do histórico
+    function loadCharacter(characterName) {
+      // Verificar se characterName é um objeto e extrair o nome
+      if (typeof characterName === 'object' && characterName !== null) {
+        console.warn("Recebeu objeto em vez de string para nome do personagem:", characterName);
+        characterName = characterName.name || Object.keys(characterName)[0] || '';
+      }
+      
+      console.log(`Tentando carregar: "${characterName}"`);
+      try {
+        const history = JSON.parse(localStorage.getItem('characterHistory') || '{}');
+        const characterDataString = history[characterName];
+
+        if (characterDataString) {
+          window.currentCharacter = JSON.parse(characterDataString);
+          console.log("Personagem carregado do histórico:", window.currentCharacter);
+          renderCharacterSheet(window.currentCharacter);
+          // ... resto da função ...
+        } else {
+          console.error(`Dados não encontrados para "${characterName}" no histórico.`);
+          alert(`Erro: Dados não encontrados para "${characterName}".`);
+        }
+      } catch (error) {
+        // ... tratamento de erro ...
+      }
+    }
+    
+    // Função para salvar o personagem atual
+    function saveCharacter() {
+      try {
+        if (!window.currentCharacter) {
+          alert('Nenhum personagem para salvar. Gere um personagem primeiro.');
+          return;
+        }
+        
+        // Salvar no histórico
+        saveCharacterToHistory(window.currentCharacter);
+        
+        alert('Personagem salvo com sucesso!');
+      } catch (error) {
+        console.error('Erro ao salvar personagem:', error);
+        alert('Ocorreu um erro ao salvar o personagem. Por favor, tente novamente.');
+      }
+    }
+    
+    // Função para exportar a ficha para PDF
+    function exportCharacter() {
+      try {
+        if (!window.currentCharacter) {
+          alert('Nenhum personagem para exportar. Gere um personagem primeiro.');
+          return;
+        }
+        
+        if (window.pdfExport && typeof window.pdfExport.exportCharacterToPDF === 'function') {
+          // Mostrar indicador de carregamento
+          showLoading();
+          
+          // Exportar o personagem
+          window.pdfExport.exportCharacterToPDF(window.currentCharacter)
+            .finally(() => {
+              // Esconder o indicador de carregamento independente do resultado
+              hideLoading();
+            });
+        } else {
+          alert('Biblioteca de exportação para PDF não está disponível.');
+        }
+      } catch (error) {
+        console.error('Erro ao exportar personagem:', error);
+        hideLoading();
+        alert('Ocorreu um erro ao exportar o personagem. Por favor, tente novamente.');
+      }
+    }
+    
+    // Função para iniciar aventura
+    function startAdventure() {
+      if (!window.currentCharacter) {
+        alert('Você precisa gerar um personagem primeiro!');
+        return;
+      }
+      
+      // Salvar o personagem atual no localStorage
+      localStorage.setItem('currentCharacter', JSON.stringify(window.currentCharacter));
+      
+      // Redirecionar para a página de aventura
+      window.location.href = 'adventure.html';
+    }
+    
+    // Função para visualizar habilidades e magias
+    function viewAbilities() {
+      if (!window.currentCharacter) {
+        alert('Nenhum personagem foi gerado para visualizar habilidades.');
+        return;
+      }
+      
+      // Salvar o personagem atual no localStorage
+      localStorage.setItem('currentCharacter', JSON.stringify(window.currentCharacter));
+      
+      // Redirecionar para a página de habilidades
+      window.location.href = 'abilities.html';
+    }
+    
+    // Função para gerenciar equipamentos
+    function viewEquipment() {
+      if (!window.currentCharacter) {
+        alert('Nenhum personagem foi gerado para gerenciar equipamentos.');
+        return;
+      }
+      
+      // Salvar o personagem atual no localStorage
+      localStorage.setItem('currentCharacter', JSON.stringify(window.currentCharacter));
+      
+      // Redirecionar para a página de equipamentos
+      window.location.href = 'equipment.html';
+    }
+    
+    // Carregar raças e classes quando a página carregar
+    document.addEventListener('DOMContentLoaded', () => {
+      // Run migration for existing characters
+      const migrationResult = migrateCharacterAttributesToEnglish();
+      if (migrationResult) {
+        console.log("Legacy characters successfully migrated to English attribute names");
+      }
+      
+      // Continue with normal initialization
+      loadRacesAndClasses();
+      updateCharacterHistory();
+    });
+
+    // Dentro de initializePage em personagem.html
+    const characterData = localStorage.getItem('currentCharacter');
+    if (characterData) {
+      console.log("Dados lidos do localStorage:", characterData); // Log dos dados brutos
+      window.currentCharacter = JSON.parse(characterData);
+      console.log("Objeto personagem após parse:", window.currentCharacter); // Log do objeto
+      renderCharacterSheet(window.currentCharacter);
+    } else {
+      // ...
+    }
+
+
+    // Função auxiliar para sinal de modificador
+    function getModifierSign(modifier) {
+      return modifier >= 0 ? '+' : '';
+    }
+
+    // Função auxiliar para bônus de proficiência
+    function calculateProficiencyBonus(level) {
+        return Math.ceil(level / 4) + 1;
+    }
+
+    // --- Na função que carrega do histórico ---
+    function loadCharacterFromHistory(characterName) {
+        // ... (lógica para encontrar os dados do personagem 'characterData' pelo nome) ...
+        if (characterData) {
+            window.currentCharacter = JSON.parse(characterData); // Atualiza global
+            renderCharacterSheet(window.currentCharacter); // <<< CHAMA RENDERIZAÇÃO
+            // Preencher campos do formulário se necessário
+            document.getElementById('character-name-input').value = window.currentCharacter.name;
+            // ... outros campos ...
+            alert(`Personagem ${characterName} carregado.`);
+        } else {
+            alert(`Erro ao carregar personagem ${characterName}.`);
+        }
+    }
+
+    // --- Funções Auxiliares ---
+
+    // Função auxiliar para sinal de modificador
+    function getModifierSign(modifier) {
+      // Garante que modifier é um número, retorna '+' para 0 ou positivo, '' para negativo
+      const modNum = Number(modifier);
+      return !isNaN(modNum) && modNum >= 0 ? '+' : '';
+    }
+
+    // Função auxiliar para bônus de proficiência
+    function calculateProficiencyBonus(level) {
+        // Garante que level é um número
+        const lvlNum = Number(level);
+        if (isNaN(lvlNum) || lvlNum < 1) return '+0'; // Retorna +0 se inválido
+        return Math.ceil(lvlNum / 4) + 1;
+    }
+
+    // --- Função Auxiliar Necessária para Itens ---
+    // Você PRECISA implementar esta função para buscar os detalhes de um item
+    // Pode ser buscando em uma lista global de itens, ou fazendo fetch se necessário
+    function findItemDetails(itemName) {
+        // Exemplo MUITO SIMPLIFICADO - Substitua pela sua lógica real
+        // Idealmente, você teria uma lista/objeto `allItemsData` carregado
+        console.log(`Procurando detalhes para: ${itemName}`); // Log para depuração
+        const allItems = [
+            { name: "Chain Mail", type: "armor", category: "heavy", ac: 16, strength_requirement: 13 },
+            { name: "Escudo", type: "armor", category: "shield", ac_bonus: 2 },
+            { name: "Espada Longa Consagrada", type: "weapon", category: "martial", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"] },
+            { name: "Espada Longa", type: "weapon", category: "martial", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"] },
+            { name: "Machado de Batalha", type: "weapon", category: "martial", damage: "1d8", damageType: "slashing", properties: ["Versatile (1d10)"] },
+            // ... adicione TODOS os seus itens aqui ou carregue de outra fonte
+        ];
+        const foundItem = allItems.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+        if (!foundItem) {
+            console.warn(`Detalhes não encontrados para o item: ${itemName}`);
+        }
+        return foundItem;
+    }
+
+
+    // Função para calcular AC baseado no equipamento
+    function calculateAC(character) {
+      let baseAC = 10;
+      let dexBonus = character.modifiers.dex || 0; 
+      let armorAC = 0;
+      let shieldBonus = 0;
+      let hasArmor = false;
+      let calculatedAC = 0; // Variável para armazenar o resultado final
+
+      // Verificar itens equipados
+      if (character.equipped && Array.isArray(character.equipped)) {
+        character.equipped.forEach(equippedItemName => {
+          const itemDetails = findItemDetails(equippedItemName); // Usa a função auxiliar
+
+          if (itemDetails) {
+            if (itemDetails.type === 'armor' && itemDetails.category !== 'shield') {
+              hasArmor = true;
+              armorAC = itemDetails.ac || 0; // AC base da armadura
+              // Limitar bônus de Destreza (Regra D&D)
+              if (itemDetails.category === 'medium') {
+                dexBonus = Math.min(dexBonus, 2);
+              } else if (itemDetails.category === 'heavy') {
+                dexBonus = 0;
+              }
+            } else if (itemDetails.type === 'armor' && itemDetails.category === 'shield') {
+              shieldBonus = itemDetails.ac_bonus || 0;
+            }
+            // Adicionar lógica para outros bônus (anéis, amuletos, etc.) aqui
+          }
+        });
+      }
+
+      // Calcular AC final
+      if (hasArmor) {
+        calculatedAC = armorAC + dexBonus + shieldBonus;
+      } else {
+        // Sem armadura, AC = 10 + Bônus de DES + Bônus de Escudo
+        calculatedAC = baseAC + dexBonus + shieldBonus;
+      }
+      console.log(`AC Calculado: ${calculatedAC} (Base: ${hasArmor ? armorAC : baseAC}, DexMod: ${dexBonus}, Shield: ${shieldBonus})`); // Log para depuração
+      return calculatedAC;
+    }
+
+    // ... (Restante do seu script: renderCharacterSheet, initializePage, etc.) ...
+
+    // Função chamada ao clicar em um personagem no histórico
+    function loadCharacter(characterName) {
+        console.log(`Tentando carregar: ${characterName}`);
+        try {
+            const history = JSON.parse(localStorage.getItem('characterHistory') || '{}');
+            const characterDataString = history[characterName];
+
+            if (characterDataString) {
+                window.currentCharacter = JSON.parse(characterDataString); // Atualiza a variável global
+                console.log("Personagem carregado do histórico:", window.currentCharacter);
+
+                renderCharacterSheet(window.currentCharacter); // <<< CHAMA A RENDERIZAÇÃO
+
+                // Opcional: Atualizar campos do formulário se você os usa para edição
+                document.getElementById('character-name-input').value = window.currentCharacter.name;
+                // ... preencher outros campos ...
+
+                alert(`Personagem ${characterName} carregado com sucesso.`);
+            } else {
+                console.error(`Dados não encontrados para ${characterName} no histórico.`);
+                alert(`Erro: Dados não encontrados para ${characterName}.`);
+            }
+        } catch (error) {
+            console.error('Erro ao carregar personagem:', error);
+            alert('Ocorreu um erro ao carregar o personagem. Por favor, tente novamente.');
+        }
+    }
+
+    // Add this function in your script section
+    function migrateCharacterAttributesToEnglish() {
+      try {
+        // Get character history
+        const savedHistory = localStorage.getItem('characterHistory');
+        if (!savedHistory) return;
+        
+        const characterHistory = JSON.parse(savedHistory);
+        let migrationPerformed = false;
+        
+        // Process each character
+        characterHistory.forEach(character => {
+          if (!character.attributes) return;
+          
+          // Check if using Portuguese attribute names
+          if (character.attributes.FOR || character.attributes.DES || 
+              character.attributes.SAB || character.attributes.CAR) {
+            
+            // Create new attributes object with English names
+            const newAttributes = {};
+            
+            // Map Portuguese to English
+            if (character.attributes.FOR) newAttributes.STR = character.attributes.FOR;
+            if (character.attributes.DES) newAttributes.DEX = character.attributes.DES;
+            if (character.attributes.CON) newAttributes.CON = character.attributes.CON;
+            if (character.attributes.INT) newAttributes.INT = character.attributes.INT;
+            if (character.attributes.SAB) newAttributes.WIS = character.attributes.SAB;
+            if (character.attributes.CAR) newAttributes.CHA = character.attributes.CAR;
+            
+            // Replace old attributes with new ones
+            character.attributes = newAttributes;
+            migrationPerformed = true;
+            console.log(`Migrated character: ${character.name}`);
+          }
+        });
+        
+        // Save updated history if changes were made
+        if (migrationPerformed) {
+          localStorage.setItem('characterHistory', JSON.stringify(characterHistory));
+          console.log("Character migration completed successfully!");
+          
+          // If there's a current character, update it too
+          const currentCharData = localStorage.getItem('currentCharacter');
+          if (currentCharData) {
+            const currentChar = JSON.parse(currentCharData);
+            
+            // Check if using Portuguese attribute names
+            if (currentChar.attributes && (currentChar.attributes.FOR || currentChar.attributes.DES)) {
+              // Create new attributes object with English names
+              const newAttributes = {};
+              
+              if (currentChar.attributes.FOR) newAttributes.STR = currentChar.attributes.FOR;
+              if (currentChar.attributes.DES) newAttributes.DEX = currentChar.attributes.DES;
+              if (currentChar.attributes.CON) newAttributes.CON = currentChar.attributes.CON;
+              if (currentChar.attributes.INT) newAttributes.INT = currentChar.attributes.INT;
+              if (currentChar.attributes.SAB) newAttributes.WIS = currentChar.attributes.SAB;
+              if (currentChar.attributes.CAR) newAttributes.CHA = currentChar.attributes.CAR;
+              
+              // Replace old attributes with new ones
+              currentChar.attributes = newAttributes;
+              
+              // Save updated current character
+              localStorage.setItem('currentCharacter', JSON.stringify(currentChar));
+            }
+          }
+        }
+        
+        return migrationPerformed;
+      } catch (error) {
+        console.error("Error during character migration:", error);
+        return false;
+      }
+    }
+
+    // Add this to your attribute_highlighter.js file
+window.attributeHighlighter = {
+  classAttributes: {
+    'Barbarian': ['STR', 'CON'],
+    'Bard': ['CHA', 'DEX'],
+    'Cleric': ['WIS', 'CHA'],
+    'Druid': ['WIS', 'CON'],
+    'Fighter': ['STR', 'CON'],
+    'Monk': ['DEX', 'WIS'],
+    'Paladin': ['STR', 'CHA'],
+    'Ranger': ['DEX', 'WIS'],
+    'Rogue': ['DEX', 'INT'],
+    'Sorcerer': ['CHA', 'CON'],
+    'Warlock': ['CHA', 'CON'],
+    'Wizard': ['INT', 'WIS']
+  },
+  
+  highlightPrimaryAttributes: function(characterClass) {
+    if (!characterClass) return;
+    
+    const primaryAttrs = this.classAttributes[characterClass] || [];
+    
+    // Clear existing highlights
+    document.querySelectorAll('.attribute-box').forEach(box => {
+      box.classList.remove('primary-attribute');
+    });
+    
+    // Apply highlights to primary attributes
+    primaryAttrs.forEach(attr => {
+      const attrBox = document.querySelector(`.attribute-box[data-attribute="${attr}"]`);
+      if (attrBox) {
+        attrBox.classList.add('primary-attribute');
+      }
+    });
+    
+    // Update attribute tip message
+    this.updateAttributeTips(characterClass, primaryAttrs);
+  },
+  
+  updateAttributeTips: function(className, primaryAttrs) {
+    const tipsElement = document.getElementById('attribute-tips');
+    if (!tipsElement) return;
+    
+    if (primaryAttrs && primaryAttrs.length > 0) {
+      const attrNames = primaryAttrs.map(attr => window.attributeDisplayNames[attr] || attr);
+      tipsElement.textContent = `Main attributes: ${attrNames.join(' and ')}. These attributes are the most important for your class.`;
+    } else {
+      tipsElement.textContent = '';
+    }
+  }
+};
+  </script>
+</body>
+</html>
