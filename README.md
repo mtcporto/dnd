@@ -81,9 +81,11 @@ npm run db:migrate
 
 O importador escreve o snapshot somente após completar a coleta. O formulário recebe somente o recorte de dados necessário; o catálogo completo fica no servidor. Migrações SQL estão em `server/db/migrations/`.
 
-## Publicação posterior
+## Publicação na Vercel
 
-O site de produção ainda usa a versão anterior. A reconstrução é versionada na branch `rebuild/next-rpg-2024`; enviá-la ao GitHub não substitui a versão da `main`. Antes de substituir a produção, preparar um banco separado, configurar as variáveis de Production e validar um preview da reconstrução. O retorno Google de produção já está registrado no cliente DND.
+A `main` já contém a reconstrução em Next.js e a correção que adia a inicialização do banco e da autenticação. Configure `main` como Production Branch na integração Git da Vercel. Novos commits nessa branch devem iniciar um deploy da versão atual; o redeploy de uma execução antiga reutiliza o commit daquela execução.
+
+Confira a branch e o commit na linha de clonagem dos logs antes de avaliar o build. Para habilitar contas e salvamento em produção, prepare um banco separado, execute as migrações e configure as variáveis de Production. O retorno Google de produção já está registrado no cliente DND.
 
 ## Fontes
 
