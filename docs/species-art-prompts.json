@@ -1,0 +1,29 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "transparent_background": false,
+  "outputFormat": "Generated PNG, optimized to WebP quality 85 using sharp, without content edits",
+  "useCase": "stylized-concept",
+  "promptTemplate": "Use case: stylized-concept. Final bitmap asset for a DND web application's species gallery. Create one original high-end dark fantasy RPG illustration, portrait aspect ratio 2:3, 1024x1536. {subject} Show ONE adult adventurer full-body from boots to head, centered, face and species-specific anatomy clearly visible, believable anatomy and hands. Painterly realism, richly textured costume, cinematic chiaroscuro, muted midnight teal shadows, restrained warm highlights. Character occupies 80 percent of height with breathing room above head, dark softly integrated environmental edges. Coherent mature art direction matching an illustrated class roster. These are examples of species, not locked classes. Original fantasy design, no Diablo/Warcraft characters, no logos, text, lettering, UI, borders, collage or extra people.",
+  "subjects": {
+    "dragonborn": "A proud adult dragonborn adventurer with bronze scales, a clearly draconic head and muzzle, small swept horns, no human hair, no tail and no wings, tall strong humanoid body, worn layered leather and bronze shoulder armor, standing in a weathered mountain gateway.",
+    "dwarf": "An adult dwarf woman, visibly short with a broad sturdy powerful build, braided auburn hair, practical heavy mail and leather, a traveling pack and a lowered compact hammer, standing by ancient carved stone halls and warm forge light.",
+    "elf": "An adult elf man with long silver hair, clearly visible pointed ears, slender elegant proportions, moss-green traveling cloak and fitted leather attire, a sheathed blade, standing among ancient forest ruins in silver-green dawn light.",
+    "gnome": "An adult gnome woman with a very small compact body, expressive mature face, prominent pointed ears, curly dark hair, intricate practical teal traveling clothes and an artisan satchel, holding a small brass device, standing near a mossy stone workshop.",
+    "goliath": "An adult goliath woman, exceptionally tall and heavily built with grey stone-like skin, dark geometric markings, shaved head and angular human face, practical fur-trimmed travel clothing and leather, standing in rugged misty mountain ruins.",
+    "halfling": "An adult halfling man, very short with natural compact proportions, rounded ears and curly brown hair, a clearly mature cheerful face, practical russet traveling vest, wool cloak and leather pack, standing on a quiet old cobbled village path. No childlike appearance.",
+    "human": "An adult dark-skinned human woman with natural rounded ears, braided black hair, practical dark traveling coat over worn leather armor, a rolled map and traveling pack, confident grounded stance, standing in a misty ruined stone city gateway.",
+    "orc": "An adult orc man with dark green skin, broad muscular build, small clearly visible lower tusks, long black hair tied back, dignified calm face, practical weathered cloak and leather armor, standing among windswept ancient hillside stones.",
+    "tiefling": "An adult tiefling woman with burgundy skin, elegantly curved horns, visible long slender tail, long dark hair, amber eyes, practical charcoal traveling clothes with restrained copper details, standing among moonlit ruined arches."
+  },
+  "outputs": [
+    "public/images/species/dragonborn.webp",
+    "public/images/species/dwarf.webp",
+    "public/images/species/elf.webp",
+    "public/images/species/gnome.webp",
+    "public/images/species/goliath.webp",
+    "public/images/species/halfling.webp",
+    "public/images/species/human.webp",
+    "public/images/species/orc.webp",
+    "public/images/species/tiefling.webp"
+  ]
+}

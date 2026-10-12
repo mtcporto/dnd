@@ -1,0 +1,36 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "transparency": false,
+  "outputFormat": "Generated PNG, optimized to WebP (quality 85) using sharp, no content changes",
+  "artDirection": "Original full-body dark fantasy RPG concept art, portrait 2:3, centered readable face, cinematic chiaroscuro, muted midnight teal shadows, textured costume, soft integrated surroundings, breathing room above head, no UI/text/logos/collage or existing Diablo/Warcraft characters",
+  "wizard": "A human wizard, adult woman with auburn hair, worn elegant charcoal robes with restrained gold embroidery, holds a carved staff and an open grimoire, blue-violet arcane magic illuminating hands; ruined stone arches, subtle mist, warm candles.",
+  "subjects": {
+    "fighter": "A battle-seasoned human man with short dark hair and a weathered face, dark steel plate and leather armor, a longsword held lowered and a battered round shield, disciplined grounded stance; warm amber rim light in a misty ruined fortress.",
+    "cleric": "A black human woman priest-warrior with braided hair, silver mail armor and ivory hooded tabard, holding a small radiant sun-shaped sacred symbol and a mace lowered; restrained warm divine golden light in a candlelit ancient stone sanctuary.",
+    "rogue": "A lean half-elf woman with olive skin and short raven hair, practical worn charcoal leather armor and a deep hood pushed back, two short daggers lowered, watchful agile stance; cool silver moonlight over misty old city rooftops.",
+    "ranger": "A rugged brown-skinned human man with long dark hair tied back, forest green cloak and leather armor, holding a carved longbow pointed down with a quiver on his back; teal dawn light in a misty ancient forest.",
+    "barbarian": "A formidable broad-shouldered orc woman with small tusks, dark green skin and braided black hair, fur-lined weathered leather armor, holding a large two-handed axe lowered, proud grounded stance; restrained copper torchlight in mountain ruins.",
+    "bard": "A charismatic dark-skinned half-elf man with curly black hair and pointed ears, wine-red practical embroidered traveling coat, holding a beautifully carved lute, rapier sheathed at his hip; amber candlelight outside an ancient stone tavern.",
+    "druid": "An older human woman with silver hair, natural moss-green robes and bark-textured leather, holding a gnarled living wooden staff with a small emerald glow, a raven perched on a branch near her, composed wise stance; misty green light in an ancient grove.",
+    "monk": "A poised East Asian human woman with close-cropped hair, practical deep indigo and ochre martial robes with cloth handwraps, unarmed balanced stance, subtle luminous chi around her hands; soft dawn light in a ruined stone monastery.",
+    "paladin": "A tall dark-skinned human man with a shaved head, dignified dark steel plate with subtle sun engraving and a faded cream cape, a large sword lowered and a broad shield, solemn guardian stance; golden shafts of light in a stone cathedral ruin.",
+    "sorcerer": "A young human man with olive skin and long flowing black hair, layered dark crimson robes, no staff or book, innate ember-red magic swirling lightly around his open hands, intense expression; warm fiery rim light in a misty volcanic stone ruin.",
+    "warlock": "A violet-skinned tiefling woman with gracefully swept horns, black hair and a tailored dark leather coat, holding an eldritch talisman with restrained emerald-green flame around her open hand, mysterious composed stance; green moonlight among ancient ruined arches."
+  },
+  "outputs": [
+    "public/images/classes/wizard.webp",
+    "public/images/classes/fighter.webp",
+    "public/images/classes/cleric.webp",
+    "public/images/classes/rogue.webp",
+    "public/images/classes/ranger.webp",
+    "public/images/classes/barbarian.webp",
+    "public/images/classes/bard.webp",
+    "public/images/classes/druid.webp",
+    "public/images/classes/monk.webp",
+    "public/images/classes/paladin.webp",
+    "public/images/classes/sorcerer.webp",
+    "public/images/classes/warlock.webp"
+  ],
+  "promptTemplate": "Create one original high-end dark fantasy RPG character-selection illustration, portrait aspect ratio 2:3. {subject} Three-quarter full-body from boots to head, centered, face clearly visible, believable anatomy and hands. Illustrated AAA game concept art, painterly realism, highly textured costume, cinematic chiaroscuro, muted midnight teal shadows with class-specific restrained light. Character occupies 80 percent of frame with breathing room above head. Dark softly integrated surroundings at edges suitable for a website character-selection stage. Match a coherent mature fantasy art direction across a character roster. Original Dungeons and Dragons style adventurer, no Diablo or Warcraft specific characters, no logos, no writing, no lettering, no UI, no border, no collage. Final bitmap asset for the DND web application.",
+  "wizardPrompt": "Create one original high-end dark fantasy RPG character-selection illustration, portrait aspect ratio 2:3. A human wizard, adult woman with auburn hair, worn elegant charcoal robes with restrained gold embroidery, holds a carved staff and an open grimoire, blue-violet arcane magic illuminating hands. Three-quarter full-body from boots to head, centered, face clearly visible, calm formidable expression, believable anatomy and hands. Illustrated AAA game concept art, painterly realism, textured costume, cinematic chiaroscuro, muted midnight teal background of ruined stone arches, subtle mist, warm candle highlights. Tall elegant character occupying 80 percent of frame, leave breathing room above head. Dark softly integrated surroundings at edges for use in a website character-selection stage. Original Dungeons and Dragons style adventurer, no Diablo or Warcraft specific characters, no logos, no writing, no lettering, no UI, no border, no collage. This is a final bitmap asset for the DND web application."
+}

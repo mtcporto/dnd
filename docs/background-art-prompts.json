@@ -1,0 +1,19 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "transparent_background": false,
+  "outputFormat": "Generated PNG, optimized to WebP quality 85 using sharp, without content edits",
+  "useCase": "stylized-concept",
+  "promptTemplate": "Use case: stylized-concept. Asset type: background origin illustration for a DND web application compendium, coordinated with existing class and species character portraits. Create ONE original premium dark fantasy RPG illustration in portrait aspect ratio 2:3, 1024x1536. {subject} Show one adult full-body from boots to head, centered, face clearly visible, believable anatomy and hands. Painterly realism, textured period clothing, cinematic chiaroscuro, muted midnight teal shadows and restrained warm highlights, dark softly integrated surroundings at edges. Character occupies about 80 percent of frame height, breathing room above head, boots fully inside frame. The occupation is the focus: these are past backgrounds before adventuring, compatible with any future class. Original medieval fantasy design. No logos, lettering, readable text, UI, borders, collage, watermark, extra people or recognizable franchise characters.",
+  "subjects": {
+    "acolyte": "An adult human woman temple attendant with dark braided hair, modest layered ivory and charcoal ceremonial robes, a plain bronze sacred medallion, holding a small candle lantern and a worn prayer book close to her torso. No armor, weapon, magical effects or established religion symbols. Standing inside a timeworn stone temple with candles, a subtle altar and muted golden light. Show a life of service and ritual, not a combat cleric.",
+    "criminal": "An adult human man with olive skin, short dark hair and an observant mature face, practical weathered charcoal coat and muted burgundy scarf, ordinary leather belt and a small pouch of coins, holding a compact set of lockpicks at waist height. No visible weapon, violence or fantasy magic. Standing in a misty medieval cobbled back alley under restrained amber lantern light. Portray an experienced street survivor, not an assassin.",
+    "sage": "An older adult human woman with brown skin, loosely tied silver hair and a thoughtful mature face, layered deep teal wool scholar robes, leather book satchel and ink-stained fingers, holding a heavy open scholarly volume whose pages contain indistinct marks with no readable text. No glowing magic, staff, pointy hat or weapon. Standing among ancient stone library shelves, scrolls and restrained candlelight. A life devoted to study, not necessarily a wizard.",
+    "soldier": "An adult dark-skinned human man with close-cropped hair and a weathered mature face, practical worn mail and leather military uniform, faded blue-gray cloak, a plain shield held lowered and a sheathed short sword. Relaxed veteran stance. Standing outside a stone barracks and a quiet old military encampment in misty dawn light. No combat, gore, medals with writing or exaggerated heroic plate armor. A past of military service, not necessarily a fighter class."
+  },
+  "outputs": [
+    "public/images/backgrounds/acolyte.webp",
+    "public/images/backgrounds/criminal.webp",
+    "public/images/backgrounds/sage.webp",
+    "public/images/backgrounds/soldier.webp"
+  ]
+}
