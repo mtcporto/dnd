@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getSession } from "@/lib/session";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { characters } from "@/server/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { CharacterRoster } from "@/components/character-roster";
@@ -8,7 +8,7 @@ export const metadata = { title: "Personagens" };
 export default async function Page() {
   const session = await getSession();
   const rows = session
-    ? await db
+    ? await getDb()
         .select({
           id: characters.id,
           name: characters.name,

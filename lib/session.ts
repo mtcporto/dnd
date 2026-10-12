@@ -1,6 +1,8 @@
 import "server-only";
 import { headers } from "next/headers";
-import { auth } from "./auth";
+import { authConfigured, getAuth } from "./auth";
 export async function getSession() {
-  return auth.api.getSession({ headers: await headers() });
+  const requestHeaders = await headers();
+  if (!authConfigured) return null;
+  return getAuth().api.getSession({ headers: requestHeaders });
 }

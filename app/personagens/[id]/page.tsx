@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { characters } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { SavedCharacterDetail } from "@/components/saved-character-detail";
@@ -13,7 +13,7 @@ export default async function Page({
   const { id } = await params,
     session = await getSession();
   if (!session) redirect("/entrar");
-  const [row] = await db
+  const [row] = await getDb()
     .select()
     .from(characters)
     .where(and(eq(characters.id, id), eq(characters.userId, session.user.id)));

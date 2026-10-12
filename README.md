@@ -88,3 +88,16 @@ O site de produção ainda usa a versão anterior. A reconstrução é versionad
 ## Fontes
 
 Dados de https://www.dnd5eapi.co/api/2024, mantidos por 5e-bits, com regras do SRD 5.2.1 de Wizards of the Coast sob CC BY 4.0. O catálogo SRD não representa todos os conteúdos dos livros comerciais. Informações de atribuição em https://www.dndbeyond.com/srd.
+
+## Deploy sem configuração de contas
+
+O banco e a autenticação são inicializados somente quando utilizados. Sem
+`TURSO_DATABASE_URL` ou `BETTER_AUTH_SECRET`, o site oferece as páginas públicas,
+o compêndio e a criação de rascunhos com download em JSON. O login fica em
+preparação e as APIs de contas/personagens respondem 503.
+
+Para habilitar contas no ambiente correspondente da Vercel (Preview ou Production),
+configure `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `BETTER_AUTH_SECRET`,
+`BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`. Use um banco
+dedicado ao ambiente e execute as migrações antes de habilitar o salvamento.
+Variáveis configuradas apenas em Development não são usadas pelos deploys.
