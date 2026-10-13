@@ -1,3 +1,4 @@
+import { RulesText } from "@/components/rules-text";
 import { getI18n } from "@/lib/i18n/server";
 import { localizeRecord } from "@/lib/i18n/shared";
 import Image from "next/image";
@@ -142,9 +143,7 @@ export default async function Page({ params }: Props) {
             </p>
             <article className="class-reference-feature">
               <h3>{l(entry.feat.name)}</h3>
-              <p className="rules-description">
-                {l(entry.feat.desc?.join("\n\n"))}
-              </p>
+              <RulesText text={t(entry.feat.desc?.join("\n\n") || "")} />
             </article>
           </section>
           <Link className="class-confirm" href="/personagens/novo">

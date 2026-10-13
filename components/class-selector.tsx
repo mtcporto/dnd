@@ -1,4 +1,5 @@
 "use client";
+import { RulesText } from "@/components/rules-text";
 import { useI18n } from "@/lib/i18n/client";
 import { localizeRecord } from "@/lib/i18n/shared";
 
@@ -206,7 +207,7 @@ export function ClassSelector({
                   features.map((feature) => (
                     <details key={feature.index}>
                       <summary>{l(feature.name)}</summary>
-                      <p>{l(feature.desc?.join("\n\n"))}</p>
+                      <RulesText text={t(feature.desc?.join("\n\n") || "")} />
                     </details>
                   )),
                 )}

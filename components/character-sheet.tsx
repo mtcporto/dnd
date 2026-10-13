@@ -1,4 +1,5 @@
 "use client";
+import { RulesText } from "@/components/rules-text";
 import { useI18n } from "@/lib/i18n/client";
 import { localizeRecord } from "@/lib/i18n/shared";
 
@@ -129,9 +130,7 @@ export function CharacterSheet({ draft }: { draft: CharacterDraft }) {
       <div className="sheet-section">
         <h3>{t("Talento de origem")}</h3>
         <p>{l(draft.originFeat.name)}</p>
-        <p className="rules-description">
-          {l(draft.originFeat.desc?.join("\n\n"))}
-        </p>
+        <RulesText text={t(draft.originFeat.desc?.join("\n\n") || "")} />
       </div>
       <div className="sheet-section">
         <h3>{t("Para completar a ficha")}</h3>

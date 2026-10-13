@@ -1,3 +1,4 @@
+import { RulesText } from "@/components/rules-text";
 import { getI18n } from "@/lib/i18n/server";
 import { localizeRecord } from "@/lib/i18n/shared";
 import Image from "next/image";
@@ -249,9 +250,7 @@ export async function SavedCharacterDetail({
               {l(backgroundNames[draft.input.backgroundIndex])}
             </p>
             <h3>{l(draft.originFeat.name)}</h3>
-            <p className="rules-description">
-              {l(draft.originFeat.desc?.join("\n\n"))}
-            </p>
+            <RulesText text={t(draft.originFeat.desc?.join("\n\n") || "")} />
           </article>
           <div className="saved-feature-groups">
             <div>
@@ -263,9 +262,7 @@ export async function SavedCharacterDetail({
                 draft.features.map((feature) => (
                   <details key={feature.index}>
                     <summary>{l(feature.name)}</summary>
-                    <p className="rules-description">
-                      {l(feature.desc?.join("\n\n"))}
-                    </p>
+                    <RulesText text={t(feature.desc?.join("\n\n") || "")} />
                   </details>
                 )),
               )}
@@ -279,9 +276,7 @@ export async function SavedCharacterDetail({
                 draft.traits.map((trait) => (
                   <details key={trait.index}>
                     <summary>{l(trait.name)}</summary>
-                    <p className="rules-description">
-                      {l(trait.desc?.join("\n\n"))}
-                    </p>
+                    <RulesText text={t(trait.desc?.join("\n\n") || "")} />
                   </details>
                 )),
               )}

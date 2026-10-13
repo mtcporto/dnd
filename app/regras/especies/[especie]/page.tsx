@@ -1,3 +1,4 @@
+import { RulesText } from "@/components/rules-text";
 import { getI18n } from "@/lib/i18n/server";
 import { localizeRecord } from "@/lib/i18n/shared";
 import Image from "next/image";
@@ -104,9 +105,7 @@ export default async function Page({ params }: Props) {
               entry.traits.map((trait) => (
                 <article className="class-reference-feature" key={trait.index}>
                   <h3>{l(trait.name)}</h3>
-                  <p className="rules-description">
-                    {l(trait.desc?.join("\n\n"))}
-                  </p>
+                  <RulesText text={t(trait.desc?.join("\n\n") || "")} />
                 </article>
               )),
             )}

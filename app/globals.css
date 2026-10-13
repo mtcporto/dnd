@@ -2665,3 +2665,18 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
     margin-left: auto;
   }
 }
+
+/* API descriptions are Markdown, including tables and inline rule labels. */
+.rules-description { white-space: normal; font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.rules-description > :first-child { margin-top: 0; }
+.rules-description > :last-child { margin-bottom: 0; }
+.rules-description p { margin-block: 0 1em; white-space: normal; }
+.rules-description strong { color: var(--ink); font-weight: 600; }
+.rules-description ul, .rules-description ol { padding-left: 1.5em; margin-block: .75em; }
+.rules-description li { margin-block: .3em; }
+.rules-description h1, .rules-description h2, .rules-description h3, .rules-description h4 { font: 600 1.1em/1.5 var(--sans); color: var(--gold); margin-block: 1.2em .5em; }
+.rules-description blockquote { margin-inline: 0; border-left: 2px solid var(--gold); padding-left: 1em; color: var(--muted); }
+.rules-description table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; margin-block: 1em; }
+.rules-description th, .rules-description td { text-align: left; padding: .5em .7em; border: 1px solid var(--line); }
+.rules-description th { color: var(--gold); }
+.rules-description code { font-size: .9em; }
