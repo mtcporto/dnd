@@ -36,9 +36,10 @@ export default async function Page() {
           <p className="login-note">Um lugar para guardar os aventureiros que você criou.</p>
         </div>
         <div className="login-art" aria-hidden="true">
-          <Image src="/images/heroes/adventurers-campfire.webp" alt="" fill sizes="(max-width: 760px) 100vw, 55vw" preload />
-          <p>Histórias que começam ao redor de uma fogueira.</p>
+          <Image className="login-panorama" src="/images/heroes/adventurers-campfire-wide.webp" alt="" fill sizes="100vw" preload />
+          <Image className="login-mobile-scene" src="/images/heroes/adventurers-campfire.webp" alt="" fill sizes="(max-width: 760px) 100vw, 1px" />
         </div>
+        <p className="login-scene-caption">Histórias que começam ao redor de uma fogueira.</p>
       </section>
     </main>
   );
