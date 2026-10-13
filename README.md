@@ -71,6 +71,12 @@ node --env-file=.env.local scripts/verify-flow.cjs
 
 O último comando requer o servidor na porta 3001 e usa o banco Development do DND. Verifica sessão assinada, salvamento/consulta, separação entre contas e rejeição de escrita de outra origem. Ele **não** substitui o teste do fluxo OAuth real do Google.
 
+## Assistência de IA
+
+O endpoint compatível com Chat Completions está configurado por `AI_BASE_URL=https://copilot-mtcporto.vercel.app/v1/` e `AI_MODEL=gpt-4o`, sem chave de API. As variáveis são de servidor e estão cadastradas em Development, Preview e Production na Vercel, além dos arquivos locais privados. Foram verificados `/models` e uma chamada real a `/chat/completions`, ambos com HTTP 200.
+
+Essa configuração prepara as próximas funcionalidades, como ajudar a preencher fichas. A interface ainda não oferece geração por IA.
+
 ## Conteúdo e banco
 
 ```bash
