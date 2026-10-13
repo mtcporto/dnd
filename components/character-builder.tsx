@@ -1,4 +1,7 @@
 "use client";
+import { useI18n } from "@/lib/i18n/client";
+import { localizeRecord } from "@/lib/i18n/shared";
+
 import { useEffect, useRef, useState } from "react";
 import {
   ABILITIES,
@@ -11,10 +14,10 @@ import {
   type Catalogue,
 } from "@/domain/character";
 import {
-  classNames,
-  speciesNames,
-  backgroundNames,
-  abilityNames,
+  classNames as base_classNames,
+  speciesNames as base_speciesNames,
+  backgroundNames as base_backgroundNames,
+  abilityNames as base_abilityNames,
 } from "@/lib/labels";
 import { CharacterSheet } from "./character-sheet";
 import { ProficiencyPicker } from "./proficiency-picker";
@@ -41,7 +44,17 @@ export function CharacterBuilder({
   initialClass?: string;
   initialSpecies?: string;
 }) {
-  const [input, setInput] = useState(() => ({ ...initial, classIndex: initialClass || initial.classIndex, speciesIndex: initialSpecies || initial.speciesIndex })),
+  const { t, l } = useI18n();
+  const classNames = localizeRecord(base_classNames, t);
+  const speciesNames = localizeRecord(base_speciesNames, t);
+  const backgroundNames = localizeRecord(base_backgroundNames, t);
+  const abilityNames = localizeRecord(base_abilityNames, t);
+
+  const [input, setInput] = useState(() => ({
+      ...initial,
+      classIndex: initialClass || initial.classIndex,
+      speciesIndex: initialSpecies || initial.speciesIndex,
+    })),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [ready, setReady] = useState(false),
@@ -59,12 +72,16 @@ export function CharacterBuilder({
         try {
           const parsed = draftInputSchema.safeParse(JSON.parse(saved));
           if (parsed.success && active) {
-            const originChanged = (initialClass && initialClass !== parsed.data.classIndex) || (initialSpecies && initialSpecies !== parsed.data.speciesIndex);
+            const originChanged =
+              (initialClass && initialClass !== parsed.data.classIndex) ||
+              (initialSpecies && initialSpecies !== parsed.data.speciesIndex);
             const restored = {
               ...parsed.data,
               classIndex: initialClass || parsed.data.classIndex,
               speciesIndex: initialSpecies || parsed.data.speciesIndex,
-              proficiencySelections: originChanged ? {} : parsed.data.proficiencySelections,
+              proficiencySelections: originChanged
+                ? {}
+                : parsed.data.proficiencySelections,
             };
             deriveDraft(restored, catalogue);
             setInput(restored);
@@ -96,7 +113,7 @@ export function CharacterBuilder({
   let draft: CharacterDraft | undefined;
   try {
     draft = deriveDraft(
-      { ...input, name: input.name || "Seu aventureiro" },
+      { ...input, name: input.name || t("Seu aventureiro") },
       catalogue,
     );
   } catch {}
@@ -124,7 +141,7 @@ export function CharacterBuilder({
   function exportDraft() {
     const parsed = draftInputSchema.safeParse(input);
     if (!parsed.success || !draft) {
-      setError("Informe o nome e revise os atributos antes de baixar.");
+      setError(t("Informe o nome e revise os atributos antes de baixar."));
       return;
     }
     const blob = new Blob([JSON.stringify(draft, null, 2)], {
@@ -140,7 +157,7 @@ export function CharacterBuilder({
   async function save() {
     const parsed = draftInputSchema.safeParse(input);
     if (!parsed.success || !draft) {
-      setError("Informe o nome e revise os atributos.");
+      setError(t("Informe o nome e revise os atributos."));
       return;
     }
     setBusy(true);
@@ -157,20 +174,20 @@ export function CharacterBuilder({
       location.assign("/personagens/" + result.id);
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : "Não foi possível salvar.",
+        error instanceof Error ? error.message : t("Não foi possível salvar."),
       );
       setBusy(false);
     }
   }
   return (
     <>
-      <div className="creation-steps" aria-label="Etapas de criação">
+      <div className="creation-steps" aria-label={t("Etapas de criação")}>
         <button
           type="button"
           onClick={() => setView("class")}
           aria-current={view === "class" ? "step" : undefined}
         >
-          <span>01</span> Classe
+          <span>01</span> {t(" Classe ")}
         </button>
         <span className="creation-step-line" aria-hidden="true" />
         <button
@@ -178,7 +195,7 @@ export function CharacterBuilder({
           onClick={() => setView("details")}
           aria-current={view === "details" ? "step" : undefined}
         >
-          <span>02</span> Origens e ficha
+          <span>02</span> {t(" Origens e ficha ")}
         </button>
       </div>
       {view === "class" ? (
@@ -201,214 +218,246 @@ export function CharacterBuilder({
               className="back-link"
               onClick={() => setView("class")}
             >
-              ← Voltar às classes
+              {t(" ← Voltar às classes ")}
             </button>
             <h1 ref={detailsHeading} tabIndex={-1}>
-              Dê vida ao seu {classNames[input.classIndex].toLowerCase()}
+              {t("Dê vida ao seu {0}", [
+                classNames[input.classIndex].toLowerCase(),
+              ])}
             </h1>
             <p>
-              A classe é o começo. Agora, escolha as origens e construa sua
-              ficha.
+              {t(
+                " A classe é o começo. Agora, escolha as origens e construa sua ficha. ",
+              )}
             </p>
           </div>
           <div className="builder-layout">
             <div className="builder-form">
               <section className="form-section">
                 <span className="section-marker">01</span>
-                <h2>Quem é seu personagem?</h2>
+                <h2>{t("Quem é seu personagem?")}</h2>
                 <label>
-                  Nome
+                  {t(" Nome ")}
                   <input
                     value={input.name}
                     onChange={(event) => set("name", event.target.value)}
-                    placeholder="Como será conhecido?"
+                    placeholder={t("Como será conhecido?")}
                     maxLength={60}
                   />
                 </label>
                 <div className="form-columns">
                   <label>
-                    Classe
+                    {t(" Classe ")}
                     <select
                       value={input.classIndex}
                       onChange={(event) =>
                         set("classIndex", event.target.value)
                       }
                     >
-                      {catalogue.classes.map((entry) => (
-                        <option key={entry.index} value={entry.index}>
-                          {classNames[entry.index] || entry.name}
-                        </option>
-                      ))}
+                      {l(
+                        catalogue.classes.map((entry) => (
+                          <option key={entry.index} value={entry.index}>
+                            {l(classNames[entry.index] || entry.name)}
+                          </option>
+                        )),
+                      )}
                     </select>
                   </label>
                   <label>
-                    Espécie
+                    {t(" Espécie ")}
                     <select
                       value={input.speciesIndex}
                       onChange={(event) =>
                         set("speciesIndex", event.target.value)
                       }
                     >
-                      {catalogue.species.map((entry) => (
-                        <option key={entry.index} value={entry.index}>
-                          {speciesNames[entry.index] || entry.name}
-                        </option>
-                      ))}
+                      {l(
+                        catalogue.species.map((entry) => (
+                          <option key={entry.index} value={entry.index}>
+                            {l(speciesNames[entry.index] || entry.name)}
+                          </option>
+                        )),
+                      )}
                     </select>
                   </label>
                 </div>
                 <label>
-                  Antecedente
+                  {t(" Antecedente ")}
                   <select
                     value={input.backgroundIndex}
                     onChange={(event) => backgroundChanged(event.target.value)}
                   >
-                    {catalogue.backgrounds.map((entry) => (
-                      <option key={entry.index} value={entry.index}>
-                        {backgroundNames[entry.index] || entry.name}
-                      </option>
-                    ))}
+                    {l(
+                      catalogue.backgrounds.map((entry) => (
+                        <option key={entry.index} value={entry.index}>
+                          {l(backgroundNames[entry.index] || entry.name)}
+                        </option>
+                      )),
+                    )}
                   </select>
                 </label>
               </section>
               <section className="form-section">
                 <span className="section-marker">02</span>
-                <h2>Defina seus atributos</h2>
+                <h2>{t("Defina seus atributos")}</h2>
                 <p>
-                  Distribua a matriz padrão. Ao trocar um valor, o outro
-                  atributo recebe o valor anterior.
+                  {t(
+                    " Distribua a matriz padrão. Ao trocar um valor, o outro atributo recebe o valor anterior. ",
+                  )}
                 </p>
                 <div className="attribute-inputs">
-                  {ABILITIES.map((key) => (
-                    <label key={key}>
-                      {abilityNames[key]}
-                      <select
-                        value={input.attributes[key]}
-                        onChange={(event) =>
-                          scoreChanged(key, Number(event.target.value))
-                        }
-                      >
-                        {STANDARD_ARRAY.map((value) => (
-                          <option key={value} value={value}>
-                            {value}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  ))}
+                  {l(
+                    ABILITIES.map((key) => (
+                      <label key={key}>
+                        {l(abilityNames[key])}
+                        <select
+                          value={input.attributes[key]}
+                          onChange={(event) =>
+                            scoreChanged(key, Number(event.target.value))
+                          }
+                        >
+                          {l(
+                            STANDARD_ARRAY.map((value) => (
+                              <option key={value} value={value}>
+                                {l(value)}
+                              </option>
+                            )),
+                          )}
+                        </select>
+                      </label>
+                    )),
+                  )}
                 </div>
                 <div className="form-columns">
                   <label>
-                    Bônus de +2
+                    {t(" Bônus de +2 ")}
                     <select
                       value={input.bonusTwo}
                       onChange={(event) =>
                         set("bonusTwo", event.target.value as Ability)
                       }
                     >
-                      {background.ability_scores.map((score) => (
-                        <option
-                          key={score.index}
-                          value={score.index.toUpperCase()}
-                        >
-                          {abilityNames[score.index.toUpperCase()]}
-                        </option>
-                      ))}
+                      {l(
+                        background.ability_scores.map((score) => (
+                          <option
+                            key={score.index}
+                            value={score.index.toUpperCase()}
+                          >
+                            {l(abilityNames[score.index.toUpperCase()])}
+                          </option>
+                        )),
+                      )}
                     </select>
                   </label>
                   <label>
-                    Bônus de +1
+                    {t(" Bônus de +1 ")}
                     <select
                       value={input.bonusOne}
                       onChange={(event) =>
                         set("bonusOne", event.target.value as Ability)
                       }
                     >
-                      {background.ability_scores.map((score) => (
-                        <option
-                          key={score.index}
-                          value={score.index.toUpperCase()}
-                        >
-                          {abilityNames[score.index.toUpperCase()]}
-                        </option>
-                      ))}
+                      {l(
+                        background.ability_scores.map((score) => (
+                          <option
+                            key={score.index}
+                            value={score.index.toUpperCase()}
+                          >
+                            {l(abilityNames[score.index.toUpperCase()])}
+                          </option>
+                        )),
+                      )}
                     </select>
                   </label>
                 </div>
-                {!draft ? (
-                  <p className="form-error" role="alert">
-                    Escolha atributos diferentes para os bônus do antecedente.
-                  </p>
-                ) : null}
+                {l(
+                  !draft ? (
+                    <p className="form-error" role="alert">
+                      {t(
+                        " Escolha atributos diferentes para os bônus do antecedente. ",
+                      )}
+                    </p>
+                  ) : null,
+                )}
               </section>
               <section className="form-section">
                 <span className="section-marker">03</span>
-                <h2>O que você sabe fazer?</h2>
+                <h2>{t("O que você sabe fazer?")}</h2>
                 <ProficiencyPicker
                   input={input}
                   catalogue={catalogue}
                   onChange={(choices) => set("proficiencySelections", choices)}
                 />
                 <p className="small-note">
-                  Ao trocar classe, espécie ou antecedente, refaça as escolhas
-                  para a nova origem.
+                  {t(
+                    " Ao trocar classe, espécie ou antecedente, refaça as escolhas para a nova origem. ",
+                  )}
                 </p>
               </section>
               <section className="form-section">
                 <span className="section-marker">04</span>
-                <h2>Um começo de história</h2>
+                <h2>{t("Um começo de história")}</h2>
                 <label>
-                  Notas
+                  {t(" Notas ")}
                   <textarea
                     value={input.notes}
                     onChange={(event) => set("notes", event.target.value)}
-                    placeholder="O que trouxe seu personagem até aqui?"
+                    placeholder={t("O que trouxe seu personagem até aqui?")}
                     maxLength={2000}
                     rows={4}
                   />
                 </label>
                 <div className="form-actions">
-                  {signedIn ? (
-                    <button
-                      className="button primary"
-                      onClick={save}
-                      disabled={busy || !draft}
-                    >
-                      {busy ? "Salvando…" : "Salvar rascunho"}
-                    </button>
-                  ) : (
-                    <a href="/entrar" className="button primary">
-                      Entrar para salvar
-                    </a>
+                  {l(
+                    signedIn ? (
+                      <button
+                        className="button primary"
+                        onClick={save}
+                        disabled={busy || !draft}
+                      >
+                        {l(busy ? t("Salvando…") : t("Salvar rascunho"))}
+                      </button>
+                    ) : (
+                      <a href="/entrar" className="button primary">
+                        {t(" Entrar para salvar ")}
+                      </a>
+                    ),
                   )}
                   <button
                     className="button secondary"
                     onClick={exportDraft}
                     disabled={!draft}
                   >
-                    Baixar rascunho
+                    {t(" Baixar rascunho ")}
                   </button>
                 </div>
-                {!signedIn ? (
-                  <p className="small-note">
-                    O rascunho fica nesta aba enquanto você cria. Entre para
-                    vinculá-lo à sua conta ou baixe uma cópia.
-                  </p>
-                ) : null}
-                {error ? (
-                  <p className="form-error" role="alert">
-                    {error}
-                  </p>
-                ) : null}
+                {l(
+                  !signedIn ? (
+                    <p className="small-note">
+                      {t(
+                        " O rascunho fica nesta aba enquanto você cria. Entre para vinculá-lo à sua conta ou baixe uma cópia. ",
+                      )}
+                    </p>
+                  ) : null,
+                )}
+                {l(
+                  error ? (
+                    <p className="form-error" role="alert">
+                      {l(error)}
+                    </p>
+                  ) : null,
+                )}
               </section>
             </div>
             <div className="sheet-column">
-              {draft ? (
-                <CharacterSheet draft={draft} />
-              ) : (
-                <div className="character-sheet">
-                  <p>Revise os bônus para atualizar a prévia.</p>
-                </div>
+              {l(
+                draft ? (
+                  <CharacterSheet draft={draft} />
+                ) : (
+                  <div className="character-sheet">
+                    <p>{t("Revise os bônus para atualizar a prévia.")}</p>
+                  </div>
+                ),
               )}
             </div>
           </div>

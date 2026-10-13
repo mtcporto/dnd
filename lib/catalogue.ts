@@ -1,9 +1,18 @@
 import "server-only";
+import portuguese from "@/data/catalogue.pt.json";
+import spanish from "@/data/catalogue.es.json";
+import { cache } from "react";
+import { and, eq } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { catalogueSnapshots } from "@/server/db/schema";
+import { getLocale } from "@/lib/i18n/server";
 import data from "@/data/catalogue.json";
 import type { Catalogue } from "@/domain/character";
 export const catalogue = data as unknown as Catalogue;
 
-export function getBuilderCatalogue(): Catalogue {
+export function getBuilderCatalogue(
+  catalogue: Catalogue = data as unknown as Catalogue,
+): Catalogue {
   const reference = (entry: {
     index: string;
     name: string;
@@ -28,6 +37,7 @@ export function getBuilderCatalogue(): Catalogue {
       name: entry.name,
       speed: entry.speed,
       size: entry.size,
+      size_options: entry.size_options,
       traits: entry.traits.map((trait) => ({
         ...reference(trait),
         proficiency_choices: trait.proficiency_choices,
@@ -47,3 +57,30 @@ export function getBuilderCatalogue(): Catalogue {
     })),
   };
 }
+
+export const getLocalizedCatalogue = cache(async (): Promise<Catalogue> => {
+  const locale = await getLocale();
+  if (process.env.TURSO_DATABASE_URL) {
+    try {
+      const [row] = await getDb()
+        .select({ payload: catalogueSnapshots.payload })
+        .from(catalogueSnapshots)
+        .where(
+          and(
+            eq(catalogueSnapshots.edition, "2024"),
+            eq(catalogueSnapshots.locale, locale),
+          ),
+        );
+      if (row) return row.payload;
+    } catch {
+      console.warn(
+        "Catalogue database unavailable; using the packaged localized catalogue.",
+      );
+    }
+  }
+  return (locale === "pt"
+    ? portuguese
+    : locale === "es"
+      ? spanish
+      : data) as unknown as Catalogue;
+});

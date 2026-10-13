@@ -61,6 +61,6 @@ export const skillNames: Record<string, string> = {
 export function proficiencyName(index: string, name: string): string {
   return (
     skillNames[index.replace(/^skill-/, "")] ||
-    name.replace(/^(Skill|Tool): /, "")
+    name.replace(/^(Skill|Tool|Perícia|Ferramenta|Habilidad|Herramienta): /, "")
   );
 }

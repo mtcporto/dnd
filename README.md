@@ -69,13 +69,15 @@ npm run build
 node --env-file=.env.local scripts/verify-flow.cjs
 ```
 
-O último comando requer o servidor na porta 3001 e usa o banco Development do DND. Verifica sessão assinada, salvamento/consulta, separação entre contas e rejeição de escrita de outra origem. Ele **não** substitui o teste do fluxo OAuth real do Google.
+O último comando requer o servidor na porta 3001 e usa o banco compartilhado do DND. Verifica sessão assinada, salvamento/consulta, separação entre contas e rejeição de escrita de outra origem. Ele **não** substitui o teste do fluxo OAuth real do Google.
 
 ## Assistência de IA
 
 O endpoint compatível com Chat Completions está configurado por `AI_BASE_URL=https://copilot-mtcporto.vercel.app/v1/` e `AI_MODEL=gpt-4o`, sem chave de API. As variáveis são de servidor e estão cadastradas em Development, Preview e Production na Vercel, além dos arquivos locais privados. Foram verificados `/models` e uma chamada real a `/chat/completions`, ambos com HTTP 200.
 
-Essa configuração prepara as próximas funcionalidades, como ajudar a preencher fichas. A interface ainda não oferece geração por IA.
+Essa configuração prepara as próximas funcionalidades, como ajudar a preencher fichas. A interface ainda não oferece assistência generativa. A tradução do catálogo usa Ollama Cloud com `OLLAMA_BASE_URL=https://ollama.com/v1/`, `OLLAMA_MODEL=gpt-oss:120b` e `OLLAMA_API_KEY` privados, com autenticação Bearer. A chave foi reutilizada da configuração local do NexusOne, conforme solicitado, e cadastrada nos três ambientes da Vercel. O teste real retornou HTTP 200 com português e espanhol.
+
+O importador prefere Ollama quando sua chave existe; sem ela, usa o endpoint Copilot configurado em `AI_BASE_URL` e `AI_MODEL`. As variáveis Copilot foram preservadas. A chave Ollama nunca é enviada ao navegador.
 
 ## Conteúdo e banco
 
@@ -109,3 +111,19 @@ configure `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `BETTER_AUTH_SECRET`,
 `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`. Use um banco
 exclusivo do DND, compartilhado entre os ambientes, e execute as migrações antes de habilitar o salvamento.
 Variáveis configuradas apenas em Development não são usadas pelos deploys.
+
+## Idiomas
+
+A interface e o catálogo estão disponíveis em inglês, português brasileiro e espanhol. Sem preferência salva, o idioma inicial segue o cabeçalho `Accept-Language` do navegador, incluindo variantes como `pt-BR` e `es-MX`; inglês é o padrão para idiomas não suportados. Uma escolha explícita no seletor tem prioridade sobre o navegador. O seletor no cabeçalho grava a preferência em um cookie de um ano, válido para todas as páginas. A troca mantém os dados do formulário e não chama o modelo. Nomes e histórias escritos pelo jogador permanecem como foram escritos.
+
+O Turso compartilhado contém `catalogue_snapshots`, com uma linha por edição e idioma. `en` preserva o catálogo original da API. `pt` e `es` contêm traduções geradas pelos provedores de IA e revisadas editorialmente; IDs, URLs, números e estruturas das regras permanecem iguais. Cada versão registra o hash da origem, a URL da fonte, o modelo de tradução e a data. As fichas salvas continuam com seus valores originais; traduzir a apresentação não recalcula personagens.
+
+```bash
+npm run db:migrate
+npm run catalogue:translate # traduz o catálogo atual e grava os três idiomas
+npm run catalogue:update   # coleta a API, traduz e publica no banco
+```
+
+Os comandos de tradução precisam das variáveis de IA e do Turso em `.env.local`. O manifesto versionado registra a origem de cada tradução e permite reutilizá-la em um checkout novo. O cache incremental fica em `data/local/`, ignorado pelo Git: rodar novamente reutiliza trechos já traduzidos. Antes da publicação, o importador exige cobertura nos três idiomas e verifica que os valores numéricos foram preservados. A tradução é editorial e deve ser revisada ao atualizar as regras.
+
+Os snapshots em `data/catalogue.pt.json` e `data/catalogue.es.json` permitem servir o idioma escolhido se o banco estiver indisponível ou não configurado. `data/ui-source.json` é extraído da interface e `data/ui-translations.json` contém suas traduções, além dos textos necessários para apresentar fichas anteriores. Não há tradução em tempo real nem envio de personagens ao modelo durante a navegação.

@@ -1,5 +1,26 @@
-import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  text,
+  integer,
+  index,
+  primaryKey,
+} from "drizzle-orm/sqlite-core";
 import type { CharacterDraft } from "../../domain/character.ts";
+import type { Catalogue } from "../../domain/character.ts";
+
+export const catalogueSnapshots = sqliteTable(
+  "catalogue_snapshots",
+  {
+    edition: text("edition").notNull(),
+    locale: text("locale").notNull(),
+    payload: text("payload", { mode: "json" }).$type<Catalogue>().notNull(),
+    sourceHash: text("source_hash").notNull(),
+    sourceUrl: text("source_url").notNull(),
+    translationModel: text("translation_model"),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.edition, table.locale] })],
+);
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),

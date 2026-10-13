@@ -2627,3 +2627,41 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
   .roster-guest-page .login-hero::after { background: linear-gradient(180deg, #0d1012b8 0%, #0d1012c9 35%, #0d10124d 60%, transparent 78%, #0d1012 100%); }
   .roster-guest-page .login-scene-caption { left: 20px; right: 20px; }
 }
+
+/* The language preference applies to public pages and saved character sheets. */
+.locale-switcher select {
+  width: auto;
+  min-width: 100px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.8rem;
+  background: transparent;
+  color: inherit;
+  border: 1px solid #796b5044;
+  border-radius: 3px;
+}
+.locale-switcher option {
+  background: #151818;
+  color: #e9e3d3;
+}
+.locale-switcher [role="alert"] {
+  position: absolute;
+  right: 5vw;
+  font-size: 0.8rem;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .site-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .locale-switcher {
+    margin-left: auto;
+  }
+}

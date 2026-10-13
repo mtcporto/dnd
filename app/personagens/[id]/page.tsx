@@ -1,15 +1,21 @@
+import { getI18n } from "@/lib/i18n/server";
 import { notFound, redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { getDb } from "@/lib/db";
 import { characters } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { SavedCharacterDetail } from "@/components/saved-character-detail";
-export const metadata = { title: "Ficha do personagem" };
+export async function generateMetadata() {
+  const { t } = await getI18n();
+  return { title: t("Ficha do personagem") };
+}
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { t } = await getI18n();
+
   const { id } = await params,
     session = await getSession();
   if (!session) redirect("/entrar");
@@ -22,10 +28,11 @@ export default async function Page({
     <main id="main" className="character-space saved-character-page">
       <div className="character-space-heading">
         <a className="back-link" href="/personagens">
-          ← Meus personagens
+          {t(" ← Meus personagens ")}
         </a>
         <p>
-          Seu grupo de aventureiros <span aria-hidden="true">/</span> Ficha
+          {t(" Seu grupo de aventureiros ")}
+          <span aria-hidden="true">/</span> {t(" Ficha ")}
         </p>
       </div>
       <SavedCharacterDetail name={row.name} draft={row.draft} />

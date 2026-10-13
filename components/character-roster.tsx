@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "@/lib/i18n/client";
+import { localizeRecord } from "@/lib/i18n/shared";
 
 import { useState, type CSSProperties, type KeyboardEvent } from "react";
 import Image from "next/image";
@@ -11,12 +13,12 @@ import {
 } from "motion/react";
 import { ABILITIES, type Scores } from "@/domain/character";
 import {
-  abilityNames,
-  classNames,
-  speciesNames,
-  backgroundNames,
+  abilityNames as base_abilityNames,
+  classNames as base_classNames,
+  speciesNames as base_speciesNames,
+  backgroundNames as base_backgroundNames,
 } from "@/lib/labels";
-import { classPresentation } from "@/lib/class-presentation";
+import { classPresentation as base_classPresentation } from "@/lib/class-presentation";
 
 export interface RosterCharacter {
   id: string;
@@ -36,6 +38,13 @@ export function CharacterRoster({
 }: {
   characters: RosterCharacter[];
 }) {
+  const { t, l } = useI18n();
+  const abilityNames = localizeRecord(base_abilityNames, t);
+  const classNames = localizeRecord(base_classNames, t);
+  const speciesNames = localizeRecord(base_speciesNames, t);
+  const backgroundNames = localizeRecord(base_backgroundNames, t);
+  const classPresentation = localizeRecord(base_classPresentation, t);
+
   const [selectedId, setSelectedId] = useState(characters[0].id);
   const selected =
     characters.find((character) => character.id === selectedId) ||
@@ -62,18 +71,18 @@ export function CharacterRoster({
       <section
         className="roster-stage"
         style={{ "--class-accent": profile.color } as CSSProperties}
-        aria-label="Seus personagens"
+        aria-label={t("Seus personagens")}
       >
         <div className="stage-atmosphere" aria-hidden="true" />
         <aside className="roster-sidebar">
           <div className="roster-sidebar-heading">
-            <p className="stage-kicker">Seus aventureiros</p>
-            <span>{characters.length.toString().padStart(2, "0")}</span>
+            <p className="stage-kicker">{t("Seus aventureiros")}</p>
+            <span>{l(characters.length.toString().padStart(2, "0"))}</span>
           </div>
           <div
             className="roster-characters"
             role="radiogroup"
-            aria-label="Selecione um personagem"
+            aria-label={t("Selecione um personagem")}
           >
             {characters.map((character, position) => (
               <button
@@ -92,7 +101,8 @@ export function CharacterRoster({
                 <span>
                   <strong>{character.name}</strong>
                   <small>
-                    {classNames[character.classIndex]} · Nível {character.level}
+                    {l(classNames[character.classIndex])} {t(" · Nível ")}
+                    {l(character.level)}
                   </small>
                 </span>
                 <span className="roster-selection-dot" aria-hidden="true" />
@@ -100,7 +110,7 @@ export function CharacterRoster({
             ))}
           </div>
           <a className="roster-new-character" href="/personagens/novo">
-            <span aria-hidden="true">＋</span> Criar personagem
+            <span aria-hidden="true">＋</span> {t(" Criar personagem ")}
           </a>
         </aside>
         <div className="class-portrait-stage roster-portrait">
@@ -115,7 +125,9 @@ export function CharacterRoster({
             >
               <Image
                 src={`/images/classes/${profile.image}.webp`}
-                alt={`Arte ilustrativa da classe ${classNames[selected.classIndex]}`}
+                alt={t("Arte ilustrativa da classe {0}", [
+                  classNames[selected.classIndex],
+                ])}
                 fill
                 sizes="(max-width: 700px) 100vw, 45vw"
                 preload={selected.id === characters[0].id}
@@ -124,8 +136,8 @@ export function CharacterRoster({
             </m.div>
           </AnimatePresence>
           <div className="portrait-caption">
-            <span>Arquétipo de classe</span>
-            <strong>{classNames[selected.classIndex]}</strong>
+            <span>{t("Arquétipo de classe")}</span>
+            <strong>{l(classNames[selected.classIndex])}</strong>
             <span className="portrait-rule" />
           </div>
         </div>
@@ -138,45 +150,55 @@ export function CharacterRoster({
               exit={{ opacity: 0 }}
               transition={{ duration: reduced ? 0 : 0.15 }}
             >
-              <p className="stage-kicker">Nível {selected.level} · D&D 2024</p>
+              <p className="stage-kicker">
+                {t("Nível ")}
+                {l(selected.level)} {t(" · D&D 2024")}
+              </p>
               <h1>{selected.name}</h1>
               <p className="roster-character-origin">
-                {speciesNames[selected.speciesIndex]}{" "}
-                <span aria-hidden="true">·</span>{" "}
-                {classNames[selected.classIndex]}
+                {l(speciesNames[selected.speciesIndex])}
+                {l(" ")}
+                <span aria-hidden="true">·</span>
+                {l(" ")}
+                {l(classNames[selected.classIndex])}
               </p>
-              <p className="class-tagline">{profile.title}</p>
+              <p className="class-tagline">{l(profile.title)}</p>
               <span className="character-status">
-                <i aria-hidden="true" /> Rascunho
+                <i aria-hidden="true" /> {t(" Rascunho ")}
               </span>
               <dl className="roster-combat-stats">
                 <div>
-                  <dt>Pontos de vida</dt>
-                  <dd>{selected.hitPoints}</dd>
+                  <dt>{t("Pontos de vida")}</dt>
+                  <dd>{l(selected.hitPoints)}</dd>
                 </div>
                 <div>
-                  <dt>CA sem armadura</dt>
-                  <dd>{selected.unarmoredAC}</dd>
+                  <dt>{t("CA sem armadura")}</dt>
+                  <dd>{l(selected.unarmoredAC)}</dd>
                 </div>
                 <div>
-                  <dt>Iniciativa</dt>
+                  <dt>{t("Iniciativa")}</dt>
                   <dd>
-                    {selected.initiative >= 0 ? "+" : ""}
-                    {selected.initiative}
+                    {l(selected.initiative >= 0 ? "+" : "")}
+                    {l(selected.initiative)}
                   </dd>
                 </div>
               </dl>
-              <div className="roster-abilities" aria-label="Atributos">
-                {ABILITIES.map((ability) => (
-                  <div key={ability}>
-                    <span title={abilityNames[ability]}>{ability}</span>
-                    <strong>{selected.attributes[ability]}</strong>
-                  </div>
-                ))}
+              <div className="roster-abilities" aria-label={t("Atributos")}>
+                {l(
+                  ABILITIES.map((ability) => (
+                    <div key={ability}>
+                      <span title={abilityNames[ability]}>
+                        {abilityNames[ability]}
+                      </span>
+                      <strong>{l(selected.attributes[ability])}</strong>
+                    </div>
+                  )),
+                )}
               </div>
               <p className="roster-background">
-                Antecedente{" "}
-                <strong>{backgroundNames[selected.backgroundIndex]}</strong>
+                {t(" Antecedente")}
+                {l(" ")}
+                <strong>{l(backgroundNames[selected.backgroundIndex])}</strong>
               </p>
             </m.div>
           </AnimatePresence>
@@ -184,18 +206,24 @@ export function CharacterRoster({
             href={`/personagens/${selected.id}`}
             className="class-confirm roster-open-sheet"
           >
-            Abrir ficha <span aria-hidden="true">→</span>
+            {t(" Abrir ficha ")}
+            <span aria-hidden="true">→</span>
           </a>
           <p className="roster-progress-note">
-            {selected.pendingCount}{" "}
-            {selected.pendingCount === 1
-              ? "etapa pendente"
-              : "etapas pendentes"}{" "}
-            antes da aventura. Veja os detalhes na ficha.
+            {l(selected.pendingCount)}
+            {l(" ")}
+            {l(
+              selected.pendingCount === 1
+                ? t("etapa pendente")
+                : t("etapas pendentes"),
+            )}
+            {l(" ")}
+            {t(" antes da aventura. Veja os detalhes na ficha. ")}
           </p>
           <p className="class-art-note">
-            Arte da classe. A aparência personalizada do seu personagem será
-            definida em uma etapa futura.
+            {t(
+              " Arte da classe. A aparência personalizada do seu personagem será definida em uma etapa futura. ",
+            )}
           </p>
         </div>
       </section>

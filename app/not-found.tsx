@@ -1,10 +1,13 @@
-export default function NotFound() {
+import { getI18n } from "@/lib/i18n/server";
+export default async function NotFound() {
+  const { t } = await getI18n();
+
   return (
     <main id="main" className="page empty-state">
-      <h1>Esta página não foi encontrada.</h1>
-      <p>Volte aos personagens para continuar.</p>
+      <h1>{t("Esta página não foi encontrada.")}</h1>
+      <p>{t("Volte aos personagens para continuar.")}</p>
       <a href="/personagens" className="button primary">
-        Meus personagens
+        {t(" Meus personagens ")}
       </a>
     </main>
   );

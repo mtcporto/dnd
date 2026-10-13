@@ -1,126 +1,148 @@
+"use client";
+import { useI18n } from "@/lib/i18n/client";
+import { localizeRecord } from "@/lib/i18n/shared";
+
 import { ABILITIES, type CharacterDraft } from "@/domain/character";
 import {
-  abilityNames,
-  classNames,
-  speciesNames,
-  backgroundNames,
-  skillNames,
+  abilityNames as base_abilityNames,
+  classNames as base_classNames,
+  speciesNames as base_speciesNames,
+  backgroundNames as base_backgroundNames,
+  skillNames as base_skillNames,
 } from "@/lib/labels";
 export function CharacterSheet({ draft }: { draft: CharacterDraft }) {
+  const { t, l } = useI18n();
+  const abilityNames = localizeRecord(base_abilityNames, t);
+  const classNames = localizeRecord(base_classNames, t);
+  const speciesNames = localizeRecord(base_speciesNames, t);
+  const backgroundNames = localizeRecord(base_backgroundNames, t);
+  const skillNames = localizeRecord(base_skillNames, t);
+
   return (
-    <section className="character-sheet" aria-label="Prévia da ficha">
+    <section className="character-sheet" aria-label={t("Prévia da ficha")}>
       <div className="sheet-heading">
-        <p className="eyebrow">Ficha de personagem · Rascunho</p>
-        <h2>{draft.input.name || "Seu aventureiro"}</h2>
+        <p className="eyebrow">{t("Ficha de personagem · Rascunho")}</p>
+        <h2>{draft.input.name || t("Seu aventureiro")}</h2>
         <p>
-          {speciesNames[draft.input.speciesIndex]} ·{" "}
-          {classNames[draft.input.classIndex]} · Nível 1
+          {l(speciesNames[draft.input.speciesIndex])} ·{l(" ")}
+          {l(classNames[draft.input.classIndex])} {t(" · Nível 1 ")}
         </p>
         <span className="sheet-background">
-          {backgroundNames[draft.input.backgroundIndex]}
+          {l(backgroundNames[draft.input.backgroundIndex])}
         </span>
       </div>
       <div className="ability-grid">
-        {ABILITIES.map((key) => (
-          <div key={key}>
-            <span>{abilityNames[key]}</span>
-            <strong>{draft.attributes[key]}</strong>
-            <b>
-              {draft.modifiers[key] >= 0 ? "+" : ""}
-              {draft.modifiers[key]}
-            </b>
-          </div>
-        ))}
+        {l(
+          ABILITIES.map((key) => (
+            <div key={key}>
+              <span>{l(abilityNames[key])}</span>
+              <strong>{l(draft.attributes[key])}</strong>
+              <b>
+                {l(draft.modifiers[key] >= 0 ? "+" : "")}
+                {l(draft.modifiers[key])}
+              </b>
+            </div>
+          )),
+        )}
       </div>
       <dl className="combat-stats">
         <div>
-          <dt>Pontos de vida</dt>
-          <dd>{draft.hitPoints}</dd>
+          <dt>{t("Pontos de vida")}</dt>
+          <dd>{l(draft.hitPoints)}</dd>
         </div>
         <div>
-          <dt>CA sem armadura</dt>
-          <dd>{draft.unarmoredAC}</dd>
+          <dt>{t("CA sem armadura")}</dt>
+          <dd>{l(draft.unarmoredAC)}</dd>
         </div>
         <div>
-          <dt>Iniciativa</dt>
+          <dt>{t("Iniciativa")}</dt>
           <dd>
-            {draft.initiative >= 0 ? "+" : ""}
-            {draft.initiative}
+            {l(draft.initiative >= 0 ? "+" : "")}
+            {l(draft.initiative)}
           </dd>
         </div>
         <div>
-          <dt>Proficiência</dt>
-          <dd>+{draft.proficiencyBonus}</dd>
+          <dt>{t("Proficiência")}</dt>
+          <dd>+{l(draft.proficiencyBonus)}</dd>
         </div>
         <div>
-          <dt>Deslocamento</dt>
-          <dd>{draft.speed} ft.</dd>
+          <dt>{t("Deslocamento")}</dt>
+          <dd>
+            {l(draft.speed)} {t(" pés")}
+          </dd>
         </div>
       </dl>
-      {draft.training ? (
-        <>
-          <div className="sheet-section">
-            <h3>Testes de resistência</h3>
-            <dl className="training-list">
-              {ABILITIES.map((ability) => {
-                const save = draft.training.savingThrows[ability];
-                return (
-                  <div key={ability}>
-                    <dt>
-                      {abilityNames[ability]}
-                      {save.proficient ? " · proficiente" : ""}
-                    </dt>
-                    <dd>
-                      {save.bonus >= 0 ? "+" : ""}
-                      {save.bonus}
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
-          </div>
-          <div className="sheet-section">
-            <h3>Perícias</h3>
-            <p className="small-note">
-              Percepção passiva: {draft.training.passivePerception}. Bônus
-              básicos; especialização e benefícios de escolhas pendentes ainda
-              não estão aplicados.
-            </p>
-            <dl className="training-list">
-              {draft.training.skills.map((skill) => (
-                <div key={skill.index}>
-                  <dt>
-                    {skillNames[skill.index] || skill.name}
-                    {skill.proficient ? " · proficiente" : ""}
-                  </dt>
-                  <dd>
-                    {skill.bonus >= 0 ? "+" : ""}
-                    {skill.bonus}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </>
-      ) : null}
+      {l(
+        draft.training ? (
+          <>
+            <div className="sheet-section">
+              <h3>{t("Testes de resistência")}</h3>
+              <dl className="training-list">
+                {l(
+                  ABILITIES.map((ability) => {
+                    const save = draft.training.savingThrows[ability];
+                    return (
+                      <div key={ability}>
+                        <dt>
+                          {l(abilityNames[ability])}
+                          {l(save.proficient ? t(" · proficiente") : "")}
+                        </dt>
+                        <dd>
+                          {l(save.bonus >= 0 ? "+" : "")}
+                          {l(save.bonus)}
+                        </dd>
+                      </div>
+                    );
+                  }),
+                )}
+              </dl>
+            </div>
+            <div className="sheet-section">
+              <h3>{t("Perícias")}</h3>
+              <p className="small-note">
+                {t(" Percepção passiva: ")}
+                {l(draft.training.passivePerception)}
+                {t(
+                  ". Bônus básicos; especialização e benefícios de escolhas pendentes ainda não estão aplicados. ",
+                )}
+              </p>
+              <dl className="training-list">
+                {l(
+                  draft.training.skills.map((skill) => (
+                    <div key={skill.index}>
+                      <dt>
+                        {l(skillNames[skill.index] || skill.name)}
+                        {l(skill.proficient ? t(" · proficiente") : "")}
+                      </dt>
+                      <dd>
+                        {l(skill.bonus >= 0 ? "+" : "")}
+                        {l(skill.bonus)}
+                      </dd>
+                    </div>
+                  )),
+                )}
+              </dl>
+            </div>
+          </>
+        ) : null,
+      )}
       <div className="sheet-section">
-        <h3>Talento de origem</h3>
-        <p>{draft.originFeat.name}</p>
+        <h3>{t("Talento de origem")}</h3>
+        <p>{l(draft.originFeat.name)}</p>
         <p className="rules-description">
-          {draft.originFeat.desc?.join("\n\n")}
+          {l(draft.originFeat.desc?.join("\n\n"))}
         </p>
       </div>
       <div className="sheet-section">
-        <h3>Para completar a ficha</h3>
+        <h3>{t("Para completar a ficha")}</h3>
         <ul>
-          {draft.pending.map((value) => (
-            <li key={value}>{value}</li>
-          ))}
+          {l(draft.pending.map((value) => <li key={value}>{l(value)}</li>))}
         </ul>
       </div>
       <p className="small-note">
-        Esta ficha ainda é um rascunho: escolhas e equipamento precisam ser
-        finalizados antes de iniciar uma aventura.
+        {t(
+          " Esta ficha ainda é um rascunho: escolhas e equipamento precisam ser finalizados antes de iniciar uma aventura. ",
+        )}
       </p>
     </section>
   );

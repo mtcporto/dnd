@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "@/lib/i18n/client";
+import { localizeRecord } from "@/lib/i18n/shared";
 
 import { useState, type CSSProperties, type KeyboardEvent } from "react";
 import Image from "next/image";
@@ -10,8 +12,14 @@ import {
   useReducedMotion,
 } from "motion/react";
 import type { Catalogue } from "@/domain/character";
-import { abilityNames, classNames } from "@/lib/labels";
-import { classOrder, classPresentation } from "@/lib/class-presentation";
+import {
+  abilityNames as base_abilityNames,
+  classNames as base_classNames,
+} from "@/lib/labels";
+import {
+  classOrder,
+  classPresentation as base_classPresentation,
+} from "@/lib/class-presentation";
 
 export function ClassSelector({
   catalogue,
@@ -24,6 +32,11 @@ export function ClassSelector({
   onSelect: (index: string) => void;
   onConfirm: () => void;
 }) {
+  const { t, l } = useI18n();
+  const abilityNames = localizeRecord(base_abilityNames, t);
+  const classNames = localizeRecord(base_classNames, t);
+  const classPresentation = localizeRecord(base_classPresentation, t);
+
   const reducedMotion = useReducedMotion();
   const [showFeatures, setShowFeatures] = useState(false);
   const entry = catalogue.classes.find((item) => item.index === selected)!;
@@ -59,41 +72,45 @@ export function ClassSelector({
       <section
         className="class-stage"
         style={{ "--class-accent": profile.color } as CSSProperties}
-        aria-label="Escolha sua classe"
+        aria-label={t("Escolha sua classe")}
       >
         <div className="stage-atmosphere" aria-hidden="true" />
         <aside className="class-roster-panel">
-          <p className="stage-kicker">Seu caminho</p>
-          <h2>Escolha uma classe</h2>
+          <p className="stage-kicker">{t("Seu caminho")}</p>
+          <h2>{t("Escolha uma classe")}</h2>
           <div
             className="class-roster"
             role="radiogroup"
-            aria-label="Classes de D&D"
+            aria-label={t("Classes de D&D")}
           >
-            {available.map((index) => (
-              <button
-                key={index}
-                type="button"
-                role="radio"
-                aria-checked={selected === index}
-                tabIndex={selected === index ? 0 : -1}
-                onKeyDown={navigate}
-                onClick={() => onSelect(index)}
-                className={selected === index ? "is-selected" : ""}
-              >
-                <svg viewBox="0 0 28 28" aria-hidden="true">
-                  <path d={classPresentation[index].icon} />
-                </svg>
-                <span>{classNames[index]}</span>
-                {selected === index ? (
-                  <span className="selection-mark" aria-hidden="true">
-                    ◆
-                  </span>
-                ) : null}
-              </button>
-            ))}
+            {l(
+              available.map((index) => (
+                <button
+                  key={index}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected === index}
+                  tabIndex={selected === index ? 0 : -1}
+                  onKeyDown={navigate}
+                  onClick={() => onSelect(index)}
+                  className={selected === index ? "is-selected" : ""}
+                >
+                  <svg viewBox="0 0 28 28" aria-hidden="true">
+                    <path d={classPresentation[index].icon} />
+                  </svg>
+                  <span>{l(classNames[index])}</span>
+                  {l(
+                    selected === index ? (
+                      <span className="selection-mark" aria-hidden="true">
+                        ◆
+                      </span>
+                    ) : null,
+                  )}
+                </button>
+              )),
+            )}
           </div>
-          <p className="roster-note">12 caminhos. Uma história sua.</p>
+          <p className="roster-note">{t("12 caminhos. Uma história sua.")}</p>
         </aside>
         <div className="class-portrait-stage">
           <AnimatePresence initial={false} mode="sync">
@@ -107,7 +124,9 @@ export function ClassSelector({
             >
               <Image
                 src={`/images/classes/${profile.image}.webp`}
-                alt={`Ilustração de um aventureiro da classe ${classNames[selected]}`}
+                alt={t("Ilustração de um aventureiro da classe {0}", [
+                  classNames[selected],
+                ])}
                 fill
                 sizes="(max-width: 700px) 100vw, (max-width: 1050px) 55vw, 50vw"
                 preload={selected === "fighter"}
@@ -116,8 +135,8 @@ export function ClassSelector({
             </m.div>
           </AnimatePresence>
           <div className="portrait-caption">
-            <span>Arquétipo de classe</span>
-            <strong>{classNames[selected]}</strong>
+            <span>{t("Arquétipo de classe")}</span>
+            <strong>{l(classNames[selected])}</strong>
             <span className="portrait-rule" />
           </div>
         </div>
@@ -130,38 +149,43 @@ export function ClassSelector({
               exit={{ opacity: 0 }}
               transition={{ duration: reducedMotion ? 0 : 0.18 }}
             >
-              <p className="stage-kicker">D&D · Regras de 2024</p>
-              <h1>{classNames[selected]}</h1>
-              <p className="class-tagline">{profile.title}</p>
-              <p className="class-description">{profile.description}</p>
+              <p className="stage-kicker">{t("D&D · Regras de 2024")}</p>
+              <h1>{l(classNames[selected])}</h1>
+              <p className="class-tagline">{l(profile.title)}</p>
+              <p className="class-description">{l(profile.description)}</p>
               <dl className="class-facts">
                 <div>
-                  <dt>Dado de vida</dt>
-                  <dd>d{entry.hit_die}</dd>
+                  <dt>{t("Dado de vida")}</dt>
+                  <dd>
+                    {t("d")}
+                    {l(entry.hit_die)}
+                  </dd>
                 </div>
                 <div>
-                  <dt>Atributo principal</dt>
+                  <dt>{t("Atributo principal")}</dt>
                   <dd>
-                    {primaryAbilities
-                      .map(
-                        (score) =>
-                          abilityNames[score.index.toUpperCase()] || score.name,
-                      )
-                      .join(primaryChoice ? " ou " : " e ") ||
-                      "Consulte a classe"}
+                    {l(
+                      primaryAbilities
+                        .map(
+                          (score) =>
+                            abilityNames[score.index.toUpperCase()] ||
+                            score.name,
+                        )
+                        .join(primaryChoice ? t(" ou ") : t(" e ")) ||
+                        t("Consulte a classe"),
+                    )}
                   </dd>
                 </div>
               </dl>
-              <p className="class-approach">{profile.approach}</p>
+              <p className="class-approach">{l(profile.approach)}</p>
               <div className="class-features-preview">
-                {profile.tags.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
+                {l(profile.tags.map((tag) => <span key={tag}>{l(tag)}</span>))}
               </div>
             </m.div>
           </AnimatePresence>
           <button type="button" className="class-confirm" onClick={onConfirm}>
-            Escolher {classNames[selected]} <span aria-hidden="true">→</span>
+            {t(" Escolher ")}
+            {l(classNames[selected])} <span aria-hidden="true">→</span>
           </button>
           <button
             type="button"
@@ -170,22 +194,29 @@ export function ClassSelector({
             aria-controls="class-level-features"
             onClick={() => setShowFeatures(!showFeatures)}
           >
-            {showFeatures ? "Ocultar" : "Ver"} características do nível 1{" "}
-            <span aria-hidden="true">{showFeatures ? "−" : "+"}</span>
+            {l(showFeatures ? t("Ocultar") : t("Ver"))}{" "}
+            {t(" características do nível 1")}
+            {l(" ")}
+            <span aria-hidden="true">{l(showFeatures ? "−" : "+")}</span>
           </button>
-          {showFeatures ? (
-            <div className="class-level-features" id="class-level-features">
-              {features.map((feature) => (
-                <details key={feature.index}>
-                  <summary>{feature.name}</summary>
-                  <p>{feature.desc?.join("\n\n")}</p>
-                </details>
-              ))}
-            </div>
-          ) : null}
+          {l(
+            showFeatures ? (
+              <div className="class-level-features" id="class-level-features">
+                {l(
+                  features.map((feature) => (
+                    <details key={feature.index}>
+                      <summary>{l(feature.name)}</summary>
+                      <p>{l(feature.desc?.join("\n\n"))}</p>
+                    </details>
+                  )),
+                )}
+              </div>
+            ) : null,
+          )}
           <p className="class-art-note">
-            A ilustração apresenta a classe. Você define a espécie e a
-            identidade do personagem na próxima etapa.
+            {t(
+              " A ilustração apresenta a classe. Você define a espécie e a identidade do personagem na próxima etapa. ",
+            )}
           </p>
         </div>
       </section>
