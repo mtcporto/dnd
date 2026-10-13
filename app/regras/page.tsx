@@ -9,15 +9,20 @@ export const metadata = { title: "Compêndio" };
 export default function Page() {
   return (
     <main id="main" className="character-space compendium-page">
-      <div className="compendium-heading">
+      <header className="compendium-hero">
+        <div className="compendium-hero-art" aria-hidden="true">
+          <Image src="/images/heroes/arcane-library-wide.webp" alt="" fill sizes="100vw" preload />
+        </div>
+        <div className="compendium-heading">
         <p className="stage-kicker">Compêndio · Regras de 2024</p>
         <h1>Conheça suas possibilidades</h1>
         <p>
           Uma referência das origens e características disponíveis para montar o
           rascunho. Descrições da fonte são apresentadas no idioma original.
         </p>
-      </div>
-      <nav className="compendium-nav">
+        </div>
+      </header>
+      <nav className="compendium-nav" aria-label="Categorias do compêndio">
         <a href="#classes">Classes</a>
         <a href="#species">Espécies</a>
         <a href="#backgrounds">Antecedentes</a>

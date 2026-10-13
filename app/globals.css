@@ -2507,9 +2507,15 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 }
 
 /* Compendium: illustrated class catalogue and source-backed references. */
-.compendium-heading { padding: 58px 0 34px; max-width: 750px; }
+.compendium-hero { position: relative; isolation: isolate; display: flex; align-items: center; min-height: 420px; margin-inline: -5vw; padding: 55px 5vw 65px; overflow: hidden; }
+.compendium-hero-art { position: absolute; inset: 0; z-index: -2; }
+.compendium-hero-art img { object-fit: cover; object-position: right center; }
+.compendium-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #0d1012bd, #0d101280 30%, #0d101226 55%, transparent 75%), linear-gradient(0deg, #0d1012, transparent 25%, transparent 85%, #0d101280); pointer-events: none; }
+.compendium-page { padding-inline: 5vw; }
+.compendium-heading { position: relative; padding: 0; max-width: 570px; }
 .compendium-heading h1 { font: clamp(36px, 4vw, 60px)/1.1 var(--serif); margin: 16px 0; }
 .compendium-heading > p:last-child, .compendium-intro { color: var(--muted); line-height: 1.7; max-width: 75ch; }
+.compendium-heading > p:last-child { color: #bdc3c2; max-width: 480px; }
 .compendium-section > h2 { font: 34px var(--serif); }
 .compendium-class-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 30px; }
 .compendium-class-card { position: relative; display: block; color: var(--ink); text-decoration: none; background: #161a1c; border: 1px solid var(--line); overflow: hidden; transition: border-color .2s, transform .2s; }
@@ -2540,7 +2546,15 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 .class-reference-feature p { font-size: 13px; line-height: 1.8; }
 @media (max-width: 1000px) { .compendium-class-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } .class-reference-layout { gap: 30px; } }
 @media (max-width: 760px) { .class-reference-layout { grid-template-columns: 1fr; gap: 0; } .class-reference-art { position: relative; top: auto; height: min(110vw, 580px); min-height: 0; } .class-reference-content { padding-top: 0; } }
-@media (max-width: 600px) { .compendium-class-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .compendium-class-copy { padding: 0 12px 16px; } .compendium-class-copy h3 { font-size: 24px; } .compendium-class-copy .stage-kicker { font-size: 8px; } .compendium-heading { padding-top: 35px; } }
+@media (max-width: 600px) { .compendium-class-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .compendium-class-copy { padding: 0 12px 16px; } .compendium-class-copy h3 { font-size: 24px; } .compendium-class-copy .stage-kicker { font-size: 8px; } }
+@media (max-width: 760px) {
+  .compendium-page { padding-inline: 20px; }
+  .compendium-hero { min-height: 470px; margin-inline: -20px; padding: 38px 20px 190px; align-items: start; }
+  .compendium-hero-art img { object-position: 72% center; }
+  .compendium-hero::after { background: linear-gradient(180deg, #0d1012c9, #0d101299 48%, #0d101233 75%, #0d1012); }
+  .compendium-heading h1 { font-size: clamp(35px, 6vw, 45px); }
+  .compendium-heading > p:last-child { font-size: 13px; }
+}
 @media (prefers-reduced-motion: reduce) { .compendium-class-card { transition: none; } .compendium-class-card:hover { transform: none; } }
 
 /* Sign-in belongs to the same illustrated world as character creation. */
