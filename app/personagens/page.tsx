@@ -4,7 +4,7 @@ import { getDb } from "@/lib/db";
 import { characters } from "@/server/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { CharacterRoster } from "@/components/character-roster";
-import { CampfireBackdrop } from "@/components/campfire-backdrop";
+import { IllustratedBackdrop } from "@/components/illustrated-backdrop";
 export const metadata = { title: "Personagens" };
 export default async function Page() {
   const session = await getSession();
@@ -23,7 +23,7 @@ export default async function Page() {
             </div>
             <p className="login-note">Cada aventureiro começa com uma escolha.</p>
           </div>
-          <CampfireBackdrop />
+          <IllustratedBackdrop image="/images/heroes/adventurers-tavern-wide.webp" mobileImage="/images/heroes/adventurers-tavern-wide.webp" caption="Cada jornada começa com uma escolha." />
         </section>
       </main>
     );

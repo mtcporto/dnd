@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { googleEnabled } from "@/lib/auth";
 import { getSession } from "@/lib/session";
 import { GoogleSignIn } from "@/components/google-sign-in";
-import { CampfireBackdrop } from "@/components/campfire-backdrop";
+import { IllustratedBackdrop } from "@/components/illustrated-backdrop";
 import Link from "next/link";
 export const metadata = { title: "Entrar" };
 export default async function Page() {
@@ -35,7 +35,7 @@ export default async function Page() {
           </div>
           <p className="login-note">Um lugar para guardar os aventureiros que você criou.</p>
         </div>
-        <CampfireBackdrop />
+        <IllustratedBackdrop image="/images/heroes/adventurers-campfire-wide.webp" mobileImage="/images/heroes/adventurers-campfire.webp" caption="Histórias que começam ao redor de uma fogueira." />
       </section>
     </main>
   );
