@@ -16,7 +16,7 @@ A versão antiga está preservada em `legacy/` e no histórico da `main`. A reco
 - Página inicial no mesmo tema escuro e ilustrado, com acessos à criação, personagens salvos e compêndio; composição responsiva usando as artes existentes.
 - O carrossel da página inicial percorre as 12 classes, mantendo três cartas visíveis. A cada cinco segundos, uma lateral vem ao centro e a carta que passa por trás apresenta a próxima classe, com rotação e profundidade via Motion/CSS. É possível avançar ou voltar clicando nas laterais e pausar a rotação. A animação pausa com mouse/foco nas cartas, fora da área visível e em abas ocultas; movimento reduzido desativa a rotação automática.
 - Compêndio ilustrado com galerias e páginas de detalhes para 12 classes, 9 espécies e 4 antecedentes. As características, os traços e os talentos de origem vêm do catálogo; as imagens representam exemplos visuais. Classes e espécies podem ser pré-selecionadas ao iniciar um personagem, preservando os demais dados do rascunho.
-- Sessões, validação no servidor e leitura de personagens limitada ao proprietário. Banco `dnd-development` exclusivo para esta aplicação.
+- Sessões, validação no servidor e leitura de personagens limitada ao proprietário. Um único banco Turso `dnd-development`, exclusivo do DND, compartilhado entre desenvolvimento e produção.
 
 As fichas são **rascunhos**: idiomas, equipamento, escolhas adicionais de talentos/classes/espécies (incluindo especialização em perícias) e magias ainda precisam ser finalizados. O novo sistema de combate ainda não foi implementado. O registro do escopo e da arquitetura está em [docs/rebuild-plan.md](docs/rebuild-plan.md).
 
@@ -34,7 +34,7 @@ npm run dev
 
 Abra http://localhost:3001. Essa porta mantém o WoW livre na 3000.
 
-As quatro variáveis obrigatórias são `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `BETTER_AUTH_SECRET` e `BETTER_AUTH_URL`. Foram configuradas no ambiente **Development** da Vercel e no `.env.local`, ignorado pelo Git. Não sobrescreva o arquivo local se tiver adicionado novas credenciais ainda não salvas na Vercel.
+As quatro variáveis obrigatórias são `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `BETTER_AUTH_SECRET` e `BETTER_AUTH_URL`. Estão configuradas nos ambientes **Development** e **Production** da Vercel. Ambos usam o mesmo banco; a URL de autenticação e a chave de sessão são específicas de cada ambiente. `.env.local` e `.env.production.local` são privados e ignorados pelo Git. Não sobrescreva arquivos locais com credenciais ainda não salvas na Vercel.
 
 Não execute migrações usando credenciais de outro aplicativo. O arquivo `.env.example` contém apenas os nomes necessários.
 
@@ -46,12 +46,12 @@ O compêndio também usa nove ilustrações de espécies em `public/images/speci
 
 ## Configuração do Google
 
-O cliente OAuth Web **DND** foi criado no projeto `umbrella-mtcporto`. As credenciais estão no `.env.local` e no ambiente Development da Vercel. O login real foi validado no navegador integrado do VS Code, incluindo o retorno ao aplicativo e a sessão autenticada. A configuração de Production continua pendente.
+O cliente OAuth Web **DND** foi criado no projeto `umbrella-mtcporto` e configurado em Development e Production. O login real local foi validado no navegador integrado do VS Code. Em produção, foram verificados o redirecionamento ao Google e o salvamento/leitura com sessões assinadas.
 
 1. No projeto existente `umbrella-mtcporto` (nome `umbrella`), crie um cliente do tipo **Aplicativo Web**, chamado **DND**, em https://console.cloud.google.com/auth/clients?project=umbrella-mtcporto. Configure a identidade e o público do aplicativo no Google Auth Platform.
 2. Registre os redirect URIs:
    - `http://localhost:3001/api/auth/callback/google`
-   - `https://dnd-coral.vercel.app/api/auth/callback/google` para o futuro deploy de produção.
+   - `https://dnd-coral.vercel.app/api/auth/callback/google` para produção.
 3. Adicione `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` ao `.env.local`, sem publicar seus valores. Em modo de teste no Google, inclua os usuários que testarão o login.
 4. Reinicie o servidor local. Depois de validar o login real, configure esses valores também nos ambientes correspondentes da Vercel.
 
@@ -85,7 +85,7 @@ O importador escreve o snapshot somente após completar a coleta. O formulário 
 
 A `main` já contém a reconstrução em Next.js e a correção que adia a inicialização do banco e da autenticação. Configure `main` como Production Branch na integração Git da Vercel. Novos commits nessa branch devem iniciar um deploy da versão atual; o redeploy de uma execução antiga reutiliza o commit daquela execução.
 
-Confira a branch e o commit na linha de clonagem dos logs antes de avaliar o build. Para habilitar contas e salvamento em produção, prepare um banco separado, execute as migrações e configure as variáveis de Production. O retorno Google de produção já está registrado no cliente DND.
+Confira a branch e o commit na linha de clonagem dos logs antes de avaliar o build. Contas e salvamento estão configurados em Production. Por escolha do projeto, desenvolvimento e produção compartilham o banco original `dnd-development`, preservando os personagens existentes. Não crie outro banco por ambiente. O retorno Google de produção já está registrado no cliente DND.
 
 ## Fontes
 
@@ -101,5 +101,5 @@ preparação e as APIs de contas/personagens respondem 503.
 Para habilitar contas no ambiente correspondente da Vercel (Preview ou Production),
 configure `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `BETTER_AUTH_SECRET`,
 `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`. Use um banco
-dedicado ao ambiente e execute as migrações antes de habilitar o salvamento.
+exclusivo do DND, compartilhado entre os ambientes, e execute as migrações antes de habilitar o salvamento.
 Variáveis configuradas apenas em Development não são usadas pelos deploys.

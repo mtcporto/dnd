@@ -57,7 +57,7 @@ A revisão de 2024 agrega Weapon Mastery, alterações de classes/magias e antec
 | Código e entrega | GitHub + Vercel | Branch de reconstrução, revisão, testes de regras e previews antes de substituir o site atual. |
 | Aplicação | Next.js + TypeScript | Interface, rotas, API própria e validação de comandos do jogador. |
 | Contas | Better Auth com Google OAuth | Login, sessões e identificação do proprietário dos personagens. |
-| Banco | Turso/libSQL + Drizzle | Contas, personagens, inventário, aventuras, encontros e histórico. Migrações versionadas; banco local separado para desenvolvimento. |
+| Banco | Turso/libSQL + Drizzle | Contas, personagens, inventário, aventuras, encontros e histórico. Migrações versionadas; um único banco exclusivo do DND, compartilhado por desenvolvimento e produção, conforme escolha do usuário. |
 | Conteúdo | Importador da D&D 5e SRD API | Catálogo normalizado/versionado de classes, espécies, habilidades, magias, itens e monstros. Fonte e versão registradas por entrada. |
 | Regras | Módulo TypeScript independente da interface | Atributos, dados, ações, recursos, condições, dano, cura, descanso e evolução. Testes com rolagens controladas. |
 | Arquivos, quando houver uploads | Cloudflare R2 | Retratos, mapas e anexos. Metadados/permissões no Turso; binários no R2. |
