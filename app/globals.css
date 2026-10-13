@@ -2440,24 +2440,25 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 }
 .home-carousel-card {
   position: absolute;
-  left: 17.5%;
-  bottom: 7%;
-  width: 65%;
-  height: 92%;
+  left: 50%;
+  translate: -50% 0;
+  bottom: 16%;
+  width: auto;
+  height: 82%;
+  aspect-ratio: 2 / 3;
   padding: 0;
-  border: 0;
-  background: transparent;
+  border: 1px solid #b49b68;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #151818;
+  box-shadow: 0 12px 28px #0006;
   cursor: pointer;
   transform-style: preserve-3d;
   -webkit-tap-highlight-color: transparent;
 }
 .home-carousel-card img {
-  object-fit: contain;
-  object-position: center bottom;
-  mask-image:
-    linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent),
-    linear-gradient(180deg, transparent, #000 7%, #000 77%, transparent);
-  mask-composite: intersect;
+  object-fit: cover;
+  object-position: center;
   user-select: none;
 }
 .home-carousel-image {
@@ -2467,8 +2468,7 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 }
 .home-carousel-card:focus-visible {
   outline: 1px solid #c9b281;
-  outline-offset: 0;
-  border-radius: 8px;
+  outline-offset: 3px;
 }
 .home-carousel-caption {
   pointer-events: none;
@@ -2495,8 +2495,8 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 }
 @media (max-width: 700px) {
   .home-carousel-card {
-    bottom: 11%;
-    height: 89%;
+    bottom: 22%;
+    height: 76%;
   }
   .home-carousel-card img {
     object-position: center top;

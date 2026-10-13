@@ -138,7 +138,7 @@ export function HomeCharacterCarousel() {
                           : 0.78,
                     rotateY: centered ? 0 : slot === 1 ? 18 : -18,
                     rotateZ: centered ? 0 : slot === 1 ? -3 : 3,
-                    opacity: centered ? 1 : 0.62,
+                    opacity: 1,
                   }}
                   style={{ zIndex: centered ? 3 : 1 }}
                   transition={{
