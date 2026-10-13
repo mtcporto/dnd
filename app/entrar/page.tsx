@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { googleEnabled } from "@/lib/auth";
 import { getSession } from "@/lib/session";
 import { GoogleSignIn } from "@/components/google-sign-in";
-import Image from "next/image";
+import { CampfireBackdrop } from "@/components/campfire-backdrop";
 import Link from "next/link";
 export const metadata = { title: "Entrar" };
 export default async function Page() {
@@ -35,11 +35,7 @@ export default async function Page() {
           </div>
           <p className="login-note">Um lugar para guardar os aventureiros que você criou.</p>
         </div>
-        <div className="login-art" aria-hidden="true">
-          <Image className="login-panorama" src="/images/heroes/adventurers-campfire-wide.webp" alt="" fill sizes="100vw" preload />
-          <Image className="login-mobile-scene" src="/images/heroes/adventurers-campfire.webp" alt="" fill sizes="(max-width: 760px) 100vw, 1px" />
-        </div>
-        <p className="login-scene-caption">Histórias que começam ao redor de uma fogueira.</p>
+        <CampfireBackdrop />
       </section>
     </main>
   );

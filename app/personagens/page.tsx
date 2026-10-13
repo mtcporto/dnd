@@ -4,11 +4,31 @@ import { getDb } from "@/lib/db";
 import { characters } from "@/server/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { CharacterRoster } from "@/components/character-roster";
+import { CampfireBackdrop } from "@/components/campfire-backdrop";
 export const metadata = { title: "Personagens" };
 export default async function Page() {
   const session = await getSession();
-  const rows = session
-    ? await getDb()
+  if (!session) {
+    return (
+      <main id="main" className="character-space login-page roster-guest-page">
+        <section className="login-hero" aria-labelledby="roster-guest-title">
+          <div className="login-copy">
+            <a className="back-link" href="/">← D&D Aventuras</a>
+            <p className="stage-kicker">Seu grupo de aventureiros</p>
+            <h1 id="roster-guest-title">Um lugar para<br />suas <em>histórias.</em></h1>
+            <p className="login-description">Escolha uma classe e dê vida ao seu personagem. Entre com sua conta Google para salvar suas fichas e reencontrá-las aqui.</p>
+            <div className="login-actions">
+              <a href="/personagens/novo" className="class-confirm">Criar personagem <span aria-hidden="true">→</span></a>
+              <a href="/entrar" className="adventure-home-secondary">Entrar com Google <span aria-hidden="true">↗</span></a>
+            </div>
+            <p className="login-note">Cada aventureiro começa com uma escolha.</p>
+          </div>
+          <CampfireBackdrop />
+        </section>
+      </main>
+    );
+  }
+  const rows = await getDb()
         .select({
           id: characters.id,
           name: characters.name,
@@ -16,8 +36,7 @@ export default async function Page() {
         })
         .from(characters)
         .where(eq(characters.userId, session.user.id))
-        .orderBy(desc(characters.updatedAt))
-    : [];
+        .orderBy(desc(characters.updatedAt));
   return (
     <main id="main" className="character-space roster-page">
       <div className="character-space-heading">
@@ -58,24 +77,11 @@ export default async function Page() {
           </div>
           <div className="roster-empty-copy">
             <p className="stage-kicker">O primeiro capítulo</p>
-            <h1>
-              {session
-                ? "Sua história ainda vai começar."
-                : "Um lugar para suas histórias."}
-            </h1>
-            <p>
-              {session
-                ? "Cada aventureiro começa com uma escolha. Crie seu personagem, salve a ficha e encontre seu próximo caminho aqui."
-                : "Escolha uma classe e dê vida ao seu personagem. Entre com sua conta Google para salvar suas fichas e reencontrá-las aqui."}
-            </p>
+            <h1>Sua história ainda vai começar.</h1>
+            <p>Cada aventureiro começa com uma escolha. Crie seu personagem, salve a ficha e encontre seu próximo caminho aqui.</p>
             <a href="/personagens/novo" className="class-confirm">
               Criar personagem <span aria-hidden="true">→</span>
             </a>
-            {!session ? (
-              <a href="/entrar" className="roster-sign-in">
-                Entrar com Google →
-              </a>
-            ) : null}
           </div>
         </section>
       )}
