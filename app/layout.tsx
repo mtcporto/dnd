@@ -40,6 +40,7 @@ export default async function Layout({
             <nav aria-label={t("Principal")}>
               <a href="/personagens">{t("Personagens")}</a>
               <a href="/regras">{t("Compêndio")}</a>
+              <a href="/bestiario">{t("Bestiário")}</a>
             </nav>
             <LocaleSwitcher />
             <AccountMenu

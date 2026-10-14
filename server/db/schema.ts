@@ -4,9 +4,26 @@ import {
   integer,
   index,
   primaryKey,
+  real,
 } from "drizzle-orm/sqlite-core";
 import type { CharacterDraft } from "../../domain/character.ts";
 import type { Catalogue } from "../../domain/character.ts";
+
+import type { Monster } from "../../domain/monster.ts";
+
+export const bestiaryEntries = sqliteTable("bestiary_entries", {
+  edition: text("edition").notNull(),
+  locale: text("locale").notNull(),
+  monsterIndex: text("monster_index").notNull(),
+  name: text("name").notNull(),
+  canonicalName: text("canonical_name").notNull(),
+  creatureType: text("creature_type").notNull(),
+  creatureSize: text("creature_size").notNull(),
+  challengeRating: real("challenge_rating").notNull(),
+  payload: text("payload", {mode: "json"}).$type<Monster>().notNull(),
+  sourceHash: text("source_hash").notNull(),
+  updatedAt: integer("updated_at", {mode:"timestamp_ms"}).notNull(),
+}, table => [primaryKey({columns:[table.edition,table.locale,table.monsterIndex]})]);
 
 export const catalogueSnapshots = sqliteTable(
   "catalogue_snapshots",

@@ -2680,3 +2680,44 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 .rules-description th, .rules-description td { text-align: left; padding: .5em .7em; border: 1px solid var(--line); }
 .rules-description th { color: var(--gold); }
 .rules-description code { font-size: .9em; }
+
+/* Bestiary uses the compendium's card and reference layout. */
+.bestiary-heading { padding-block: 50px 30px; max-width: 850px; }
+.bestiary-heading h1 { font: clamp(38px, 4vw, 60px)/1.1 var(--serif); margin-block: 16px; }
+.bestiary-heading .back-link { margin-top: 16px; }
+.bestiary-filters { display: grid; grid-template-columns: 2fr repeat(4,minmax(0,1fr)); gap: 18px; padding-block: 25px; border-block: 1px solid var(--line); align-items: end; }
+.bestiary-filters label { display: flex; flex-direction: column; gap: 8px; color: var(--muted); font-size: 12px; min-width: 0; }
+.bestiary-filters input, .bestiary-filters select { width: 100%; min-width: 0; }
+.bestiary-filters .primary { color: #141718; }
+.bestiary-filters .text-button { align-self: center; color: var(--gold); font-size: 12px; }
+.bestiary-result-count { color: var(--muted); margin-block: 24px; font-size: 13px; }
+.monster-card-art { aspect-ratio: 1; background: #1b2023; }
+.monster-card-art img { object-fit: contain; object-position: center; mask-image: none; padding: 14px; }
+.monster-card .compendium-class-copy { padding-top: 18px; }
+.monster-card h2 { font: 27px/1.1 var(--serif); margin: 12px 0; overflow-wrap: anywhere; }
+.monster-card .compendium-class-copy p { color: var(--gold); }
+.monster-image-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 180px; gap: 18px; color: #7f7867; padding: 24px; text-align: center; font-size: 12px; }
+.monster-image-placeholder svg { width: 80px; height: 80px; opacity: .6; }
+.bestiary-empty { padding-block: 40px; color: var(--muted); }
+.bestiary-pagination { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-block: 32px; color: var(--muted); font-size: 13px; }
+.monster-reference-content h1 { font-size: clamp(38px, 4vw, 60px); overflow-wrap: anywhere; }
+.monster-reference-art { height: min(70vh,650px); background: #171c1e; border: 1px solid var(--line); }
+.monster-reference-art img { object-fit: contain; object-position: center; mask-image: none; padding: 24px; }
+.monster-classification { color: var(--muted); text-transform: capitalize; margin-bottom: 25px; }
+.monster-core-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding-block: 25px; border-block: 1px solid var(--line); }
+.monster-core-stats dt { color: var(--muted); font-size: 12px; }
+.monster-core-stats dd { color: var(--gold); margin: 4px 0 0; font-size: 22px; }
+.monster-core-stats small { display: block; color: var(--muted); font-size: 12px; }
+.monster-ability-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; padding-block: 24px; }
+.monster-ability-grid > div { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.monster-ability-grid span { font-size: 12px; color: var(--muted); }
+.monster-ability-grid strong { font-size: 22px; }
+.monster-ability-grid small { color: var(--gold); }
+.monster-reference-facts > div { padding-block: 12px; }
+.monster-reference-facts dt { color: var(--gold); font-size: 13px; }
+.monster-reference-facts dd { color: var(--muted); font-size: 13px; margin: 4px 0 0; overflow-wrap: anywhere; }
+.monster-action-meta { display: flex; flex-wrap: wrap; gap: 14px; color: var(--gold); font-size: 12px; }
+.monster-action-group h2 { font: 30px var(--serif); }
+@media(max-width:1000px) { .bestiary-filters { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media(max-width:760px) { .monster-reference-art { position: relative; top: auto; height: 380px; min-height: 0; } .monster-reference-layout { gap: 25px; } }
+@media(max-width:600px) { .bestiary-filters { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; } .bestiary-filters label:first-child { grid-column: 1/-1; } .monster-card h2 { font-size: 22px; } .monster-card .compendium-class-copy { padding: 14px; } .bestiary-pagination .button { padding-inline: 12px; font-size: 12px; } }

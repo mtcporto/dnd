@@ -1,8 +1,16 @@
 const fs = require("node:fs"),
   crypto = require("node:crypto");
 const { createClient } = require("@libsql/client");
-const source = JSON.parse(fs.readFileSync("data/catalogue.json", "utf8"));
-const ui = JSON.parse(fs.readFileSync("data/ui-source.json", "utf8"));
+const bestiaryMode = process.argv.includes("--bestiary");
+const source = JSON.parse(
+  fs.readFileSync(
+    bestiaryMode ? "data/bestiary.json" : "data/catalogue.json",
+    "utf8",
+  ),
+);
+const ui = bestiaryMode
+  ? {}
+  : JSON.parse(fs.readFileSync("data/ui-source.json", "utf8"));
 const registry = new Map(
   Object.entries(ui).map(([text, locale]) => [text.trim(), locale]),
 );
@@ -26,6 +34,28 @@ function collect(value, key) {
     for (const [k, v] of Object.entries(value)) collect(v, k);
 }
 collect(source);
+const displayLabels = new Set();
+if (bestiaryMode) {
+  for (const monster of source.monsters) {
+    for (const value of [
+      monster.type,
+      monster.size,
+      monster.alignment,
+      monster.languages,
+      monster.gear,
+      ...monster.damage_resistances,
+      ...monster.damage_immunities,
+      ...monster.damage_vulnerabilities,
+      ...Object.values(monster.senses),
+      ...Object.values(monster.speed),
+    ]) {
+      if (typeof value === "string" && value.trim()) {
+        registry.set(value.trim(), "en");
+        displayLabels.add(value.trim());
+      }
+    }
+  }
+}
 const hash = (text) => crypto.createHash("sha256").update(text).digest("hex");
 const entries = [...registry].map(([text, sourceLocale]) => ({
   id: hash(sourceLocale + "\n" + text),
@@ -55,11 +85,14 @@ function valid(entry, row) {
   );
 }
 // Reuse the versioned translations even on a fresh checkout without a local cache.
-const manifestPath = "data/translation-manifest.json";
-if (fs.existsSync(manifestPath) && fs.existsSync("data/ui-translations.json")) {
-  const published = JSON.parse(
-    fs.readFileSync("data/ui-translations.json", "utf8"),
-  );
+const manifestPath = bestiaryMode
+  ? "data/bestiary-translation-manifest.json"
+  : "data/translation-manifest.json";
+const dictionaryPath = bestiaryMode
+  ? "data/bestiary-translations.json"
+  : "data/ui-translations.json";
+if (fs.existsSync(manifestPath) && fs.existsSync(dictionaryPath)) {
+  const published = JSON.parse(fs.readFileSync(dictionaryPath, "utf8"));
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   for (const entry of entries) {
     if (valid(entry, cache[entry.id]) || !manifest.translations[entry.id])
@@ -79,7 +112,11 @@ const batches = [];
 let batch = [],
   size = 0;
 for (const entry of pending) {
-  if (batch.length && (batch.length >= 20 || size + entry.text.length > 2500)) {
+  if (
+    batch.length &&
+    (batch.length >= (bestiaryMode ? 35 : 20) ||
+      size + entry.text.length > (bestiaryMode ? 6000 : 2500))
+  ) {
     batches.push(batch);
     batch = [];
     size = 0;
@@ -88,7 +125,11 @@ for (const entry of pending) {
   size += entry.text.length;
 }
 if (batch.length) batches.push(batch);
-const system = `You are a professional Dungeons & Dragons 5e SRD translator. Translate ALL supplied texts, never summarize, omit content or alter rules. Each entry has id, text and sourceLocale (en or pt). Return JSON object {"translations":[{"id":"...","en":"...","pt":"...","es":"..."}]}. en is fluent English, pt is Brazilian Portuguese, es is Spanish. Preserve the sourceLocale text verbatim in that language. Preserve ALL numeric digits exactly (including dice like 2d6, signs, numbers in placeholders {0}, ranges, decimal formatting, list numbering); do not convert feet to metres or change mechanics. Preserve Markdown, tables, URLs, IDs, placeholders {0}/{1}, and proper personal names. All descriptive text and headings must be translated. Glossary: Fighter=Guerreiro/Guerrero; Wizard=Mago/Mago; Sorcerer=Feiticeiro/Hechicero; Warlock=Bruxo/Brujo; Rogue=Ladino/Pícaro; Ranger=Patrulheiro/Explorador; Cleric=Clérigo/Clérigo; Bard=Bardo/Bardo; Barbarian=Bárbaro/Bárbaro; Paladin=Paladino/Paladín; Monk=Monge/Monje; Druid=Druida/Druida. Background=Antecedente/Trasfondo; species=espécie/especie; feat=talento/dote; saving throw=teste de resistência/tirada de salvación; hit points=pontos de vida/puntos de golpe; hit die=dado de vida/dado de golpe; proficiency=proficiência/competencia; Strength=Força/Fuerza; Dexterity=Destreza/Destreza; Constitution=Constituição/Constitución; Intelligence=Inteligência/Inteligencia; Wisdom=Sabedoria/Sabiduría; Charisma=Carisma/Carisma. Common=Comum/Común, Medium=Médio/Mediano, Small=Pequeno/Pequeño. A UI draft is Rascunho/Borrador. No invented information. Translate every item; output JSON only.`;
+const system = `You are a professional Dungeons & Dragons 5e SRD translator. Translate ALL supplied texts, never summarize, omit content or alter rules. Each entry has id, text and sourceLocale (en or pt). Return JSON object {"translations":[{"id":"...","en":"...","pt":"...","es":"..."}]}. en is fluent English, pt is Brazilian Portuguese, es is Spanish. Preserve the sourceLocale text verbatim in that language. Preserve ALL numeric digits exactly (including dice like 2d6, signs, numbers in placeholders {0}, ranges, decimal formatting, list numbering); do not convert feet to metres or change mechanics. Preserve Markdown, tables, URLs, IDs, placeholders {0}/{1}, and proper personal names. All descriptive text and headings must be translated. Glossary: Fighter=Guerreiro/Guerrero; Wizard=Mago/Mago; Sorcerer=Feiticeiro/Hechicero; Warlock=Bruxo/Brujo; Rogue=Ladino/Pícaro; Ranger=Patrulheiro/Explorador; Cleric=Clérigo/Clérigo; Bard=Bardo/Bardo; Barbarian=Bárbaro/Bárbaro; Paladin=Paladino/Paladín; Monk=Monge/Monje; Druid=Druida/Druida. Background=Antecedente/Trasfondo; species=espécie/especie; feat=talento/dote; saving throw=teste de resistência/tirada de salvación; hit points=pontos de vida/puntos de golpe; hit die=dado de vida/dado de golpe; proficiency=proficiência/competencia; Strength=Força/Fuerza; Dexterity=Destreza/Destreza; Constitution=Constituição/Constitución; Intelligence=Inteligência/Inteligencia; Wisdom=Sabedoria/Sabiduría; Charisma=Carisma/Carisma. Common=Comum/Común, Medium=Médio/Mediano, Small=Pequeno/Pequeño. A UI draft is Rascunho/Borrador. No invented information. Spell=magia/conjuro; cantrip=truque/truco; Goblin=Goblin/Goblin; Dragon=Dragão/Dragón; Melee Attack Roll=Jogada de Ataque Corpo a Corpo/Tirada de ataque cuerpo a cuerpo; Ranged Attack Roll=Jogada de Ataque à Distância/Tirada de ataque a distancia; do not leave English rule terminology in Portuguese or Spanish. Translate every item; output JSON only.`;
+const prompt = bestiaryMode
+  ? system +
+    " For these English entries, return only id, pt and es; omit en, as the importer preserves the original. Never summarize the descriptions."
+  : system;
 let next = 0,
   completed = 0;
 async function translate(allItems) {
@@ -121,7 +162,7 @@ async function translate(allItems) {
               ? { reasoning_effort: "low" }
               : {}),
             messages: [
-              { role: "system", content: system },
+              { role: "system", content: prompt },
               {
                 role: "user",
                 content: JSON.stringify(
@@ -231,43 +272,95 @@ function localized(value, key, locale) {
     for (const locale of ["en", "pt", "es"])
       dictionaries[locale][text] = row[locale];
   }
-  const outputs = {
-    [manifestPath]: {
-      sourceHash: hash(JSON.stringify(source)),
-      translations: provenance,
-    },
-    "data/catalogue.pt.json": snapshots.pt,
-    "data/catalogue.es.json": snapshots.es,
-    "data/ui-translations.json": dictionaries,
-  };
+  const outputs = bestiaryMode
+    ? {
+        [manifestPath]: {
+          sourceHash: hash(JSON.stringify(source)),
+          translations: provenance,
+        },
+        "data/bestiary.pt.json": snapshots.pt,
+        "data/bestiary.es.json": snapshots.es,
+        [dictionaryPath]: dictionaries,
+        "data/bestiary-labels.json": Object.fromEntries(
+          ["en", "pt", "es"].map((locale) => [
+            locale,
+            Object.fromEntries(
+              [...displayLabels].map((text) => [
+                text,
+                dictionaries[locale][text],
+              ]),
+            ),
+          ]),
+        ),
+      }
+    : {
+        [manifestPath]: {
+          sourceHash: hash(JSON.stringify(source)),
+          translations: provenance,
+        },
+        "data/catalogue.pt.json": snapshots.pt,
+        "data/catalogue.es.json": snapshots.es,
+        "data/ui-translations.json": dictionaries,
+      };
   const client = createClient({
     url: process.env.TURSO_DATABASE_URL,
     authToken: process.env.TURSO_AUTH_TOKEN,
   });
   try {
     const sourceHash = hash(JSON.stringify(source));
-    await client.batch(
-      Object.entries(snapshots).map(([locale, payload]) => ({
-        sql: "INSERT INTO catalogue_snapshots (edition,locale,payload,source_hash,source_url,translation_model,updated_at) VALUES (?,?,?,?,?,?,?) ON CONFLICT (edition,locale) DO UPDATE SET payload=excluded.payload,source_hash=excluded.source_hash,source_url=excluded.source_url,translation_model=excluded.translation_model,updated_at=excluded.updated_at",
-        args: [
-          source.edition,
-          locale,
-          JSON.stringify(payload),
-          sourceHash,
-          source.source,
-          locale === "en" ? null : usedModels,
-          Date.now(),
-        ],
-      })),
-      "write",
-    );
+    if (bestiaryMode) {
+      const statements = [];
+      for (const [locale, snapshot] of Object.entries(snapshots))
+        for (const monster of snapshot.monsters) {
+          const original = source.monsters.find(
+            (entry) => entry.index === monster.index,
+          );
+          statements.push({
+            sql: "INSERT INTO bestiary_entries (edition,locale,monster_index,name,canonical_name,creature_type,creature_size,challenge_rating,payload,source_hash,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(edition,locale,monster_index) DO UPDATE SET name=excluded.name,canonical_name=excluded.canonical_name,creature_type=excluded.creature_type,creature_size=excluded.creature_size,challenge_rating=excluded.challenge_rating,payload=excluded.payload,source_hash=excluded.source_hash,updated_at=excluded.updated_at",
+            args: [
+              source.edition,
+              locale,
+              monster.index,
+              monster.name,
+              original.name,
+              original.type,
+              original.size,
+              original.challenge_rating,
+              JSON.stringify(monster),
+              sourceHash,
+              Date.now(),
+            ],
+          });
+        }
+      // One transaction publishes all creatures/locales together.
+      await client.batch(statements, "write");
+    } else
+      await client.batch(
+        Object.entries(snapshots).map(([locale, payload]) => ({
+          sql: "INSERT INTO catalogue_snapshots (edition,locale,payload,source_hash,source_url,translation_model,updated_at) VALUES (?,?,?,?,?,?,?) ON CONFLICT (edition,locale) DO UPDATE SET payload=excluded.payload,source_hash=excluded.source_hash,source_url=excluded.source_url,translation_model=excluded.translation_model,updated_at=excluded.updated_at",
+          args: [
+            source.edition,
+            locale,
+            JSON.stringify(payload),
+            sourceHash,
+            source.source,
+            locale === "en" ? null : usedModels,
+            Date.now(),
+          ],
+        })),
+        "write",
+      );
     // Publish packaged fallbacks only after the database transaction succeeds.
     for (const [file, value] of Object.entries(outputs)) {
       fs.writeFileSync(file + ".tmp", JSON.stringify(value, null, 2) + "\n");
       fs.renameSync(file + ".tmp", file);
     }
     console.log(
-      "Stored English original and complete Portuguese/Spanish catalogues in the shared Turso database.",
+      bestiaryMode
+        ? "Stored all " +
+            source.count +
+            " monsters in three languages in Turso."
+        : "Stored English original and complete Portuguese/Spanish catalogues in the shared Turso database.",
     );
   } finally {
     client.close();

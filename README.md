@@ -129,3 +129,18 @@ Os comandos de tradução precisam das variáveis de IA e do Turso em `.env.loca
 Os snapshots em `data/catalogue.pt.json` e `data/catalogue.es.json` permitem servir o idioma escolhido se o banco estiver indisponível ou não configurado. `data/ui-source.json` é extraído da interface e `data/ui-translations.json` contém suas traduções, além dos textos necessários para apresentar fichas anteriores. Não há tradução em tempo real nem envio de personagens ao modelo durante a navegação.
 
 As descrições de regras da API são renderizadas como Markdown no compêndio, na seleção de classe e nas fichas, com negrito, itálico, listas e tabelas. A formatação se aplica aos três idiomas; o texto original permanece intacto no banco.
+
+## Bestiário
+
+`/bestiario` reúne as 341 criaturas da API de 2024. A lista tem busca por nome localizado ou inglês, filtros por tipo, tamanho e nível de desafio, ordenação e paginação. Cada ficha apresenta atributos, defesa, deslocamento, sentidos, resistências, habilidades e ações em Markdown. Usa o mesmo idioma e layout do compêndio, sem exigir login.
+
+O importador preserva o JSON original em inglês e publica as versões traduzidas em `bestiary_entries` no Turso compartilhado (uma linha por criatura, edição e idioma). A lista consulta apenas os campos resumidos; as fichas carregam um registro completo. Os snapshots versionados servem como alternativa se o banco estiver indisponível. Nenhuma descrição é inventada quando a fonte não oferece uma.
+
+```bash
+npm run db:migrate
+npm run bestiary:update # coleta todas as criaturas, verifica imagens e traduz/publica
+npm run bestiary:translate # reutiliza o cache e atualiza os três idiomas
+npm run catalogue:translate # atualiza textos da interface após mudanças
+```
+
+Execute as traduções do catálogo e do bestiário em sequência, pois compartilham o cache incremental. `data/bestiary-images.json` contém somente URLs de imagens verificadas na API; imagens ausentes recebem uma apresentação neutra. Na coleta inicial, 294 das 341 imagens estavam disponíveis. As imagens são carregadas diretamente da API, sem geração de arte nem cópia de imagens de outras fontes.

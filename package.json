@@ -16,7 +16,9 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file=.env.local scripts/migrate.cjs",
     "verify:flow": "node --env-file=.env.local scripts/verify-flow.cjs",
-    "catalogue:translate": "node --env-file=.env.local scripts/collect-ui-texts.cjs && node --env-file=.env.local scripts/localize-catalogue.cjs"
+    "catalogue:translate": "node --env-file=.env.local scripts/collect-ui-texts.cjs && node --env-file=.env.local scripts/localize-catalogue.cjs",
+    "bestiary:update": "node scripts/import-bestiary.cjs && node scripts/audit-bestiary-images.cjs && npm run bestiary:translate",
+    "bestiary:translate": "node --env-file=.env.local scripts/localize-catalogue.cjs --bestiary"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.7.7",
