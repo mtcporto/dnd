@@ -1,3 +1,4 @@
+import { imageUrl } from "@/lib/image-assets";
 import { getI18n } from "@/lib/i18n/server";
 import { localizeRecord } from "@/lib/i18n/shared";
 import { getLocalizedCatalogue } from "@/lib/catalogue";
@@ -36,7 +37,7 @@ export default async function Page() {
       <header className="compendium-hero">
         <div className="compendium-hero-art" aria-hidden="true">
           <Image
-            src="/images/heroes/arcane-library-wide.webp"
+            src={imageUrl("/images/heroes/arcane-library-wide.webp")}
             alt=""
             fill
             sizes="100vw"
@@ -76,7 +77,7 @@ export default async function Page() {
               >
                 <div className="compendium-class-art">
                   <Image
-                    src={`/images/classes/${entry.index}.webp`}
+                    src={imageUrl(`/images/classes/${entry.index}.webp`)}
                     alt=""
                     fill
                     sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
@@ -116,7 +117,7 @@ export default async function Page() {
               >
                 <div className="compendium-class-art">
                   <Image
-                    src={`/images/species/${entry.index}.webp`}
+                    src={imageUrl(`/images/species/${entry.index}.webp`)}
                     alt=""
                     fill
                     sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
@@ -155,7 +156,7 @@ export default async function Page() {
               >
                 <div className="compendium-class-art">
                   <Image
-                    src={`/images/backgrounds/${entry.index}.webp`}
+                    src={imageUrl(`/images/backgrounds/${entry.index}.webp`)}
                     alt=""
                     fill
                     sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"

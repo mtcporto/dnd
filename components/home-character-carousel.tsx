@@ -1,4 +1,6 @@
 "use client";
+import { imageUrl } from "@/lib/image-assets";
+
 import { useI18n } from "@/lib/i18n/client";
 import { localizeRecord } from "@/lib/i18n/shared";
 
@@ -156,7 +158,7 @@ export function HomeCharacterCarousel() {
                       transition={{ duration: reduced ? 0 : 0.2 }}
                     >
                       <Image
-                        src={`/images/classes/${card.id}.webp`}
+                        src={imageUrl(`/images/classes/${card.id}.webp`)}
                         alt=""
                         fill
                         sizes="(max-width: 700px) 65vw, 36vw"

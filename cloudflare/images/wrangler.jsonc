@@ -1,0 +1,9 @@
+{
+  "name": "dnd-images",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-14",
+  "account_id": "1f5566ed99ee79517a5beeeec2ce3afc",
+  "workers_dev": true,
+  "preview_urls": false,
+  "r2_buckets": [{ "binding": "IMAGES", "bucket_name": "dnd-images" }]
+}

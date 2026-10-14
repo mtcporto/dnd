@@ -1,3 +1,4 @@
+import { imageUrl } from "@/lib/image-assets";
 import { getI18n } from "@/lib/i18n/server";
 import Image from "next/image";
 import { getSession } from "@/lib/session";
@@ -100,7 +101,7 @@ export default async function Page() {
           <section className="roster-empty">
             <div className="roster-empty-art" aria-hidden="true">
               <Image
-                src="/images/classes/fighter.webp"
+                src={imageUrl("/images/classes/fighter.webp")}
                 alt=""
                 fill
                 sizes="(max-width: 700px) 100vw, 50vw"

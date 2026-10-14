@@ -5,7 +5,7 @@ import original from "@/data/bestiary.json";
 import portuguese from "@/data/bestiary.pt.json";
 import spanish from "@/data/bestiary.es.json";
 import labels from "@/data/bestiary-labels.json";
-import imageManifest from "@/data/bestiary-images.json";
+import assets from "@/data/bestiary-assets.json";
 import { bestiaryEntries } from "@/server/db/schema";
 import { getDb } from "@/lib/db";
 import { getLocale } from "@/lib/i18n/server";
@@ -25,7 +25,8 @@ function packaged(locale: Locale) {
       : original) as unknown as Bestiary;
 }
 export function monsterImage(index: string): string | undefined {
-  return (imageManifest as Record<string, string | null>)[index] ?? undefined;
+  return (assets.assets as Record<string, { publicUrl: string }>)[index]
+    ?.publicUrl;
 }
 export const getBestiaryLabels = cache(async () =>
   createTranslator(labels[await getLocale()]),

@@ -143,4 +143,25 @@ npm run bestiary:translate # reutiliza o cache e atualiza os três idiomas
 npm run catalogue:translate # atualiza textos da interface após mudanças
 ```
 
-Execute as traduções do catálogo e do bestiário em sequência, pois compartilham o cache incremental. `data/bestiary-images.json` contém somente URLs de imagens verificadas na API; imagens ausentes recebem uma apresentação neutra. Na coleta inicial, 294 das 341 imagens estavam disponíveis. As imagens são carregadas diretamente da API, sem geração de arte nem cópia de imagens de outras fontes.
+Execute as traduções do catálogo e do bestiário em sequência, pois compartilham o cache incremental. `data/bestiary-images.json` contém somente URLs de imagens verificadas na API; imagens ausentes recebem uma apresentação neutra. Na coleta inicial, 294 das 341 imagens estavam disponíveis. As imagens foram baixadas da API e convertidas para WebP por script; a navegação usa exclusivamente o bucket R2 do DND.
+
+
+## Imagens no Cloudflare R2
+
+Todas as 323 imagens atuais usam o bucket exclusivo `dnd-images`, servido pelo Worker `cloudflare/images/worker.mjs`: 294 criaturas e 29 imagens de classes, espécies, antecedentes e cenas. O Turso guarda URLs, chaves, dimensões, tamanhos e hashes em `bestiary_image_assets` e `image_assets`; os arquivos binários ficam no R2. Os manifestos versionados são gerados da mesma publicação e permitem resolver as URLs sem uma consulta extra ao banco para cada imagem.
+
+A conversão do bestiário usa Sharp, WebP qualidade 85, sem redimensionamento e sem IA. A primeira execução reduziu 506.627.610 bytes para 42.208.412 bytes (91,67%). Os originais baixados e os arquivos de trabalho ficam em `data/local/`, ignorados pelo Git. As ilustrações existentes já estavam em WebP e conservaram seus bytes, evitando nova compressão com perda.
+
+```bash
+npm run images:prepare # baixa/reutiliza originais e prepara WebP
+npm run images:publish # envia, verifica cada hash público e grava banco/manifestos
+npm run images:update  # os dois passos em sequência
+npm run images:check   # valida referências e detecta arquivos novos ou alterados
+npm run images:deploy  # atualiza o Worker dedicado
+```
+
+Para imagens futuras, adicione os arquivos em `assets/images/` (PNG, JPEG, AVIF ou WebP), execute `npm run images:update` e use `imageUrl("/images/categoria/arquivo.png")` da biblioteca `lib/image-assets.ts`. PNG/JPEG/AVIF são convertidos para WebP; WebP é preservado. As imagens do bestiário entram pelo manifesto auditado da API. Nenhuma imagem é publicada na interface antes da verificação do upload. O build bloqueia imagens locais novas ou alteradas que ainda não foram publicadas.
+
+As URLs incluem o hash do conteúdo e usam cache público imutável de um ano. Uma alteração cria outra URL, sem invalidar arquivos anteriores. O envio é incremental e reutiliza objetos cujo hash já está no R2. As páginas usam as URLs R2 diretamente, sem solicitar imagens à API nem recomprimi-las pela Vercel.
+
+O token de upload próprio do DND está em `.env.local` e no segredo `UPLOAD_TOKEN` do Worker, nunca no navegador ou nos manifestos. As variáveis `R2_*` são necessárias apenas aos scripts locais; a Vercel não precisa do token de upload para servir o site. O Worker aceita escrita autenticada apenas de WebP válido, com limite de tamanho e hash correspondente à chave.

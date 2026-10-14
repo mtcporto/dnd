@@ -1,4 +1,6 @@
 "use client";
+import { imageUrl } from "@/lib/image-assets";
+
 import { useI18n } from "@/lib/i18n/client";
 import { localizeRecord } from "@/lib/i18n/shared";
 
@@ -124,7 +126,7 @@ export function CharacterRoster({
               transition={{ duration: reduced ? 0 : 0.35 }}
             >
               <Image
-                src={`/images/classes/${profile.image}.webp`}
+                src={imageUrl(`/images/classes/${profile.image}.webp`)}
                 alt={t("Arte ilustrativa da classe {0}", [
                   classNames[selected.classIndex],
                 ])}

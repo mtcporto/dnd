@@ -1,4 +1,6 @@
 "use client";
+import { imageUrl } from "@/lib/image-assets";
+
 import { RulesText } from "@/components/rules-text";
 import { useI18n } from "@/lib/i18n/client";
 import { localizeRecord } from "@/lib/i18n/shared";
@@ -124,7 +126,7 @@ export function ClassSelector({
               transition={{ duration: reducedMotion ? 0 : 0.4 }}
             >
               <Image
-                src={`/images/classes/${profile.image}.webp`}
+                src={imageUrl(`/images/classes/${profile.image}.webp`)}
                 alt={t("Ilustração de um aventureiro da classe {0}", [
                   classNames[selected],
                 ])}

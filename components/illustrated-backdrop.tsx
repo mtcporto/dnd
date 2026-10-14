@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+import { imageUrl } from "@/lib/image-assets";
 import { getI18n } from "@/lib/i18n/server";
 import Image from "next/image";
 
@@ -14,10 +16,16 @@ export async function IllustratedBackdrop({
 
   return (
     <>
-      <div className="login-art" aria-hidden="true">
+      <div
+        className="login-art"
+        aria-hidden="true"
+        style={
+          { "--scene-image": `url("${imageUrl(image)}")` } as CSSProperties
+        }
+      >
         <Image
           className="login-panorama"
-          src={image}
+          src={imageUrl(image)}
           alt=""
           fill
           sizes="100vw"
@@ -25,7 +33,7 @@ export async function IllustratedBackdrop({
         />
         <Image
           className="login-mobile-scene"
-          src={mobileImage}
+          src={imageUrl(mobileImage)}
           alt=""
           fill
           sizes="(max-width: 760px) 100vw, 1px"

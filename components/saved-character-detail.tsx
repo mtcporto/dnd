@@ -1,3 +1,4 @@
+import { imageUrl } from "@/lib/image-assets";
 import { RulesText } from "@/components/rules-text";
 import { getI18n } from "@/lib/i18n/server";
 import { localizeRecord } from "@/lib/i18n/shared";
@@ -48,7 +49,7 @@ export async function SavedCharacterDetail({
       <aside className="saved-character-art-panel">
         <div className="saved-character-art">
           <Image
-            src={`/images/classes/${profile.image}.webp`}
+            src={imageUrl(`/images/classes/${profile.image}.webp`)}
             alt={t("Ilustração da classe {0}", [
               classNames[draft.input.classIndex],
             ])}

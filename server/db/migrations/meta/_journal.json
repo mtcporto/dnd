@@ -22,6 +22,20 @@
       "when": 1791951232193,
       "tag": "0002_colorful_dracula",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1791954994063,
+      "tag": "0003_groovy_king_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1791955172083,
+      "tag": "0004_clear_frank_castle",
+      "breakpoints": true
     }
   ]
 }

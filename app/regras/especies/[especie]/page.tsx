@@ -1,3 +1,4 @@
+import { imageUrl } from "@/lib/image-assets";
 import { RulesText } from "@/components/rules-text";
 import { getI18n } from "@/lib/i18n/server";
 import { localizeRecord } from "@/lib/i18n/shared";
@@ -50,7 +51,7 @@ export default async function Page({ params }: Props) {
       <div className="class-reference-layout">
         <aside className="class-reference-art">
           <Image
-            src={`/images/species/${especie}.webp`}
+            src={imageUrl(`/images/species/${especie}.webp`)}
             alt={t("Ilustração de um aventureiro da espécie {0}", [
               speciesNames[especie],
             ])}

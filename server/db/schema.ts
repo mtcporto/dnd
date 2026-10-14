@@ -119,3 +119,29 @@ export const characters = sqliteTable(
   },
   (table) => [index("character_owner_idx").on(table.userId)],
 );
+
+export const bestiaryImageAssets = sqliteTable("bestiary_image_assets", {
+  monsterIndex: text("monster_index").primaryKey(),
+  sourceUrl: text("source_url").notNull(),
+  objectKey: text("object_key").notNull(),
+  publicUrl: text("public_url").notNull(),
+  sha256: text("sha256").notNull(),
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  originalBytes: integer("original_bytes").notNull(),
+  webpBytes: integer("webp_bytes").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull(),
+});
+
+export const imageAssets = sqliteTable("image_assets", {
+  sourcePath: text("source_path").primaryKey(),
+  sourceUrl: text("source_url").notNull(),
+  objectKey: text("object_key").notNull(),
+  publicUrl: text("public_url").notNull(),
+  sha256: text("sha256").notNull(),
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  originalBytes: integer("original_bytes").notNull(),
+  webpBytes: integer("webp_bytes").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull(),
+});
