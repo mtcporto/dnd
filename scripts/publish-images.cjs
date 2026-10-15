@@ -39,6 +39,10 @@ async function retry(fn) {
   const site = JSON.parse(
     await fs.readFile(path.join(siteWork, "manifest.json"), "utf8"),
   );
+  const itemWork = path.join(root, "data/local/item-images");
+  const itemImages = JSON.parse(
+    await fs.readFile(path.join(itemWork, "manifest.json"), "utf8"),
+  );
   const expected = Object.values(
     require("../data/bestiary-images.json"),
   ).filter(Boolean).length;
@@ -50,6 +54,7 @@ async function retry(fn) {
   const entries = [
     ...Object.entries(manifest.assets).map(([key, a]) => [key, a, "bestiary"]),
     ...Object.entries(site.assets).map(([key, a]) => [key, a, "site"]),
+    ...Object.entries(itemImages.assets).map(([key, a]) => [key, a, "item"]),
   ];
   let next = 0,
     done = 0;
@@ -60,7 +65,7 @@ async function retry(fn) {
         const bytes = await fs.readFile(
           kind === "bestiary"
             ? path.join(work, index + ".webp")
-            : path.join(siteWork, asset.localFile),
+            : path.join(kind === "item" ? itemWork : siteWork, asset.localFile),
         );
         if (
           crypto.createHash("sha256").update(bytes).digest("hex") !==
@@ -129,11 +134,19 @@ async function retry(fn) {
         sql: "INSERT INTO bestiary_image_assets (monster_index,source_url,object_key,public_url,sha256,width,height,original_bytes,webp_bytes,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT(monster_index) DO UPDATE SET source_url=excluded.source_url,object_key=excluded.object_key,public_url=excluded.public_url,sha256=excluded.sha256,width=excluded.width,height=excluded.height,original_bytes=excluded.original_bytes,webp_bytes=excluded.webp_bytes,updated_at=excluded.updated_at"
           .replaceAll(
             "bestiary_image_assets",
-            kind === "bestiary" ? "bestiary_image_assets" : "image_assets",
+            kind === "bestiary"
+              ? "bestiary_image_assets"
+              : kind === "item"
+                ? "item_image_assets"
+                : "image_assets",
           )
           .replaceAll(
             "monster_index",
-            kind === "bestiary" ? "monster_index" : "source_path",
+            kind === "bestiary"
+              ? "monster_index"
+              : kind === "item"
+                ? "item_id"
+                : "source_path",
           ),
         args: [
           index,
@@ -156,6 +169,7 @@ async function retry(fn) {
   for (const [name, data] of [
     ["bestiary-assets", manifest],
     ["site-image-assets", site],
+    ["item-image-assets", itemImages],
   ]) {
     for (const asset of Object.values(data.assets)) delete asset.localFile;
     const file = path.join(root, "data/" + name + ".json");

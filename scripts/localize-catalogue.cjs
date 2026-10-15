@@ -2,13 +2,19 @@ const fs = require("node:fs"),
   crypto = require("node:crypto");
 const { createClient } = require("@libsql/client");
 const bestiaryMode = process.argv.includes("--bestiary");
+const itemsMode = process.argv.includes("--items");
+const referenceMode = bestiaryMode || itemsMode;
 const source = JSON.parse(
   fs.readFileSync(
-    bestiaryMode ? "data/bestiary.json" : "data/catalogue.json",
+    itemsMode
+      ? "data/items.json"
+      : bestiaryMode
+        ? "data/bestiary.json"
+        : "data/catalogue.json",
     "utf8",
   ),
 );
-const ui = bestiaryMode
+const ui = referenceMode
   ? {}
   : JSON.parse(fs.readFileSync("data/ui-source.json", "utf8"));
 const registry = new Map(
@@ -25,7 +31,14 @@ const baseURL =
     : process.env.AI_BASE_URL;
 if (!baseURL || !process.env.TURSO_DATABASE_URL)
   throw Error("Translation provider and Turso must be configured.");
-const fields = new Set(["name", "desc", "description", "repeatable", "note"]);
+const fields = new Set([
+  "name",
+  "desc",
+  "description",
+  "repeatable",
+  "note",
+  ...(itemsMode ? ["notes"] : []),
+]);
 function collect(value, key) {
   if (typeof value === "string" && fields.has(key) && value.trim())
     registry.set(value.trim(), "en");
@@ -71,6 +84,22 @@ function numbers(text) {
   return (text.match(/\d+(?:\.\d+)?/g) || []).sort().join("|");
 }
 function valid(entry, row) {
+  // Restore the original separators when a translator localizes a grouped number.
+  // Digits must match exactly; no numeric value is introduced or inferred.
+  if (row) {
+    const grouped = new Map(
+      (entry.text.match(/\d+(?:[,.]\d{3})+/g) || []).map((value) => [
+        value.replace(/[,.]/g, ""),
+        value,
+      ]),
+    );
+    for (const locale of ["en", "pt", "es"])
+      if (typeof row[locale] === "string")
+        row[locale] = row[locale].replace(
+          /\d+(?:[,.]\d{3})+/g,
+          (value) => grouped.get(value.replace(/[,.]/g, "")) || value,
+        );
+  }
   return (
     row &&
     ["en", "pt", "es"].every(
@@ -85,12 +114,16 @@ function valid(entry, row) {
   );
 }
 // Reuse the versioned translations even on a fresh checkout without a local cache.
-const manifestPath = bestiaryMode
-  ? "data/bestiary-translation-manifest.json"
-  : "data/translation-manifest.json";
-const dictionaryPath = bestiaryMode
-  ? "data/bestiary-translations.json"
-  : "data/ui-translations.json";
+const manifestPath = itemsMode
+  ? "data/items-translation-manifest.json"
+  : bestiaryMode
+    ? "data/bestiary-translation-manifest.json"
+    : "data/translation-manifest.json";
+const dictionaryPath = itemsMode
+  ? "data/items-translations.json"
+  : bestiaryMode
+    ? "data/bestiary-translations.json"
+    : "data/ui-translations.json";
 if (fs.existsSync(manifestPath) && fs.existsSync(dictionaryPath)) {
   const published = JSON.parse(fs.readFileSync(dictionaryPath, "utf8"));
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
@@ -114,8 +147,8 @@ let batch = [],
 for (const entry of pending) {
   if (
     batch.length &&
-    (batch.length >= (bestiaryMode ? 35 : 20) ||
-      size + entry.text.length > (bestiaryMode ? 6000 : 2500))
+    (batch.length >= (referenceMode ? 35 : 20) ||
+      size + entry.text.length > (referenceMode ? 6000 : 2500))
   ) {
     batches.push(batch);
     batch = [];
@@ -126,7 +159,7 @@ for (const entry of pending) {
 }
 if (batch.length) batches.push(batch);
 const system = `You are a professional Dungeons & Dragons 5e SRD translator. Translate ALL supplied texts, never summarize, omit content or alter rules. Each entry has id, text and sourceLocale (en or pt). Return JSON object {"translations":[{"id":"...","en":"...","pt":"...","es":"..."}]}. en is fluent English, pt is Brazilian Portuguese, es is Spanish. Preserve the sourceLocale text verbatim in that language. Preserve ALL numeric digits exactly (including dice like 2d6, signs, numbers in placeholders {0}, ranges, decimal formatting, list numbering); do not convert feet to metres or change mechanics. Preserve Markdown, tables, URLs, IDs, placeholders {0}/{1}, and proper personal names. All descriptive text and headings must be translated. Glossary: Fighter=Guerreiro/Guerrero; Wizard=Mago/Mago; Sorcerer=Feiticeiro/Hechicero; Warlock=Bruxo/Brujo; Rogue=Ladino/Pícaro; Ranger=Patrulheiro/Explorador; Cleric=Clérigo/Clérigo; Bard=Bardo/Bardo; Barbarian=Bárbaro/Bárbaro; Paladin=Paladino/Paladín; Monk=Monge/Monje; Druid=Druida/Druida. Background=Antecedente/Trasfondo; species=espécie/especie; feat=talento/dote; saving throw=teste de resistência/tirada de salvación; hit points=pontos de vida/puntos de golpe; hit die=dado de vida/dado de golpe; proficiency=proficiência/competencia; Strength=Força/Fuerza; Dexterity=Destreza/Destreza; Constitution=Constituição/Constitución; Intelligence=Inteligência/Inteligencia; Wisdom=Sabedoria/Sabiduría; Charisma=Carisma/Carisma. Common=Comum/Común, Medium=Médio/Mediano, Small=Pequeno/Pequeño. A UI draft is Rascunho/Borrador. No invented information. Spell=magia/conjuro; cantrip=truque/truco; Goblin=Goblin/Goblin; Dragon=Dragão/Dragón; Melee Attack Roll=Jogada de Ataque Corpo a Corpo/Tirada de ataque cuerpo a cuerpo; Ranged Attack Roll=Jogada de Ataque à Distância/Tirada de ataque a distancia; do not leave English rule terminology in Portuguese or Spanish. Translate every item; output JSON only.`;
-const prompt = bestiaryMode
+const prompt = referenceMode
   ? system +
     " For these English entries, return only id, pt and es; omit en, as the importer preserves the original. Never summarize the descriptions."
   : system;
@@ -272,43 +305,67 @@ function localized(value, key, locale) {
     for (const locale of ["en", "pt", "es"])
       dictionaries[locale][text] = row[locale];
   }
-  const outputs = bestiaryMode
+  const outputs = itemsMode
     ? {
         [manifestPath]: {
           sourceHash: hash(JSON.stringify(source)),
           translations: provenance,
         },
-        "data/bestiary.pt.json": snapshots.pt,
-        "data/bestiary.es.json": snapshots.es,
+        "data/items.pt.json": snapshots.pt,
+        "data/items.es.json": snapshots.es,
         [dictionaryPath]: dictionaries,
-        "data/bestiary-labels.json": Object.fromEntries(
-          ["en", "pt", "es"].map((locale) => [
-            locale,
-            Object.fromEntries(
-              [...displayLabels].map((text) => [
-                text,
-                dictionaries[locale][text],
-              ]),
-            ),
-          ]),
-        ),
       }
-    : {
-        [manifestPath]: {
-          sourceHash: hash(JSON.stringify(source)),
-          translations: provenance,
-        },
-        "data/catalogue.pt.json": snapshots.pt,
-        "data/catalogue.es.json": snapshots.es,
-        "data/ui-translations.json": dictionaries,
-      };
+    : bestiaryMode
+      ? {
+          [manifestPath]: {
+            sourceHash: hash(JSON.stringify(source)),
+            translations: provenance,
+          },
+          "data/bestiary.pt.json": snapshots.pt,
+          "data/bestiary.es.json": snapshots.es,
+          [dictionaryPath]: dictionaries,
+          "data/bestiary-labels.json": Object.fromEntries(
+            ["en", "pt", "es"].map((locale) => [
+              locale,
+              Object.fromEntries(
+                [...displayLabels].map((text) => [
+                  text,
+                  dictionaries[locale][text],
+                ]),
+              ),
+            ]),
+          ),
+        }
+      : {
+          [manifestPath]: {
+            sourceHash: hash(JSON.stringify(source)),
+            translations: provenance,
+          },
+          "data/catalogue.pt.json": snapshots.pt,
+          "data/catalogue.es.json": snapshots.es,
+          "data/ui-translations.json": dictionaries,
+        };
   const client = createClient({
     url: process.env.TURSO_DATABASE_URL,
     authToken: process.env.TURSO_AUTH_TOKEN,
   });
   try {
     const sourceHash = hash(JSON.stringify(source));
-    if (bestiaryMode) {
+    if (itemsMode) {
+      await client.batch(
+        Object.entries(snapshots).map(([locale, payload]) => ({
+          sql: "INSERT INTO item_catalogues (edition,locale,payload,source_hash,updated_at) VALUES (?,?,?,?,?) ON CONFLICT(edition,locale) DO UPDATE SET payload=excluded.payload,source_hash=excluded.source_hash,updated_at=excluded.updated_at",
+          args: [
+            source.edition,
+            locale,
+            JSON.stringify(payload),
+            sourceHash,
+            Date.now(),
+          ],
+        })),
+        "write",
+      );
+    } else if (bestiaryMode) {
       const statements = [];
       for (const [locale, snapshot] of Object.entries(snapshots))
         for (const monster of snapshot.monsters) {
@@ -356,11 +413,13 @@ function localized(value, key, locale) {
       fs.renameSync(file + ".tmp", file);
     }
     console.log(
-      bestiaryMode
-        ? "Stored all " +
+      itemsMode
+        ? "Stored all items in three languages in Turso."
+        : bestiaryMode
+          ? "Stored all " +
             source.count +
             " monsters in three languages in Turso."
-        : "Stored English original and complete Portuguese/Spanish catalogues in the shared Turso database.",
+          : "Stored English original and complete Portuguese/Spanish catalogues in the shared Turso database.",
     );
   } finally {
     client.close();

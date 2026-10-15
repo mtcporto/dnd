@@ -47,8 +47,23 @@ for (const file of [
         "placeholder",
         "caption",
       ].includes(node.name.getText(source))
-    )
+    ) {
+      // Event handlers can contain translated errors even when the attribute
+      // itself is code rather than a user-facing string.
+      function translations(child) {
+        if (
+          ts.isCallExpression(child) &&
+          ts.isIdentifier(child.expression) &&
+          child.expression.text === "t" &&
+          child.arguments[0] &&
+          ts.isStringLiteral(child.arguments[0])
+        )
+          add(child.arguments[0].text);
+        ts.forEachChild(child, translations);
+      }
+      ts.forEachChild(node, translations);
       return;
+    }
     if (ts.isImportDeclaration(node)) return;
     if (
       ts.isCallExpression(node) &&

@@ -2,6 +2,8 @@ const fs = require("node:fs"),
   path = require("node:path"),
   crypto = require("node:crypto");
 const root = path.resolve(__dirname, "..");
+const itemImages = require("../data/item-image-assets.json");
+const itemSource = require("../data/items.json");
 const site = require("../data/site-image-assets.json"),
   bestiary = require("../data/bestiary-assets.json"),
   sources = require("../data/bestiary-images.json");
@@ -36,7 +38,14 @@ for (const file of files(path.join(root, "assets/images")).filter((p) =>
 for (const [index, url] of Object.entries(sources))
   if (url && !bestiary.assets[index])
     throw Error("Missing R2 monster: " + index);
-for (const manifest of [site, bestiary])
+for (const item of itemSource.items)
+  if (
+    item.image &&
+    !itemImages.assets[item.id] &&
+    !itemImages.unavailable.includes(item.id)
+  )
+    throw Error("Unpublished item image: " + item.id);
+for (const manifest of [site, bestiary, itemImages])
   for (const a of Object.values(manifest.assets))
     if (
       !a.publicUrl?.startsWith(
@@ -49,5 +58,6 @@ for (const manifest of [site, bestiary])
     )
       throw Error("Invalid asset metadata");
 console.log(
-  "Published image references verified: " + (site.count + bestiary.count),
+  "Published image references verified: " +
+    (site.count + bestiary.count + itemImages.count),
 );

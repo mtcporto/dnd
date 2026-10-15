@@ -1,5 +1,5 @@
 const keyPattern =
-  /^(?:bestiary\/[a-z0-9-]+|site\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+)-[a-f0-9]{16}\.webp$/;
+  /^(?:bestiary\/[a-z0-9-]+|items\/(?:equipment|magic)\/[a-z0-9-]+|site\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+)-[a-f0-9]{16}\.webp$/;
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url),

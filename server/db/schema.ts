@@ -145,3 +145,17 @@ export const imageAssets = sqliteTable("image_assets", {
   webpBytes: integer("webp_bytes").notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull(),
 });
+
+export const itemCatalogues = sqliteTable("item_catalogues", {
+ edition:text("edition").notNull(),locale:text("locale").notNull(),
+ payload:text("payload",{mode:"json"}).$type<import('../../domain/items.ts').ItemCatalogue>().notNull(),
+ sourceHash:text("source_hash").notNull(),updatedAt:integer("updated_at",{mode:"timestamp_ms"}).notNull(),
+},table=>[primaryKey({columns:[table.edition,table.locale]})]);
+export const characterInventories=sqliteTable("character_inventories",{
+ characterId:text("character_id").primaryKey().references(()=>characters.id,{onDelete:'cascade'}),
+ state:text("state",{mode:"json"}).$type<import('../../domain/inventory.ts').InventoryState>().notNull(),
+ revision:integer("revision").notNull().default(0),updatedAt:integer("updated_at",{mode:"timestamp_ms"}).notNull(),
+});
+export const itemImageAssets=sqliteTable("item_image_assets",{
+ itemId:text("item_id").primaryKey(),sourceUrl:text("source_url").notNull(),objectKey:text("object_key").notNull(),publicUrl:text("public_url").notNull(),sha256:text("sha256").notNull(),width:integer("width").notNull(),height:integer("height").notNull(),originalBytes:integer("original_bytes").notNull(),webpBytes:integer("webp_bytes").notNull(),updatedAt:integer("updated_at",{mode:"timestamp_ms"}).notNull(),
+});

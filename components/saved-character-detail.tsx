@@ -19,9 +19,13 @@ const signed = (value: number) => (value >= 0 ? "+" : "") + value;
 export async function SavedCharacterDetail({
   name,
   draft,
+  currentHP,
+  armorClass,
 }: {
   name: string;
   draft: CharacterDraft;
+  currentHP?: number;
+  armorClass?: number;
 }) {
   const { t, l } = await getI18n();
   const abilityNames = localizeRecord(base_abilityNames, t);
@@ -92,11 +96,19 @@ export async function SavedCharacterDetail({
           <dl className="saved-combat-stats">
             <div>
               <dt>{t("Pontos de vida")}</dt>
-              <dd>{l(draft.hitPoints)}</dd>
+              <dd>
+                {currentHP !== undefined
+                  ? `${currentHP} / ${draft.hitPoints}`
+                  : l(draft.hitPoints)}
+              </dd>
             </div>
             <div>
-              <dt>{t("CA sem armadura")}</dt>
-              <dd>{l(draft.unarmoredAC)}</dd>
+              <dt>
+                {armorClass !== undefined
+                  ? t("Classe de armadura")
+                  : t("CA sem armadura")}
+              </dt>
+              <dd>{l(armorClass ?? draft.unarmoredAC)}</dd>
             </div>
             <div>
               <dt>{t("Iniciativa")}</dt>

@@ -4,10 +4,12 @@ const test = require("node:test"),
   fs = require("node:fs");
 test("all image manifests contain verified content-addressed R2 URLs and preserve resolution", () => {
   const site = require("../data/site-image-assets.json"),
-    bestiary = require("../data/bestiary-assets.json");
+    bestiary = require("../data/bestiary-assets.json"),
+    items = require("../data/item-image-assets.json");
   assert.equal(site.count, 29);
   assert.equal(bestiary.count, 294);
-  for (const m of [site, bestiary])
+  assert.equal(items.count, 73);
+  for (const m of [site, bestiary, items])
     for (const a of Object.values(m.assets)) {
       assert.match(
         a.publicUrl,

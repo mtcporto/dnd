@@ -19,12 +19,15 @@
     "catalogue:translate": "node --env-file=.env.local scripts/collect-ui-texts.cjs && node --env-file=.env.local scripts/localize-catalogue.cjs",
     "bestiary:update": "node scripts/import-bestiary.cjs && node scripts/audit-bestiary-images.cjs && npm run bestiary:translate && npm run images:update",
     "bestiary:translate": "node --env-file=.env.local scripts/localize-catalogue.cjs --bestiary",
-    "images:prepare": "node scripts/prepare-bestiary-images.cjs && node scripts/prepare-site-images.cjs",
+    "images:prepare": "node scripts/prepare-bestiary-images.cjs && node scripts/prepare-site-images.cjs && node scripts/prepare-item-images.cjs",
     "images:publish": "node --env-file=.env.local scripts/publish-images.cjs",
     "images:update": "npm run images:prepare && npm run images:publish",
     "images:check": "node scripts/check-image-assets.cjs",
     "prebuild": "npm run images:check",
-    "images:deploy": "npx --yes wrangler@4.150.0 deploy --config cloudflare/images/wrangler.jsonc"
+    "images:deploy": "npx --yes wrangler@4.150.0 deploy --config cloudflare/images/wrangler.jsonc",
+    "items:translate": "node --env-file=.env.local scripts/localize-catalogue.cjs --items",
+    "items:update": "node scripts/import-items.cjs && npm run items:translate && npm run images:update",
+    "verify:inventory": "node --env-file=.env.local scripts/verify-inventory.cjs"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.7.7",

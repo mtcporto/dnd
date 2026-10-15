@@ -59,6 +59,7 @@ export default async function Page() {
         <a href="#species">{t("Espécies")}</a>
         <a href="#backgrounds">{t("Antecedentes")}</a>
         <Link href="/bestiario">{t("Bestiário")}</Link>
+        <Link href="/itens">{t("Itens")}</Link>
       </nav>
       <section className="compendium-section" id="classes">
         <h2>{t("Classes")}</h2>

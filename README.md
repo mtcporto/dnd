@@ -40,9 +40,9 @@ Não execute migrações usando credenciais de outro aplicativo. O arquivo `.env
 
 ## Arte da seleção de classes
 
-As 12 ilustrações foram geradas com a ferramenta integrada `image_gen.imagegen` e otimizadas em WebP, preservando a imagem completa. Estão em `public/images/classes/`. O conjunto de prompts, assuntos e arquivos está em [docs/class-art-prompts.json](docs/class-art-prompts.json). A interface usa imagens 2D e Motion for React; não há renderização 3D. Somente a classe visível e a imagem de saída durante a transição ficam montadas.
+As 12 ilustrações foram geradas com a ferramenta integrada `image_gen.imagegen` e otimizadas em WebP, preservando a imagem completa. Estão em `assets/images/classes/`. O conjunto de prompts, assuntos e arquivos está em [docs/class-art-prompts.json](docs/class-art-prompts.json). A interface usa imagens 2D e Motion for React; não há renderização 3D. Somente a classe visível e a imagem de saída durante a transição ficam montadas.
 
-O compêndio também usa nove ilustrações de espécies em `public/images/species/` e quatro de antecedentes em `public/images/backgrounds/`, geradas com a mesma ferramenta e direção visual. Os prompts estão em [docs/species-art-prompts.json](docs/species-art-prompts.json) e [docs/background-art-prompts.json](docs/background-art-prompts.json).
+O compêndio também usa nove ilustrações de espécies em `assets/images/species/` e quatro de antecedentes em `assets/images/backgrounds/`, geradas com a mesma ferramenta e direção visual. Os prompts estão em [docs/species-art-prompts.json](docs/species-art-prompts.json) e [docs/background-art-prompts.json](docs/background-art-prompts.json).
 
 ## Configuração do Google
 
@@ -148,7 +148,7 @@ Execute as traduções do catálogo e do bestiário em sequência, pois comparti
 
 ## Imagens no Cloudflare R2
 
-Todas as 323 imagens atuais usam o bucket exclusivo `dnd-images`, servido pelo Worker `cloudflare/images/worker.mjs`: 294 criaturas e 29 imagens de classes, espécies, antecedentes e cenas. O Turso guarda URLs, chaves, dimensões, tamanhos e hashes em `bestiary_image_assets` e `image_assets`; os arquivos binários ficam no R2. Os manifestos versionados são gerados da mesma publicação e permitem resolver as URLs sem uma consulta extra ao banco para cada imagem.
+Todas as 396 imagens atuais usam o bucket exclusivo `dnd-images`, servido pelo Worker `cloudflare/images/worker.mjs`: 294 criaturas, 29 imagens de classes, espécies, antecedentes e cenas, e 73 imagens de itens. O Turso guarda URLs, chaves, dimensões, tamanhos e hashes em `bestiary_image_assets`, `image_assets` e `item_image_assets`; os arquivos binários ficam no R2. Os manifestos versionados são gerados da mesma publicação e permitem resolver as URLs sem uma consulta extra ao banco para cada imagem.
 
 A conversão do bestiário usa Sharp, WebP qualidade 85, sem redimensionamento e sem IA. A primeira execução reduziu 506.627.610 bytes para 42.208.412 bytes (91,67%). Os originais baixados e os arquivos de trabalho ficam em `data/local/`, ignorados pelo Git. As ilustrações existentes já estavam em WebP e conservaram seus bytes, evitando nova compressão com perda.
 
@@ -165,3 +165,24 @@ Para imagens futuras, adicione os arquivos em `assets/images/` (PNG, JPEG, AVIF 
 As URLs incluem o hash do conteúdo e usam cache público imutável de um ano. Uma alteração cria outra URL, sem invalidar arquivos anteriores. O envio é incremental e reutiliza objetos cujo hash já está no R2. As páginas usam as URLs R2 diretamente, sem solicitar imagens à API nem recomprimi-las pela Vercel.
 
 O token de upload próprio do DND está em `.env.local` e no segredo `UPLOAD_TOKEN` do Worker, nunca no navegador ou nos manifestos. As variáveis `R2_*` são necessárias apenas aos scripts locais; a Vercel não precisa do token de upload para servir o site. O Worker aceita escrita autenticada apenas de WebP válido, com limite de tamanho e hash correspondente à chave.
+
+
+## Itens e inventários
+
+O catálogo público `/itens` contém 182 equipamentos e 262 registros de itens mágicos da API 2024 (incluindo famílias e variantes), com busca por nome traduzido ou original, tipo, categoria e raridade. As fichas mostram preços de referência, peso, dano, CA, alcance, propriedades, maestrias, descrições em Markdown e requisitos informados pela fonte. O inglês original e as versões em português/espanhol ficam em `item_catalogues` no Turso, com snapshots locais para contingência. A tradução preserva IDs, campos das regras e valores numéricos; descrições que exigiram correção editorial são identificadas no manifesto.
+
+Na ficha de um personagem, **Abrir inventário** permite adicionar itens manualmente, ajustar quantidades, remover itens, guardar moedas e registrar os pontos de vida atuais. Também é possível adicionar um item pela ficha do catálogo, escolhendo um personagem próprio. Esta etapa é edição de ficha: não simula uma compra e não entrega recompensas de aventuras. O inventário começa vazio e não concede automaticamente equipamento inicial ou dinheiro aos personagens existentes.
+
+A armadura e o escudo equipados calculam a CA atual sem alterar a defesa base salva. Armas consideram atributo, proficiência e empunhadura; duas mãos e escudo não podem ocupar as mesmas mãos. A defesa do monge é ajustada ao usar escudo. Falta de treinamento, requisito de Força e desvantagem em Furtividade aparecem na ficha. Efeitos especiais de itens mágicos e regras de combate não são automatizados nesta etapa.
+
+A poção de cura comum tem uso automático fora de combate: os dados `2d4 + 2` são rolados no servidor, a cura respeita o máximo de vida e uma unidade é consumida na mesma atualização. Não se consome a poção com vida completa; um personagem inconsciente não pode beber sua própria poção. Os demais itens continuam disponíveis para guardar e consultar as regras. A ficha principal reflete os PV atuais e a CA equipada, mantendo os atributos e valores base do personagem.
+
+O inventário é persistido separadamente em `character_inventories`, ligado ao personagem. Todas as leituras e alterações exigem sessão e propriedade do personagem. Os comandos aceitam apenas IDs do catálogo e valores limitados; uma revisão otimista garante que duas requisições simultâneas não dupliquem uma operação nem consumam o mesmo recurso duas vezes. POST exige origem válida e as respostas privadas não são armazenadas em cache.
+
+```bash
+npm run items:update    # importa, traduz e publica itens e imagens no R2
+npm run items:translate # traduz/publica o catálogo atual, reutilizando o cache
+npm run verify:inventory # fluxo real de autenticação, inventário e persistência
+```
+
+Os importadores/tradutores de catálogo, bestiário e itens devem ser executados em sequência, pois compartilham o cache de tradução. As 73 imagens disponíveis de itens foram baixadas, convertidas sem redimensionamento e publicadas no mesmo bucket R2; os demais registros usam uma apresentação neutra. Imagens inválidas ou inacessíveis da API não são solicitadas pelo navegador. Novas imagens de itens entram em `npm run images:update`, com verificação pública do hash antes da publicação.
