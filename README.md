@@ -186,3 +186,5 @@ npm run verify:inventory # fluxo real de autenticação, inventário e persistê
 ```
 
 Os importadores/tradutores de catálogo, bestiário e itens devem ser executados em sequência, pois compartilham o cache de tradução. As 73 imagens disponíveis de itens foram baixadas, convertidas sem redimensionamento e publicadas no mesmo bucket R2; os demais registros usam uma apresentação neutra. Imagens inválidas ou inacessíveis da API não são solicitadas pelo navegador. Novas imagens de itens entram em `npm run images:update`, com verificação pública do hash antes da publicação.
+
+O cache HMR de chamadas do servidor é desativado no desenvolvimento para não reaproveitar respostas de consultas ao banco. As chamadas HTTP ao Turso usam `no-store` e limite de 8 segundos por requisição. Leituras de personagem e inventário repetem uma vez apenas erros transitórios de conexão; comandos de escrita não são repetidos automaticamente. Falhas persistentes continuam sendo exibidas, sem substituir os dados pessoais por um inventário vazio.

@@ -1,3 +1,4 @@
+import { readDatabase } from "@/domain/database-transport";
 import "server-only";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
@@ -8,10 +9,12 @@ export async function getInventory(
   characterId: string,
   draft: CharacterDraft,
 ): Promise<InventoryView> {
-  const [row] = await getDb()
-    .select()
-    .from(characterInventories)
-    .where(eq(characterInventories.characterId, characterId));
+  const [row] = await readDatabase(() =>
+    getDb()
+      .select()
+      .from(characterInventories)
+      .where(eq(characterInventories.characterId, characterId)),
+  );
   return row
     ? { state: row.state, revision: row.revision }
     : { state: emptyInventory(draft), revision: 0 };

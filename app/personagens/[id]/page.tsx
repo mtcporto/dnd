@@ -1,3 +1,4 @@
+import { readDatabase } from "@/domain/database-transport";
 import { getInventory } from "@/lib/inventory";
 import { canonicalItems } from "@/lib/items";
 import { inventoryStats } from "@/domain/inventory";
@@ -22,10 +23,14 @@ export default async function Page({
   const { id } = await params,
     session = await getSession();
   if (!session) redirect("/entrar");
-  const [row] = await getDb()
-    .select()
-    .from(characters)
-    .where(and(eq(characters.id, id), eq(characters.userId, session.user.id)));
+  const [row] = await readDatabase(() =>
+    getDb()
+      .select()
+      .from(characters)
+      .where(
+        and(eq(characters.id, id), eq(characters.userId, session.user.id)),
+      ),
+  );
   if (!row) notFound();
   const inventory = await getInventory(id, row.draft);
   const loadout = inventoryStats(inventory.state, row.draft, canonicalItems);

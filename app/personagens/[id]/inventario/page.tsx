@@ -1,3 +1,4 @@
+import { readDatabase } from "@/domain/database-transport";
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { and, eq } from "drizzle-orm";
@@ -20,10 +21,14 @@ export default async function Page({
   const { id } = await params;
   const session = await getSession();
   if (!session) redirect("/entrar");
-  const [character] = await getDb()
-    .select()
-    .from(characters)
-    .where(and(eq(characters.id, id), eq(characters.userId, session.user.id)));
+  const [character] = await readDatabase(() =>
+    getDb()
+      .select()
+      .from(characters)
+      .where(
+        and(eq(characters.id, id), eq(characters.userId, session.user.id)),
+      ),
+  );
   if (!character) notFound();
   const [{ t }, inventory, catalogue] = await Promise.all([
     getI18n(),

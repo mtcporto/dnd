@@ -1,3 +1,7 @@
+import {
+  readDatabase,
+  transientDatabaseError,
+} from "@/domain/database-transport";
 import { randomInt } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { authConfigured, getAuth } from "@/lib/auth";
@@ -29,10 +33,14 @@ async function owned(request: Request, id: string) {
         { status: 401, headers },
       ),
     };
-  const [row] = await getDb()
-    .select()
-    .from(characters)
-    .where(and(eq(characters.id, id), eq(characters.userId, session.user.id)));
+  const [row] = await readDatabase(() =>
+    getDb()
+      .select()
+      .from(characters)
+      .where(
+        and(eq(characters.id, id), eq(characters.userId, session.user.id)),
+      ),
+  );
   if (!row)
     return {
       error: Response.json(
@@ -42,13 +50,13 @@ async function owned(request: Request, id: string) {
     };
   return { row };
 }
-export async function GET(request: Request, { params }: Context) {
+async function readInventory(request: Request, { params }: Context) {
   const { id } = await params;
   const result = await owned(request, id);
   if (result.error) return result.error;
   return Response.json(await getInventory(id, result.row!.draft), { headers });
 }
-export async function POST(request: Request, { params }: Context) {
+async function updateInventory(request: Request, { params }: Context) {
   if (request.headers.get("origin") !== new URL(request.url).origin)
     return Response.json(
       { error: "Origem inválida." },
@@ -148,4 +156,36 @@ export async function POST(request: Request, { params }: Context) {
     },
     { headers },
   );
+}
+
+async function respond(handler: () => Promise<Response>) {
+  try {
+    return await handler();
+  } catch (error) {
+    const sessionFailure = error as {
+      statusCode?: number;
+      body?: { code?: string };
+    };
+    if (
+      !transientDatabaseError(error) &&
+      !(
+        sessionFailure?.statusCode === 500 &&
+        sessionFailure?.body?.code === "FAILED_TO_GET_SESSION"
+      )
+    )
+      throw error;
+    return Response.json(
+      {
+        error:
+          "A conexão com o banco foi interrompida. Recarregue o inventário para conferir se a alteração foi salva antes de tentar novamente.",
+      },
+      { status: 503, headers },
+    );
+  }
+}
+export async function GET(request: Request, context: Context) {
+  return respond(() => readInventory(request, context));
+}
+export async function POST(request: Request, context: Context) {
+  return respond(() => updateInventory(request, context));
 }
