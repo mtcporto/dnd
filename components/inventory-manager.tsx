@@ -245,6 +245,10 @@ export function InventoryManager({
                           baseItemId={candidate.entry.baseItemId}
                           busy={busy}
                           slot={slot}
+                          equipped={
+                            inventory.state.equipment[slot] ===
+                            candidate.item.id
+                          }
                           onEquip={(baseItemId, grip) =>
                             command({
                               action: "equip",
@@ -537,6 +541,10 @@ export function InventoryManager({
                       catalogue={catalogue}
                       baseItemId={entry.baseItemId}
                       busy={busy}
+                      equipped={
+                        inventory.state.equipment.mainHand === item.id ||
+                        inventory.state.equipment.offHand === item.id
+                      }
                       onEquip={(baseItemId, grip) =>
                         command({
                           action: "equip",

@@ -8,6 +8,7 @@ export function WeaponEquipControl({
   catalogue,
   baseItemId,
   busy,
+  equipped = false,
   slot = "mainHand",
   onEquip,
 }: {
@@ -15,6 +16,7 @@ export function WeaponEquipControl({
   catalogue: ItemCatalogue;
   baseItemId?: string;
   busy: boolean;
+  equipped?: boolean;
   slot?: "mainHand" | "offHand";
   onEquip: (baseItemId: string, grip: "one" | "two") => void;
 }) {
@@ -53,8 +55,11 @@ export function WeaponEquipControl({
           onEquip(base, weapon && isTwoHanded(weapon) ? "two" : "one")
         }
       >
-        {t("Equipar")}
+        {equipped ? t("Atualizar equipamento") : t("Equipar")}
       </button>
+      {equipped ? (
+        <span className="inventory-equipped-badge">{t("Equipado")}</span>
+      ) : null}
       {slot === "mainHand" && weapon?.two_handed_damage ? (
         <button disabled={busy} onClick={() => onEquip(base, "two")}>
           {t("Duas mãos")}
