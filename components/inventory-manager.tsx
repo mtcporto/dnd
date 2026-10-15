@@ -1,4 +1,6 @@
 "use client";
+import { ArmorEquipControl } from "@/components/armor-equip-control";
+import { magicArmorProfile } from "@/domain/armor";
 import { ItemArt } from "@/components/item-art";
 import Link from "next/link";
 import { useState } from "react";
@@ -39,6 +41,9 @@ export function InventoryManager({
     [search, setSearch] = useState("");
   const stats = inventoryStats(inventory.state, draft, catalogue),
     byId = new Map(catalogue.items.map((i) => [i.id, i]));
+  const [slotSelection, setSlotSelection] = useState<Record<string, string>>(
+    {},
+  );
   const slotNames = {
     armor: t("Armadura"),
     mainHand: t("Mão principal"),
@@ -155,6 +160,11 @@ export function InventoryManager({
       </p>
       <section aria-label={t("Itens equipados")}>
         <h2>{t("Itens equipados")}</h2>
+        <p className="small-note">
+          {t(
+            "Guardar um item não o equipa. Selecione abaixo o item que deseja usar e clique em Equipar.",
+          )}
+        </p>
         <div className="inventory-equipment">
           {(["armor", "mainHand", "offHand"] as const).map((slot) => (
             <div className="inventory-slot" key={slot}>
@@ -169,6 +179,103 @@ export function InventoryManager({
                   ? " · " + t("Duas mãos")
                   : null}
               </p>
+              {(() => {
+                const candidates = inventory.state.entries
+                  .map((entry) => ({ entry, item: byId.get(entry.itemId)! }))
+                  .filter(
+                    ({ item }) =>
+                      item &&
+                      (slot === "armor"
+                        ? isArmor(item) ||
+                          magicArmorProfile(item)?.slot === "armor"
+                        : slot === "mainHand"
+                          ? isWeapon(item)
+                          : isShield(item) ||
+                            (isWeapon(item) && !isTwoHanded(item)) ||
+                            magicArmorProfile(item)?.slot === "offHand"),
+                  );
+                const selected =
+                  slotSelection[slot] ||
+                  inventory.state.equipment[slot] ||
+                  (candidates.length === 1 ? candidates[0].item.id : "");
+                const candidate = candidates.find(
+                  (c) => c.item.id === selected,
+                );
+                return candidates.length ? (
+                  <div className="inventory-slot-picker">
+                    <label>
+                      {t("Escolher item do inventário")}
+                      <select
+                        aria-label={slotNames[slot]}
+                        value={selected}
+                        disabled={busy}
+                        onChange={(e) =>
+                          setSlotSelection((current) => ({
+                            ...current,
+                            [slot]: e.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">{t("Selecione um item…")}</option>
+                        {candidates.map(({ item }) => (
+                          <option key={item.id} value={item.id}>
+                            {item.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    {candidate ? (
+                      slot === "armor" ||
+                      isShield(candidate.item) ||
+                      magicArmorProfile(candidate.item) ? (
+                        <ArmorEquipControl
+                          key={
+                            candidate.item.id + ":" + candidate.entry.baseItemId
+                          }
+                          item={candidate.item}
+                          catalogue={catalogue}
+                          busy={busy}
+                          equipped={
+                            inventory.state.equipment[slot] ===
+                            candidate.item.id
+                          }
+                          baseItemId={candidate.entry.baseItemId}
+                          onEquip={(baseItemId) =>
+                            command({
+                              action: "equip",
+                              itemId: candidate.item.id,
+                              slot,
+                              grip: "one",
+                              ...(baseItemId ? { baseItemId } : {}),
+                            })
+                          }
+                        />
+                      ) : (
+                        <button
+                          className="inventory-equip-action"
+                          disabled={busy}
+                          onClick={() =>
+                            command({
+                              action: "equip",
+                              itemId: candidate.item.id,
+                              slot,
+                              grip: isTwoHanded(candidate.item) ? "two" : "one",
+                            })
+                          }
+                        >
+                          {t("Equipar")}
+                        </button>
+                      )
+                    ) : null}
+                  </div>
+                ) : (
+                  <p className="small-note">
+                    {t(
+                      "Adicione um item compatível ao inventário para equipá-lo aqui.",
+                    )}
+                  </p>
+                );
+              })()}
               {inventory.state.equipment[slot] ? (
                 <button
                   disabled={busy}
@@ -318,6 +425,12 @@ export function InventoryManager({
                       ? t("Item mágico")
                       : t("Equipamento")}
                   </p>
+                  {entry.baseItemId ? (
+                    <p>
+                      {t("Modelo de armadura")}:{" "}
+                      {byId.get(entry.baseItemId)?.name}
+                    </p>
+                  ) : null}
                   {item.kind === "magic" ? (
                     <p>
                       {t(
@@ -357,35 +470,33 @@ export function InventoryManager({
                   </button>
                 </div>
                 <div className="inventory-row-controls">
-                  {isArmor(item) ? (
-                    <button
-                      disabled={busy}
-                      onClick={() =>
+                  {isArmor(item) ||
+                  isShield(item) ||
+                  magicArmorProfile(item) ? (
+                    <ArmorEquipControl
+                      key={item.id + ":" + entry.baseItemId}
+                      item={item}
+                      catalogue={catalogue}
+                      busy={busy}
+                      equipped={
+                        inventory.state.equipment.armor === item.id ||
+                        inventory.state.equipment.offHand === item.id
+                      }
+                      baseItemId={entry.baseItemId}
+                      onEquip={(baseItemId) =>
                         command({
                           action: "equip",
                           itemId: item.id,
-                          slot: "armor",
+                          slot:
+                            isShield(item) ||
+                            magicArmorProfile(item)?.slot === "offHand"
+                              ? "offHand"
+                              : "armor",
                           grip: "one",
+                          ...(baseItemId ? { baseItemId } : {}),
                         })
                       }
-                    >
-                      {t("Vestir armadura")}
-                    </button>
-                  ) : null}
-                  {isShield(item) ? (
-                    <button
-                      disabled={busy}
-                      onClick={() =>
-                        command({
-                          action: "equip",
-                          itemId: item.id,
-                          slot: "offHand",
-                          grip: "one",
-                        })
-                      }
-                    >
-                      {t("Equipar escudo")}
-                    </button>
+                    />
                   ) : null}
                   {isWeapon(item) ? (
                     <>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { resolvedArmor, magicArmorProfile } from "./armor.ts";
 import type { CharacterDraft } from "./character.ts";
 import {
   isArmor,
@@ -10,7 +11,7 @@ import {
   type ItemCatalogue,
 } from "./items.ts";
 export interface InventoryState {
-  entries: { itemId: string; quantity: number }[];
+  entries: { itemId: string; quantity: number; baseItemId?: string }[];
   equipment: { armor?: string; mainHand?: string; offHand?: string };
   grip: "one" | "two";
   copper: number;
@@ -49,6 +50,7 @@ export const inventoryCommandSchema = z.discriminatedUnion("action", [
       itemId,
       slot: z.enum(["armor", "mainHand", "offHand"]),
       grip: z.enum(["one", "two"]).default("one"),
+      baseItemId: itemId.optional(),
     })
     .strict(),
   z
@@ -95,8 +97,18 @@ export function inventoryStats(
   catalogue: ItemCatalogue,
 ) {
   const find = (id?: string) => catalogue.items.find((i) => i.id === id);
-  const armor = find(state.equipment.armor),
-    shield = find(state.equipment.offHand),
+  const physical = (id?: string) => {
+    const item = find(id);
+    return item
+      ? resolvedArmor(
+          item,
+          state.entries.find((e) => e.itemId === id)?.baseItemId,
+          catalogue,
+        )
+      : undefined;
+  };
+  const armor = physical(state.equipment.armor),
+    shield = physical(state.equipment.offHand),
     weapon = find(state.equipment.mainHand);
   const shieldBonus =
     shield && isShield(shield) ? shield.armor_class?.base || 2 : 0;
@@ -111,15 +123,22 @@ export function inventoryStats(
   } else if (shieldBonus && draft.input.classIndex === "monk")
     ac = 10 + draft.modifiers.DEX;
   ac += shieldBonus;
-  const weight = state.entries.reduce(
-    (sum, e) => sum + (find(e.itemId)?.weight || 0) * e.quantity,
-    0,
-  );
+  const weight = state.entries.reduce((sum, e) => {
+    const item = find(e.itemId);
+    const resolved = item
+      ? resolvedArmor(item, e.baseItemId, catalogue)
+      : undefined;
+    return sum + (resolved?.weight ?? item?.weight ?? 0) * e.quantity;
+  }, 0);
   const trained = new Set(
     draft.training?.proficiencies.map((p) => p.index) || [],
   );
   const warnings: string[] = [];
-  if (armor && !categoriesTraining(armor, trained))
+  if (
+    armor &&
+    !magicArmorProfile(find(state.equipment.armor)!)?.trained &&
+    !categoriesTraining(armor, trained)
+  )
     warnings.push("Sem treinamento para esta armadura.");
   if (shieldBonus && !trained.has("shields"))
     warnings.push("Sem treinamento para escudos.");
@@ -214,12 +233,20 @@ export function applyInventoryCommand(
       delete state.equipment.offHand;
   } else if (command.action === "equip") {
     if (!entry) throw Error("O item não está no inventário.");
+    const physical = resolvedArmor(
+      item!,
+      command.baseItemId || entry.baseItemId,
+      catalogue,
+    );
+    if (magicArmorProfile(item!) && !physical)
+      throw Error("Escolha um modelo de armadura válido para este item.");
     const valid =
       command.slot === "armor"
-        ? isArmor(item!)
+        ? !!physical && isArmor(physical)
         : command.slot === "mainHand"
           ? isWeapon(item!)
-          : isShield(item!) || (isWeapon(item!) && !isTwoHanded(item!));
+          : (!!physical && isShield(physical)) ||
+            (isWeapon(item!) && !isTwoHanded(item!));
     if (!valid) throw Error("Este item não pode ser equipado nesse espaço.");
     if (command.slot === "mainHand") {
       if (
@@ -246,6 +273,13 @@ export function applyInventoryCommand(
       entry.quantity < 2
     )
       throw Error("Você precisa de duas unidades para ocupar as duas mãos.");
+    if (magicArmorProfile(item!))
+      entry.baseItemId =
+        physical!.index === "shield"
+          ? "equipment:shield"
+          : command.baseItemId ||
+            entry.baseItemId ||
+            "equipment:" + physical!.index;
     state.equipment[command.slot] = item!.id;
   } else if (command.action === "unequip") {
     delete state.equipment[command.slot];

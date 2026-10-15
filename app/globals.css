@@ -2775,3 +2775,11 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 .inventory-manager button:hover:not(:disabled),.item-add-form button:hover:not(:disabled) { border-color:var(--gold); color:var(--gold); }
 .inventory-manager button:focus-visible,.item-add-form button:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
 .inventory-manager input,.item-add-form input,.item-add-form select { background:#171b1c; color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:12px; font-family:var(--sans); min-width:0; }
+.inventory-slot-picker { margin-block:16px; }
+.inventory-slot-picker label,.armor-equip-control label { display:flex; flex-direction:column; gap:8px; font-size:12px; color:var(--muted); }
+.inventory-slot-picker select,.armor-equip-control select { width:100%; min-width:0; background:#171b1c; color:var(--ink); padding:10px; border:1px solid var(--line); border-radius:4px; }
+.armor-equip-control { display:flex; flex-direction:column; gap:10px; min-width:0; width:100%; }
+.armor-equip-control small { color:var(--muted); font-size:12px; line-height:1.5; }
+.inventory-manager .inventory-equip-action { background:var(--gold); color:#141718; font-weight:600; margin-block:10px; }
+.inventory-manager .inventory-equip-action:hover:not(:disabled) { color:#141718; filter:brightness(1.08); }
+.inventory-equipped-badge { color:var(--gold); font-size:12px; }

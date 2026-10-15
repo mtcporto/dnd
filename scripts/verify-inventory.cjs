@@ -199,6 +199,36 @@ async function request(
       itemId: "equipment:longsword",
       slot: "mainHand",
     });
+    await mutate({
+      action: "add",
+      itemId: "magic:adamantine-armor",
+      quantity: 1,
+    });
+    await mutate(
+      { action: "equip", itemId: "magic:adamantine-armor", slot: "armor" },
+      400,
+    );
+    await mutate(
+      {
+        action: "equip",
+        itemId: "magic:adamantine-armor",
+        slot: "armor",
+        baseItemId: "equipment:leather-armor",
+      },
+      400,
+    );
+    await mutate({
+      action: "equip",
+      itemId: "magic:adamantine-armor",
+      slot: "armor",
+      baseItemId: "equipment:chain-mail",
+    });
+    assert.equal(view.state.equipment.armor, "magic:adamantine-armor");
+    assert.equal(
+      view.state.entries.find((e) => e.itemId === "magic:adamantine-armor")
+        .baseItemId,
+      "equipment:chain-mail",
+    );
     await mutate({ action: "wallet", copper: 1234 });
     assert.deepEqual(
       (await request("/api/personagens", a.cookie)).find((c) => c.id === id)

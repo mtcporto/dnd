@@ -158,7 +158,10 @@ test("armor and shields calculate AC without replacing base defense; shield and 
   );
 });
 test("monk shield removes unarmored Wisdom benefit and medium armor retains negative Dexterity", () => {
-  const monk = deriveDraft({ ...input, classIndex: "monk", proficiencySelections:{} }, catalogue);
+  const monk = deriveDraft(
+    { ...input, classIndex: "monk", proficiencySelections: {} },
+    catalogue,
+  );
   let state = add(emptyInventory(monk), "shield");
   state = run(
     state,
@@ -229,5 +232,90 @@ test("catalogue IDs distinguish equipment and magic records and preserve all 202
   assert(items.items.every((i) => i.url.startsWith("/api/2024/")));
   assert(
     items.items.find((i) => i.id === "magic:stone-of-good-luck-(luckstone)"),
+  );
+});
+
+test("adamantine armor requires a legal base model, equips in armor slot, persists the model and contributes AC and weight", () => {
+  let state = run(emptyInventory(draft), {
+    action: "add",
+    itemId: "magic:adamantine-armor",
+    quantity: 1,
+  });
+  assert.throws(
+    () =>
+      run(state, {
+        action: "equip",
+        itemId: "magic:adamantine-armor",
+        slot: "armor",
+      }),
+    /modelo/,
+  );
+  for (const baseItemId of [
+    "equipment:leather-armor",
+    "equipment:hide-armor",
+    "equipment:longsword",
+    "magic:armor-3",
+  ])
+    assert.throws(
+      () =>
+        run(state, {
+          action: "equip",
+          itemId: "magic:adamantine-armor",
+          slot: "armor",
+          baseItemId,
+        }),
+      /modelo/,
+    );
+  state = run(state, {
+    action: "equip",
+    itemId: "magic:adamantine-armor",
+    slot: "armor",
+    baseItemId: "equipment:chain-mail",
+  });
+  assert.equal(state.equipment.armor, "magic:adamantine-armor");
+  assert.equal(state.entries[0].baseItemId, "equipment:chain-mail");
+  assert.equal(inventoryStats(state, draft, items).armorClass, 16);
+  assert.equal(inventoryStats(state, draft, items).weight, 55);
+  state = run(state, { action: "unequip", slot: "armor" });
+  assert.equal(
+    inventoryStats(state, draft, items).armorClass,
+    draft.unarmoredAC,
+  );
+  state = run(state, {
+    action: "equip",
+    itemId: "magic:adamantine-armor",
+    slot: "armor",
+  });
+  assert.equal(inventoryStats(state, draft, items).armorClass, 16);
+});
+test("magical armor bonuses use the chosen base and magical shields obey hand occupancy", () => {
+  let state = run(emptyInventory(draft), {
+    action: "add",
+    itemId: "magic:armor-1",
+    quantity: 1,
+  });
+  state = run(state, {
+    action: "equip",
+    itemId: "magic:armor-1",
+    slot: "armor",
+    baseItemId: "equipment:plate-armor",
+  });
+  assert.equal(inventoryStats(state, draft, items).armorClass, 19);
+  state = run(state, { action: "add", itemId: "magic:shield-1", quantity: 1 });
+  state = run(state, {
+    action: "equip",
+    itemId: "magic:shield-1",
+    slot: "offHand",
+  });
+  assert.equal(inventoryStats(state, draft, items).armorClass, 22);
+  state = add(state, "greatsword");
+  assert.throws(
+    () =>
+      run(state, {
+        action: "equip",
+        itemId: "equipment:greatsword",
+        slot: "mainHand",
+      }),
+    /Libere/,
   );
 });
