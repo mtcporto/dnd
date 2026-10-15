@@ -1,4 +1,6 @@
 "use client";
+import { WeaponEquipControl } from "@/components/weapon-equip-control";
+import { isMagicWeapon, weaponBases } from "@/domain/weapons";
 import { ArmorEquipControl } from "@/components/armor-equip-control";
 import { magicArmorProfile } from "@/domain/armor";
 import { ItemArt } from "@/components/item-art";
@@ -189,9 +191,13 @@ export function InventoryManager({
                         ? isArmor(item) ||
                           magicArmorProfile(item)?.slot === "armor"
                         : slot === "mainHand"
-                          ? isWeapon(item)
+                          ? isWeapon(item) || isMagicWeapon(item)
                           : isShield(item) ||
                             (isWeapon(item) && !isTwoHanded(item)) ||
+                            (isMagicWeapon(item) &&
+                              weaponBases(item, catalogue).some(
+                                (b) => !isTwoHanded(b),
+                              )) ||
                             magicArmorProfile(item)?.slot === "offHand"),
                   );
                 const selected =
@@ -225,9 +231,33 @@ export function InventoryManager({
                       </select>
                     </label>
                     {candidate ? (
-                      slot === "armor" ||
-                      isShield(candidate.item) ||
-                      magicArmorProfile(candidate.item) ? (
+                      isMagicWeapon(candidate.item) && slot !== "armor" ? (
+                        <WeaponEquipControl
+                          key={
+                            candidate.item.id +
+                            ":" +
+                            candidate.entry.baseItemId +
+                            ":" +
+                            slot
+                          }
+                          item={candidate.item}
+                          catalogue={catalogue}
+                          baseItemId={candidate.entry.baseItemId}
+                          busy={busy}
+                          slot={slot}
+                          onEquip={(baseItemId, grip) =>
+                            command({
+                              action: "equip",
+                              itemId: candidate.item.id,
+                              slot,
+                              baseItemId,
+                              grip,
+                            })
+                          }
+                        />
+                      ) : slot === "armor" ||
+                        isShield(candidate.item) ||
+                        magicArmorProfile(candidate.item) ? (
                         <ArmorEquipControl
                           key={
                             candidate.item.id + ":" + candidate.entry.baseItemId
@@ -427,8 +457,10 @@ export function InventoryManager({
                   </p>
                   {entry.baseItemId ? (
                     <p>
-                      {t("Modelo de armadura")}:{" "}
-                      {byId.get(entry.baseItemId)?.name}
+                      {isMagicWeapon(item)
+                        ? t("Tipo de arma")
+                        : t("Modelo de armadura")}
+                      : {byId.get(entry.baseItemId)?.name}
                     </p>
                   ) : null}
                   {item.kind === "magic" ? (
@@ -494,6 +526,24 @@ export function InventoryManager({
                               : "armor",
                           grip: "one",
                           ...(baseItemId ? { baseItemId } : {}),
+                        })
+                      }
+                    />
+                  ) : null}
+                  {isMagicWeapon(item) ? (
+                    <WeaponEquipControl
+                      key={item.id + ":" + entry.baseItemId}
+                      item={item}
+                      catalogue={catalogue}
+                      baseItemId={entry.baseItemId}
+                      busy={busy}
+                      onEquip={(baseItemId, grip) =>
+                        command({
+                          action: "equip",
+                          itemId: item.id,
+                          slot: "mainHand",
+                          baseItemId,
+                          grip,
                         })
                       }
                     />

@@ -1,10 +1,10 @@
+import { resolvedWeapon, isMagicWeapon } from "./weapons.ts";
 import { z } from "zod";
 import { resolvedArmor, magicArmorProfile } from "./armor.ts";
 import type { CharacterDraft } from "./character.ts";
 import {
   isArmor,
   isShield,
-  isWeapon,
   isTwoHanded,
   hasCategory,
   type Item,
@@ -109,7 +109,14 @@ export function inventoryStats(
   };
   const armor = physical(state.equipment.armor),
     shield = physical(state.equipment.offHand),
-    weapon = find(state.equipment.mainHand);
+    weaponItem = find(state.equipment.mainHand),
+    weapon = weaponItem
+      ? resolvedWeapon(
+          weaponItem,
+          state.entries.find((e) => e.itemId === weaponItem.id)?.baseItemId,
+          catalogue,
+        )
+      : undefined;
   const shieldBonus =
     shield && isShield(shield) ? shield.armor_class?.base || 2 : 0;
   let ac = draft.unarmoredAC;
@@ -126,7 +133,8 @@ export function inventoryStats(
   const weight = state.entries.reduce((sum, e) => {
     const item = find(e.itemId);
     const resolved = item
-      ? resolvedArmor(item, e.baseItemId, catalogue)
+      ? resolvedArmor(item, e.baseItemId, catalogue) ||
+        resolvedWeapon(item, e.baseItemId, catalogue)
       : undefined;
     return sum + (resolved?.weight ?? item?.weight ?? 0) * e.quantity;
   }, 0);
@@ -240,22 +248,29 @@ export function applyInventoryCommand(
     );
     if (magicArmorProfile(item!) && !physical)
       throw Error("Escolha um modelo de armadura válido para este item.");
+    const weapon = resolvedWeapon(
+      item!,
+      command.baseItemId || entry.baseItemId,
+      catalogue,
+    );
+    if (isMagicWeapon(item!) && !weapon)
+      throw Error("Escolha um tipo de arma válido para este item.");
     const valid =
       command.slot === "armor"
         ? !!physical && isArmor(physical)
         : command.slot === "mainHand"
-          ? isWeapon(item!)
+          ? !!weapon
           : (!!physical && isShield(physical)) ||
-            (isWeapon(item!) && !isTwoHanded(item!));
+            (!!weapon && !isTwoHanded(weapon));
     if (!valid) throw Error("Este item não pode ser equipado nesse espaço.");
     if (command.slot === "mainHand") {
       if (
         command.grip === "two" &&
-        !isTwoHanded(item!) &&
-        !item!.two_handed_damage
+        !isTwoHanded(weapon!) &&
+        !weapon!.two_handed_damage
       )
         throw Error("Esta arma não permite empunhadura com duas mãos.");
-      const grip = isTwoHanded(item!) ? "two" : command.grip;
+      const grip = isTwoHanded(weapon!) ? "two" : command.grip;
       if (grip === "two" && state.equipment.offHand)
         throw Error("Libere a mão secundária antes de usar duas mãos.");
       state.grip = grip;
@@ -280,6 +295,7 @@ export function applyInventoryCommand(
           : command.baseItemId ||
             entry.baseItemId ||
             "equipment:" + physical!.index;
+    if (isMagicWeapon(item!)) entry.baseItemId = "equipment:" + weapon!.index;
     state.equipment[command.slot] = item!.id;
   } else if (command.action === "unequip") {
     delete state.equipment[command.slot];

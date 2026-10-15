@@ -319,3 +319,50 @@ test("magical armor bonuses use the chosen base and magical shields obey hand oc
     /Libere/,
   );
 });
+
+test("magic swords require an allowed base, respect shields and persist weapon statistics", () => {
+  let s = emptyInventory(draft);
+  for (const itemId of ["magic:sword-of-life-stealing", "equipment:shield"])
+    s = run(s, { action: "add", itemId, quantity: 1 });
+  const equip = {
+    action: "equip",
+    itemId: "magic:sword-of-life-stealing",
+    slot: "mainHand",
+  };
+  assert.throws(() => run(s, equip), /tipo de arma/);
+  assert.throws(
+    () => run(s, { ...equip, baseItemId: "equipment:club" }),
+    /tipo de arma/,
+  );
+  s = run(s, {
+    action: "equip",
+    itemId: "equipment:shield",
+    slot: "offHand",
+  });
+  assert.throws(
+    () => run(s, { ...equip, baseItemId: "equipment:greatsword" }),
+    /mão secundária/,
+  );
+  s = run(s, { ...equip, baseItemId: "equipment:longsword" });
+  assert.equal(s.equipment.mainHand, "magic:sword-of-life-stealing");
+  assert.equal(s.entries[0].baseItemId, "equipment:longsword");
+  const stats = inventoryStats(s, draft, items);
+  assert.equal(stats.weapon.damageDice, "1d8");
+  assert.equal(stats.weapon.proficient, true);
+  assert.equal(
+    stats.weapon.attackBonus,
+    draft.modifiers.STR + draft.proficiencyBonus,
+  );
+  assert.equal(stats.weight, 9);
+  s = run(s, { action: "unequip", slot: "mainHand" });
+  s = run(s, equip);
+  assert.equal(inventoryStats(s, draft, items).weapon.damageDice, "1d8");
+  assert.throws(
+    () => run(s, { action: "equip", itemId: equip.itemId, slot: "offHand" }),
+    /duas unidades/,
+  );
+  s = run(s, { action: "unequip", slot: "offHand" });
+  s = run(s, { ...equip, baseItemId: "equipment:greatsword" });
+  assert.equal(s.grip, "two");
+  assert.equal(inventoryStats(s, draft, items).weapon.damageDice, "2d6");
+});

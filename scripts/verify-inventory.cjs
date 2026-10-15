@@ -229,6 +229,41 @@ async function request(
         .baseItemId,
       "equipment:chain-mail",
     );
+    await mutate({
+      action: "add",
+      itemId: "magic:sword-of-life-stealing",
+      quantity: 1,
+    });
+    await mutate(
+      {
+        action: "equip",
+        itemId: "magic:sword-of-life-stealing",
+        slot: "mainHand",
+      },
+      400,
+    );
+    await mutate(
+      {
+        action: "equip",
+        itemId: "magic:sword-of-life-stealing",
+        slot: "mainHand",
+        baseItemId: "equipment:greatsword",
+      },
+      400,
+    );
+    await mutate({
+      action: "equip",
+      itemId: "magic:sword-of-life-stealing",
+      slot: "mainHand",
+      baseItemId: "equipment:longsword",
+    });
+    assert.equal(view.state.equipment.mainHand, "magic:sword-of-life-stealing");
+    assert.equal(
+      view.state.entries.find(
+        (e) => e.itemId === "magic:sword-of-life-stealing",
+      ).baseItemId,
+      "equipment:longsword",
+    );
     await mutate({ action: "wallet", copper: 1234 });
     assert.deepEqual(
       (await request("/api/personagens", a.cookie)).find((c) => c.id === id)
