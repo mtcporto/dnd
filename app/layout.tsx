@@ -41,7 +41,7 @@ export default async function Layout({
               <a href="/personagens">{t("Personagens")}</a>
               <a href="/regras">{t("Compêndio")}</a>
               <a href="/bestiario">{t("Bestiário")}</a>
-              <a href="/itens">{t("Itens")}</a>
+              <a href="/itens">{t("Arsenal")}</a>
             </nav>
             <LocaleSwitcher />
             <AccountMenu

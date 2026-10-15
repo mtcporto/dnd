@@ -45,7 +45,7 @@ export default async function Page({ params }: Props) {
   return (
     <main id="main" className="character-space item-reference-page">
       <Link className="back-link" href="/itens">
-        {t("← Catálogo de itens")}
+        {t("← Arsenal")}
       </Link>
       <header className="bestiary-heading">
         <p className="stage-kicker">

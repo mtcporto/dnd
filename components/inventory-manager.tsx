@@ -427,7 +427,7 @@ export function InventoryManager({
         {search.trim() && !matching.length ? (
           <p>{t("Nenhum item encontrado.")}</p>
         ) : null}
-        <Link href="/itens">{t("Explorar todos os itens")} ↗</Link>
+        <Link href="/itens">{t("Explorar o arsenal")} ↗</Link>
       </section>
       <section>
         <h2>

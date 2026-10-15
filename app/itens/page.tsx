@@ -5,7 +5,7 @@ import { getI18n } from "@/lib/i18n/server";
 import { filterItems, categoriesOf, itemPath } from "@/domain/items";
 export async function generateMetadata() {
   const { t } = await getI18n();
-  return { title: t("Itens") };
+  return { title: t("Arsenal") };
 }
 export default async function Page({
   searchParams,
@@ -48,7 +48,7 @@ export default async function Page({
   return (
     <main id="main" className="character-space compendium-page">
       <header className="bestiary-heading">
-        <p className="stage-kicker">{t("Itens · Regras de 2024")}</p>
+        <p className="stage-kicker">{t("Arsenal · Regras de 2024")}</p>
         <h1>{t("Prepare sua próxima aventura")}</h1>
         <p className="compendium-intro">
           {t("{0} equipamentos e {1} registros de itens mágicos do SRD.", [
