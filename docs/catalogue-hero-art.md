@@ -1,6 +1,12 @@
 # Catalogue hero artwork
 
-## Bestiary — current artwork: assets/images/heroes/bestiary-ancient-dragon-v2-wide.webp
+## Bestiary — current artwork: assets/images/heroes/bestiary-ancient-dragon-v3-wide.webp
+
+Built-in image_gen wing-anatomy edit of the toe-corrected dragon artwork. Final prompt:
+
+Precise localized edit of this fantasy panoramic illustration: fix ONLY the ancient red dragon's back and wing anatomy. Remove the tall curved spiny sail/extra wing arch rising immediately behind its head and neck (upper center-right). In that area show a normal solid rounded muscular scaled back with a SINGLE modest row of short dorsal spines following the spine, clearly separate from wings. Two wings only, batlike with membranes supported by finger bones, visibly originating at the shoulder blades behind the front legs. Keep the existing wing extending down to image right, but make its shoulder connection natural and clear; far-side wing mostly folded and occluded behind the torso, no extra high arch above the back. No dorsal sail, no third wing, no extra limbs. Preserve the dragon head, facial features, body pose, scales, four-toed front foot already corrected, small human, kobolds, forest, ruins, distant castle, sunset lighting and dark text-safe left third. Preserve panoramic 3:1 composition. Repair the silhouette elegantly with coherent anatomy, change as little as possible elsewhere. No text, no watermark.
+
+## Bestiary — toe correction: assets/images/heroes/bestiary-ancient-dragon-v2-wide.webp
 
 Built-in image_gen anatomy edit of the first dragon artwork. Final prompt:
 

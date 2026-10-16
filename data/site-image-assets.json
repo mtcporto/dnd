@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "count": 33,
-  "originalBytes": 8974080,
-  "webpBytes": 8974080,
+  "count": 34,
+  "originalBytes": 9279670,
+  "webpBytes": 9279670,
   "assets": {
     "/images/backgrounds/acolyte.webp": {
       "sourceUrl": "/images/backgrounds/acolyte.webp",
@@ -290,6 +290,19 @@
       "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/bestiary-ancient-dragon-v2-wide-25e4f899d796587f.webp",
       "storage": "r2"
     },
+    "/images/heroes/bestiary-ancient-dragon-v3-wide.webp": {
+      "sourceUrl": "/images/heroes/bestiary-ancient-dragon-v3-wide.webp",
+      "sourceSha256": "18d0bb270c5af1e3072b5fef908bdd11aa031f3387f8e2ac8636a4f1cc86b4cc",
+      "objectKey": "site/heroes/bestiary-ancient-dragon-v3-wide-18d0bb270c5af1e3.webp",
+      "sha256": "18d0bb270c5af1e3072b5fef908bdd11aa031f3387f8e2ac8636a4f1cc86b4cc",
+      "width": 2172,
+      "height": 724,
+      "originalBytes": 305590,
+      "webpBytes": 305590,
+      "quality": null,
+      "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/bestiary-ancient-dragon-v3-wide-18d0bb270c5af1e3.webp",
+      "storage": "r2"
+    },
     "/images/heroes/bestiary-ancient-dragon-wide.webp": {
       "sourceUrl": "/images/heroes/bestiary-ancient-dragon-wide.webp",
       "sourceSha256": "a04650e141fc83daf62fa2ddc731bbbd7fe7f47f0d9abe5f4f90500425a7c8ac",
@@ -434,5 +447,5 @@
       "storage": "r2"
     }
   },
-  "publishedAt": "2026-10-16T06:27:25.338Z"
+  "publishedAt": "2026-10-16T06:32:42.617Z"
 }
