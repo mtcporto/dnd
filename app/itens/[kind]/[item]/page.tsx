@@ -1,3 +1,8 @@
+import {
+  itemEffects,
+  itemEffectChoices,
+  itemDescription,
+} from "@/domain/item-presentation";
 import { itemRarity } from "@/domain/item-rarity";
 import { ItemArt } from "@/components/item-art";
 import { getSession } from "@/lib/session";
@@ -40,6 +45,8 @@ export default async function Page({ params }: Props) {
     item.properties?.map(
       (ref) => catalogue.properties.find((p) => p.index === ref.index) || ref,
     ) || [];
+  const effects = itemEffects(item, t),
+    choices = itemEffectChoices(item);
   const mastery = item.mastery
     ? catalogue.masteries.find((m) => m.index === item.mastery?.index)
     : undefined;
@@ -152,20 +159,49 @@ export default async function Page({ params }: Props) {
           </div>
         ) : null}
       </dl>
-      {[
-        ...(item.desc || []),
-        ...(item.description || []),
-        ...(item.notes || []),
-      ].length ? (
+      {effects.length ? (
+        <section className="item-reference-section item-effects">
+          <h2>{t("Efeitos do item")}</h2>
+          <ul>
+            {effects.map((effect) => (
+              <li key={effect}>{effect}</li>
+            ))}
+          </ul>
+          {choices.length ? (
+            <>
+              <h3>{t("Tipos possíveis")}</h3>
+              <ul className="item-effect-choices">
+                {choices.map((choice) => (
+                  <li key={choice}>{choice}</li>
+                ))}
+              </ul>
+              <p className="small-note">
+                {t(
+                  "O mestre escolhe o tipo ou usa a tabela nas regras completas.",
+                )}
+              </p>
+            </>
+          ) : null}
+          <p className="small-note">
+            {t(
+              "Resumo das regras; estes efeitos não são aplicados automaticamente à ficha.",
+            )}
+          </p>
+        </section>
+      ) : null}
+      {itemDescription(item) ? (
         <section className="item-reference-section">
-          <h2>{t("Descrição")}</h2>
-          <RulesText
-            text={[
-              ...(item.desc || []),
-              ...(item.description || []),
-              ...(item.notes || []),
-            ].join("\n\n")}
-          />
+          {effects.length ? (
+            <details className="item-full-rules">
+              <summary>{t("Regras completas e tabelas")}</summary>
+              <RulesText text={itemDescription(item)} />
+            </details>
+          ) : (
+            <>
+              <h2>{t("Descrição")}</h2>
+              <RulesText text={itemDescription(item)} />
+            </>
+          )}
         </section>
       ) : null}
       {properties.length ? (

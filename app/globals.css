@@ -2816,3 +2816,11 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 @media(hover:none) { .item-tooltip-toggle,.inventory-manager .item-tooltip-toggle { position:absolute; top:4px; right:4px; } .item-tooltip-inline > .item-tooltip-toggle { position:static; } }
 .item-hover-tooltip p { color:inherit; }
 .item-hover-tooltip .item-tooltip-muted { color:#b7bec9; }
+.item-effects > ul { padding-left:20px; line-height:1.7; }
+.item-effects > ul > li { margin-block:8px; }
+.item-effects .item-effect-choices { display:flex; flex-wrap:wrap; gap:8px; padding:0; list-style:none; }
+.item-effects .item-effect-choices > li { margin:0; padding:4px 10px; border:1px solid var(--line); border-radius:4px; font-size:13px; }
+.item-full-rules summary { cursor:pointer; color:var(--gold); padding-block:12px; }
+.item-full-rules[open] summary { margin-bottom:12px; }
+.item-hover-tooltip .item-tooltip-description ul { margin:5px 0; padding-left:17px; }
+.item-hover-tooltip .item-tooltip-description li { margin-block:4px; }

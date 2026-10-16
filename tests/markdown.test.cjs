@@ -60,3 +60,19 @@ test("source Markdown cannot insert executable HTML or javascript links", () => 
   );
   assert.equal(render(undefined), "");
 });
+
+test("API item table rows remain semantic tables after paragraph joining in every language", () => {
+  for (const locale of ["", ".pt", ".es"]) {
+    const catalogue = require("../data/items" + locale + ".json");
+    for (const [index, rows] of [
+      ["ammunition-of-slaying", 14],
+      ["armor-of-resistance", 10],
+    ]) {
+      const item = catalogue.items.find((i) => i.index === index);
+      const html = render(item.desc.join("\n\n"));
+      assert(html.includes("<table>"), locale + index);
+      assert.equal((html.match(/<tr>/g) || []).length, rows + 1);
+      assert(!html.includes("|---|"));
+    }
+  }
+});

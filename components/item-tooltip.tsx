@@ -1,5 +1,10 @@
 "use client";
 import {
+  itemEffects,
+  itemEffectChoices,
+  itemDescription,
+} from "@/domain/item-presentation";
+import {
   useEffect,
   useId,
   useLayoutEffect,
@@ -23,6 +28,8 @@ export function ItemTooltip({
   inline?: boolean;
 }) {
   const { t } = useI18n();
+  const effects = itemEffects(item, t),
+    choices = itemEffectChoices(item);
   const id = useId();
   const trigger = useRef<HTMLDivElement & HTMLSpanElement>(null),
     panel = useRef<HTMLDivElement>(null);
@@ -202,13 +209,24 @@ export function ItemTooltip({
               </p>
             ) : null}
             <div className="item-tooltip-description">
-              <RulesText
-                text={[
-                  ...(item.desc || []),
-                  ...(item.description || []),
-                  ...(item.notes || []),
-                ].join("\n\n")}
-              />
+              {effects.length ? (
+                <>
+                  <ul>
+                    {effects.map((effect) => (
+                      <li key={effect}>{effect}</li>
+                    ))}
+                  </ul>
+                  {choices.length ? (
+                    <p className="item-tooltip-muted">
+                      {t(
+                        "Tipo definido pelo mestre; veja as opções e tabelas na ficha do item.",
+                      )}
+                    </p>
+                  ) : null}
+                </>
+              ) : (
+                <RulesText text={itemDescription(item)} />
+              )}
             </div>
             {item.weight !== undefined ? (
               <p className="item-tooltip-muted">
