@@ -1,6 +1,12 @@
 # Catalogue hero artwork
 
-## Bestiary — current artwork: assets/images/heroes/bestiary-ancient-dragon-wide.webp
+## Bestiary — current artwork: assets/images/heroes/bestiary-ancient-dragon-v2-wide.webp
+
+Built-in image_gen anatomy edit of the first dragon artwork. Final prompt:
+
+Precise localized anatomy correction to the provided panoramic fantasy illustration. Keep the entire scene, dragon identity, pose, head, wings, ruins, adventurer, kobolds, lighting, composition and 3:1 framing unchanged. Correct ONLY the dragon feet and erroneous loose claws. The prominent planted front foot in the lower right center must have EXACTLY FOUR clearly separated stout reptilian toes, each ending in ONE dark curved claw. Four toes total, four claws total on that foot, anatomically connected to one broad palm and foreleg. Remove every extra little toe/claw continuing along the rocks to the right of that foot; replace these extras with natural rock and mist. The other visible foot under the chest must also have a coherent four-toed anatomy, attached to its leg, with no dangling/disembodied or duplicated claws. No rows of extra toes, no fused digits. This is a surgical repair, preserve all other artwork. No text or watermark.
+
+## Bestiary — first dragon artwork: assets/images/heroes/bestiary-ancient-dragon-wide.webp
 
 Built-in image_gen edit using the initial bestiary artwork as the reference. Final edit prompt:
 
