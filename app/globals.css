@@ -2571,9 +2571,8 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 .login-copy { position: relative; z-index: 2; width: 44%; max-width: 610px; }
 .roster-guest-page .login-copy > .back-link { display: inline-block; margin-bottom: 28px; }
 .roster-guest-page .login-hero { justify-content: flex-end; }
-.roster-guest-page .login-panorama { height: auto !important; top: 50% !important; bottom: auto !important; transform: translateY(-50%); object-fit: contain; object-position: left center; mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%); }
-.roster-guest-page .login-art::before { content: ""; position: absolute; inset: -20px; background: var(--scene-image) left center / cover; filter: blur(16px); opacity: .35; }
-.roster-guest-page .login-hero::after { background: linear-gradient(270deg, #0d1012b8 0%, #0d101280 30%, #0d10121a 55%, transparent 72%), linear-gradient(0deg, #0d1012 0%, transparent 20%, transparent 85%, #0d101280 100%); }
+.roster-guest-page .login-panorama { object-fit: cover; object-position: left center; mask-image: none; }
+.roster-guest-page .login-hero::after { background: linear-gradient(270deg, #0d1012d9 0%, #0d1012ad 30%, #0d101233 55%, transparent 72%), linear-gradient(0deg, #0d1012 0%, transparent 20%); }
 .roster-guest-page .login-scene-caption { left: 5vw; right: auto; }
 .login-copy h1 {
   color: #eee6d4;
@@ -2622,7 +2621,6 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
   .login-scene-caption { bottom: 18px; right: 20px; width: calc(100% - 40px); font-size: 15px; }
   .login-actions { max-width: 100%; }
   .roster-guest-page .login-art .login-panorama { height: 100% !important; top: 0 !important; bottom: 0 !important; transform: none; object-fit: cover; object-position: right top; mask-image: none; }
-  .roster-guest-page .login-art::before { background-position: right top; }
   .roster-guest-page .login-art .login-mobile-scene { height: 66.667vw !important; max-height: 300px; object-fit: cover; object-position: left center; }
   .roster-guest-page .login-hero::after { background: linear-gradient(180deg, #0d1012b8 0%, #0d1012c9 35%, #0d10124d 60%, transparent 78%, #0d1012 100%); }
   .roster-guest-page .login-scene-caption { left: 20px; right: 20px; }
@@ -2830,4 +2828,8 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 
 @media (max-width: 600px) {
   .bestiary-page .catalogue-hero .compendium-hero-art img { object-position: 60% center; }
+}
+
+@media (min-width: 761px) {
+  .roster-guest-page .login-hero { min-height: max(540px, 33.333vw); padding-block: 40px 50px; }
 }
