@@ -1,11 +1,17 @@
 # Catalogue hero artwork
 
+## Bestiary — current artwork: assets/images/heroes/bestiary-ancient-dragon-wide.webp
+
+Built-in image_gen edit using the initial bestiary artwork as the reference. Final edit prompt:
+
+Edit this panoramic bestiary hero artwork. Replace the enormous owlbear with an ANCIENT RED DRAGON: unmistakably reptilian, immense weathered dark crimson scales, horned draconic head, four powerful legs, folded leathery wings, long neck and tail, colossal ancient presence beside a tiny human adventurer. No feathers, no owl face, no fur. Preserve the forest valley, mossy gothic ruins, small kobolds at far right, golden sunset and mist, realistic painterly fantasy style, and dark quiet LEFT third for website text. Keep landscape 3:1 framing and the main dragon on the RIGHT two thirds, its head visible within the central vertical band for responsive cropping. Remove the small distant flying dragon so the ancient red dragon is the only dragon. Natural coherent anatomy and perspective, no text, no logos, no watermark.
+
 Generated with the built-in image_gen tool. Final sources are WebP quality 85, original resolution 2172 × 724; served through the project's R2 image pipeline.
 
 ## Arsenal — assets/images/heroes/armory-workshop-wide.webp
 
 Use case: stylized-concept. Create a cinematic panoramic fantasy illustration for a Dungeons & Dragons armory website hero, landscape 3:1 composition. Realistic painterly premium RPG concept art, intricate weathered materials, dark charcoal and muted teal shadows, warm amber fire and candle light. Inside a medieval stone armory workshop: on the RIGHT two thirds, a dwarven smith and an adventurer examining an elegant sword beside a display of steel breastplates, shields, bows, leather equipment, rings and a subtly glowing enchanted staff. Credible lived-in workshop, restrained magic, detailed faces and hands. LEFT third is atmospheric shadowy stone walls and receding weapon racks with low visual contrast, deliberately clear space behind website heading, seamless full scene rather than empty flat black. Wide establishing shot, primary subjects and equipment remain visible within middle vertical band for responsive cropping. Matches an illustrated fantasy tavern/library hero. No text, lettering, logos, borders, UI or watermark.
 
-## Bestiary — assets/images/heroes/bestiary-wilderness-wide.webp
+## Bestiary — initial artwork (retained source): assets/images/heroes/bestiary-wilderness-wide.webp
 
 Use case: stylized-concept. Create a cinematic panoramic fantasy illustration for a Dungeons & Dragons BESTIARY website hero, landscape 3:1 composition. Realistic painterly premium RPG concept art, intricate natural textures, atmospheric charcoal and muted teal shadows, golden sunset highlights, same visual family as a warm fantasy tavern and gothic library. Scene: a misty ancient forest valley with ruined stone arches and a distant mountain. On the RIGHT two thirds, a magnificent owlbear with a clearly owl-like face, hooked beak and massive bear body emerges beside mossy ruins; farther right a small group of kobolds watching from rocks, and high in the distant right sky a dragon silhouette over the crags. Creatures feel like a believable fantasy wilderness, not an arranged collage or zoo. A small cloaked naturalist observes from a safe distance near the middle, for scale. LEFT third has shadowed ancient trees and misty path, low detail and dark subdued contrast to leave room for website heading, but remains part of the same environment. Subjects sit in middle vertical band for hero cropping. Rich editorial fantasy illustration, adventurous and mysterious rather than horror. No text, lettering, borders, logos, UI or watermark.

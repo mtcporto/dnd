@@ -57,7 +57,7 @@ export default async function Page({
       <header className="compendium-hero catalogue-hero">
         <div className="compendium-hero-art" aria-hidden="true">
           <Image
-            src={imageUrl("/images/heroes/bestiary-wilderness-wide.webp")}
+            src={imageUrl("/images/heroes/bestiary-ancient-dragon-wide.webp")}
             alt=""
             fill
             sizes="100vw"

@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "count": 31,
-  "originalBytes": 8356000,
-  "webpBytes": 8356000,
+  "count": 32,
+  "originalBytes": 8671110,
+  "webpBytes": 8671110,
   "assets": {
     "/images/backgrounds/acolyte.webp": {
       "sourceUrl": "/images/backgrounds/acolyte.webp",
@@ -277,6 +277,19 @@
       "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/armory-workshop-wide-7e53dc351f5e94c0.webp",
       "storage": "r2"
     },
+    "/images/heroes/bestiary-ancient-dragon-wide.webp": {
+      "sourceUrl": "/images/heroes/bestiary-ancient-dragon-wide.webp",
+      "sourceSha256": "a04650e141fc83daf62fa2ddc731bbbd7fe7f47f0d9abe5f4f90500425a7c8ac",
+      "objectKey": "site/heroes/bestiary-ancient-dragon-wide-a04650e141fc83da.webp",
+      "sha256": "a04650e141fc83daf62fa2ddc731bbbd7fe7f47f0d9abe5f4f90500425a7c8ac",
+      "width": 2172,
+      "height": 724,
+      "originalBytes": 315110,
+      "webpBytes": 315110,
+      "quality": null,
+      "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/bestiary-ancient-dragon-wide-a04650e141fc83da.webp",
+      "storage": "r2"
+    },
     "/images/heroes/bestiary-wilderness-wide.webp": {
       "sourceUrl": "/images/heroes/bestiary-wilderness-wide.webp",
       "sourceSha256": "499cb050cc541e2f01024e6bc835fdd8605ec0b5a56aa72ff865df584bc91e51",
@@ -408,5 +421,5 @@
       "storage": "r2"
     }
   },
-  "publishedAt": "2026-10-16T06:05:51.218Z"
+  "publishedAt": "2026-10-16T06:20:12.995Z"
 }
