@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "count": 34,
-  "originalBytes": 9279670,
-  "webpBytes": 9279670,
+  "count": 35,
+  "originalBytes": 9640444,
+  "webpBytes": 9640444,
   "assets": {
     "/images/backgrounds/acolyte.webp": {
       "sourceUrl": "/images/backgrounds/acolyte.webp",
@@ -329,6 +329,19 @@
       "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/bestiary-wilderness-wide-499cb050cc541e2f.webp",
       "storage": "r2"
     },
+    "/images/heroes/lost-in-the-hoard-wide.webp": {
+      "sourceUrl": "/images/heroes/lost-in-the-hoard-wide.webp",
+      "sourceSha256": "3b250e955a1f1df91a44c026140791e09e4c98e34d992df5941cefed748bf06b",
+      "objectKey": "site/heroes/lost-in-the-hoard-wide-3b250e955a1f1df9.webp",
+      "sha256": "3b250e955a1f1df91a44c026140791e09e4c98e34d992df5941cefed748bf06b",
+      "width": 2172,
+      "height": 724,
+      "originalBytes": 360774,
+      "webpBytes": 360774,
+      "quality": null,
+      "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/lost-in-the-hoard-wide-3b250e955a1f1df9.webp",
+      "storage": "r2"
+    },
     "/images/species/dragonborn.webp": {
       "sourceUrl": "/images/species/dragonborn.webp",
       "sourceSha256": "2b34cf9a8297862e64da0b4c9de1ca4ba8adda8270c991e63ecc8d61c72b298b",
@@ -447,5 +460,5 @@
       "storage": "r2"
     }
   },
-  "publishedAt": "2026-10-16T06:32:42.617Z"
+  "publishedAt": "2026-10-16T06:51:48.516Z"
 }

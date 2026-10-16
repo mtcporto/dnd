@@ -2851,3 +2851,12 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 }
 .roster-portrait::after { content: none; }
 .roster-portrait .portrait-caption { bottom: 8px; }
+
+/* A lost adventurer in the dragon's hoard gives unknown routes a place in the world. */
+.lost-hero .login-art img { object-position: center; }
+.lost-hero .stage-kicker { font-size: 20px; letter-spacing: .22em; }
+.lost-hero .login-copy { max-width: 520px; }
+@media (max-width: 760px) {
+  .lost-hero { min-height: 800px; padding-bottom: 360px; }
+  .lost-hero .login-art img { object-position: 64% center; }
+}

@@ -1,0 +1,7 @@
+# Lost in the hoard — 404 artwork
+
+Final asset: `assets/images/heroes/lost-in-the-hoard-wide.webp`, 2172 × 724, WebP quality 85. Generated with the built-in image_gen tool; served through the project's R2 pipeline.
+
+## Final prompt
+
+Use case: stylized-concept. Panoramic 3:1 fantasy website 404 hero illustration. Realistic painterly premium RPG concept art matching a dark medieval fantasy site: charcoal, muted teal shadows and warm amber lantern light. A treasure cavern packed with mountains of gold coins, jewelry, ancient armor and chests. On the RIGHT two thirds a small cloaked adventurer stands knee-deep among the hoard, holding a lantern in one hand and a tiny crumpled map in the other, visibly puzzled, searching for one elusive object in an overwhelming treasure pile. Farther back a gigantic ancient red dragon sleeps curled around the treasure, a quiet background presence, coherent simple anatomy with limbs mostly obscured by gold. Whimsical sense of being lost, adventurous rather than horror. LEFT third a shadowy cave passage with subdued contrast and breathing room for website text. Wide establishing shot; main adventurer near 65 percent horizontal position, visible in central vertical band for responsive hero crops. Detailed tactile gold, rough stone, atmospheric depth, no blur bands, no artificial vignette or fading edges. No readable writing on map. No text, no numbers, no 404 typography, no logos, no watermark.
