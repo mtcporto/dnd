@@ -2827,3 +2827,7 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 
 .catalogue-hero .compendium-heading > .compendium-intro { color: #bdc3c2; max-width: 480px; }
 .catalogue-hero .back-link { display: inline-block; margin-top: 16px; }
+
+@media (max-width: 600px) {
+  .bestiary-page .catalogue-hero .compendium-hero-art img { object-position: 60% center; }
+}
