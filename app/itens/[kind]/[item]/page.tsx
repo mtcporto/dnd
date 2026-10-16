@@ -14,7 +14,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getItems } from "@/lib/items";
 import { getI18n } from "@/lib/i18n/server";
-import { categoriesOf, itemPath } from "@/domain/items";
+import { categoriesOf, itemPath, isShield } from "@/domain/items";
 import { RulesText } from "@/components/rules-text";
 type Props = { params: Promise<{ kind: string; item: string }> };
 export async function generateMetadata({ params }: Props) {
@@ -45,7 +45,7 @@ export default async function Page({ params }: Props) {
     item.properties?.map(
       (ref) => catalogue.properties.find((p) => p.index === ref.index) || ref,
     ) || [];
-  const effects = itemEffects(item, t),
+  const effects = itemEffects(item),
     choices = itemEffectChoices(item);
   const mastery = item.mastery
     ? catalogue.masteries.find((m) => m.index === item.mastery?.index)
@@ -109,6 +109,7 @@ export default async function Page({ params }: Props) {
           <div>
             <dt>{t("Classe de armadura")}</dt>
             <dd>
+              {isShield(item) ? "+" : ""}
               {item.armor_class.base}
               {item.armor_class.dex_bonus ? " + " + t("Destreza") : ""}
               {item.armor_class.dex_bonus && item.armor_class.max_bonus != null

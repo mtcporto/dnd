@@ -14,7 +14,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { useI18n } from "@/lib/i18n/client";
-import { categoriesOf, type Item } from "@/domain/items";
+import { categoriesOf, isShield, type Item } from "@/domain/items";
 import { itemRarity } from "@/domain/item-rarity";
 import { RulesText } from "@/components/rules-text";
 
@@ -28,7 +28,7 @@ export function ItemTooltip({
   inline?: boolean;
 }) {
   const { t } = useI18n();
-  const effects = itemEffects(item, t),
+  const effects = itemEffects(item),
     choices = itemEffectChoices(item);
   const id = useId();
   const trigger = useRef<HTMLDivElement & HTMLSpanElement>(null),
@@ -169,7 +169,8 @@ export function ItemTooltip({
             ) : null}
             {item.armor_class ? (
               <p>
-                {t("Classe de armadura")}: {item.armor_class.base}
+                {t("Classe de armadura")}: {isShield(item) ? "+" : ""}
+                {item.armor_class.base}
                 {item.armor_class.dex_bonus ? " + " + t("Destreza") : ""}
                 {item.armor_class.dex_bonus &&
                 item.armor_class.max_bonus != null

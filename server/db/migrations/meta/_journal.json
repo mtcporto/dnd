@@ -50,6 +50,13 @@
       "when": 1792030217378,
       "tag": "0006_special_zaran",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1792126436640,
+      "tag": "0007_large_captain_britain",
+      "breakpoints": true
     }
   ]
 }

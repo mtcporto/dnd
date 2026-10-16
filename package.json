@@ -26,8 +26,12 @@
     "prebuild": "npm run images:check",
     "images:deploy": "npx --yes wrangler@4.150.0 deploy --config cloudflare/images/wrangler.jsonc",
     "items:translate": "node --env-file=.env.local scripts/localize-catalogue.cjs --items",
-    "items:update": "node scripts/import-items.cjs && npm run items:translate && npm run images:update",
-    "verify:inventory": "node --env-file=.env.local scripts/verify-inventory.cjs"
+    "items:update": "node scripts/import-items.cjs && npm run items:translate && npm run items:summarize && npm run images:update",
+    "verify:inventory": "node --env-file=.env.local scripts/verify-inventory.cjs",
+    "items:summarize": "npm run items:prepare-summaries && npm run items:review-summaries && node --env-file=.env.local scripts/summarize-items.cjs",
+    "verify:items": "node --env-file=.env.local scripts/verify-item-summaries.cjs",
+    "items:prepare-summaries": "node --env-file=.env.local scripts/summarize-items.cjs --prepare-only",
+    "items:review-summaries": "node --env-file=.env.local scripts/review-item-summaries.cjs"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.7.7",

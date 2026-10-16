@@ -9,6 +9,7 @@ export interface Item {
   id: string;
   canonicalName?: string;
   rarityKey?: string;
+  effects?: string[];
   kind: "equipment" | "magic";
   index: string;
   name: string;

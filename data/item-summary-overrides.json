@@ -1,0 +1,238 @@
+{
+  "edition": "2024",
+  "sourceHash": "8641055dd1d69a1dd12a47b756a38779375adf6e7c6b11b032e6e4226f61b2cc",
+  "count": 12,
+  "items": {
+    "magic:ammunition-of-slaying": {
+      "sourceHash": "32c04487dc57e470c6d9a513d0a5866935e293acb866dd91eae5504c04b24c42",
+      "model": "editorial-review",
+      "en": [
+        "Affects a creature type chosen by the DM.",
+        "+6d10 Force damage against a creature of the chosen type that takes damage from ammunition.",
+        "Constitution saving throw DC 17: half the extra damage on a success.",
+        "Becomes nonmagical after dealing the extra damage."
+      ],
+      "pt": [
+        "Afeta um tipo de criatura escolhido pelo mestre.",
+        "+6d10 de dano de Força contra uma criatura do tipo escolhido que sofra dano da munição.",
+        "Resistência de Constituição CD 17: metade do dano adicional em caso de sucesso.",
+        "Torna-se não mágica após causar o dano adicional."
+      ],
+      "es": [
+        "Afecta a un tipo de criatura elegido por el DM.",
+        "+6d10 de daño de Fuerza contra una criatura del tipo elegido que reciba daño de munición.",
+        "Tirada de salvación de Constitución DC 17: la mitad del daño extra en caso de éxito.",
+        "Se vuelve no mágico después de infligir el daño extra."
+      ],
+      "evidence": []
+    },
+    "magic:amulet-of-health": {
+      "sourceHash": "d43490eaed4439c105b9b2a80bcded0e99bebb330123c2412f8c8f78a34a9948",
+      "model": "editorial-review",
+      "en": [
+        "Constitution becomes 19.",
+        "No effect if Constitution is already 19 or higher without the item."
+      ],
+      "pt": [
+        "Constituição passa a ser 19.",
+        "Sem efeito se a Constituição já for 19 ou maior sem o item."
+      ],
+      "es": [
+        "Constitución pasa a ser 19.",
+        "Sin efecto si la Constitución ya es 19 o mayor sin el objeto."
+      ],
+      "evidence": []
+    },
+    "magic:armor-of-resistance": {
+      "sourceHash": "3964db7fb2b7d82e39355cd74fb6862fdfc7254b2693590f107d3236f48fefae",
+      "model": "editorial-review",
+      "en": [
+        "Resistance to a damage type chosen by the DM.",
+        "Available as light, medium, or heavy armor."
+      ],
+      "pt": [
+        "Resistência a um tipo de dano escolhido pelo mestre.",
+        "Disponível como armadura leve, média ou pesada."
+      ],
+      "es": [
+        "Resistencia a un tipo de daño elegido por el DM.",
+        "Disponible como armadura ligera, media o pesada."
+      ],
+      "evidence": []
+    },
+    "magic:brooch-of-shielding": {
+      "sourceHash": "a1e67c2923fd999884bca1bba111a1db402c246ffd1f081d8bd9b1091af31a99",
+      "model": "editorial-review",
+      "en": [
+        "Resistance to Force damage.",
+        "Immunity to damage from the Magic Missile spell."
+      ],
+      "pt": [
+        "Resistência a dano de Força.",
+        "Imunidade ao dano da magia Mísseis Mágicos."
+      ],
+      "es": [
+        "Resistencia al daño de Fuerza.",
+        "Inmunidad al daño del conjuro Misiles Mágicos."
+      ],
+      "evidence": []
+    },
+    "magic:cloak-of-protection": {
+      "sourceHash": "1d9711907d4857a8ecd107ddac764e34a1a694481abcead79f4328b86c7277fb",
+      "model": "editorial-review",
+      "en": [
+        "+1 to Armor Class.",
+        "+1 to saving throws."
+      ],
+      "pt": [
+        "+1 na Classe de Armadura.",
+        "+1 nos testes de resistência."
+      ],
+      "es": [
+        "+1 a la Clase de Armadura.",
+        "+1 a las tiradas de salvación."
+      ],
+      "evidence": []
+    },
+    "magic:gauntlets-of-ogre-power": {
+      "sourceHash": "411eff0e686ed69d61e1c3df5fca12d17fe813f6a86e12a8af097bb25e396404",
+      "model": "editorial-review",
+      "en": [
+        "Strength becomes 19.",
+        "No effect if Strength is already 19 or higher without the item."
+      ],
+      "pt": [
+        "Força passa a ser 19.",
+        "Sem efeito se a Força já for 19 ou maior sem o item."
+      ],
+      "es": [
+        "Fuerza pasa a ser 19.",
+        "Sin efecto si la Fuerza ya es 19 o mayor sin el objeto."
+      ],
+      "evidence": []
+    },
+    "magic:headband-of-intellect": {
+      "sourceHash": "325290d6c9679c918fdc489d65ba1d067da29fda5b7446c0f38a3a4d3c808edd",
+      "model": "editorial-review",
+      "en": [
+        "Intelligence becomes 19.",
+        "No effect if Intelligence is already 19 or higher without the item."
+      ],
+      "pt": [
+        "Inteligência passa a ser 19.",
+        "Sem efeito se a Inteligência já for 19 ou maior sem o item."
+      ],
+      "es": [
+        "Inteligencia pasa a ser 19.",
+        "Sin efecto si la Inteligencia ya es 19 o mayor sin el objeto."
+      ],
+      "evidence": []
+    },
+    "magic:ring-of-protection": {
+      "sourceHash": "0ce5a3e88c492b39bd8ecf4445a20fa27ea5c19eb1527f1edf082853049cc7d0",
+      "model": "editorial-review",
+      "en": [
+        "+1 to Armor Class.",
+        "+1 to saving throws."
+      ],
+      "pt": [
+        "+1 na Classe de Armadura.",
+        "+1 nos testes de resistência."
+      ],
+      "es": [
+        "+1 a la Clase de Armadura.",
+        "+1 a las tiradas de salvación."
+      ],
+      "evidence": []
+    },
+    "magic:nine-lives-stealer": {
+      "sourceHash": "3188c783a06d5c0feb5a30aa88f34892a693ef5f88af464df737d6429edac20d",
+      "model": "editorial-review",
+      "evidence": [],
+      "en": [
+        "+2 to attack and damage rolls.",
+        "Life Stealing has 1d8 + 1 charges.",
+        "On a natural 20 against a creature below 100 HP: DC 15 Constitution save or die. Constructs and Undead automatically succeed.",
+        "Spend a charge only when this effect slays the target; Life Stealing ends when charges run out."
+      ],
+      "pt": [
+        "+2 nas jogadas de ataque e dano.",
+        "Roubo de Vida tem 1d8 + 1 cargas.",
+        "Em um 20 natural contra criatura com menos de 100 PV: resistência de Constituição CD 15 ou morte. Construtos e Mortos-Vivos passam automaticamente.",
+        "Consome uma carga somente se este efeito matar o alvo; Roubo de Vida termina quando as cargas acabam."
+      ],
+      "es": [
+        "+2 a las tiradas de ataque y daño.",
+        "Robo de Vida tiene 1d8 + 1 cargas.",
+        "Con un 20 natural contra una criatura con menos de 100 PV: salvación de Constitución CD 15 o muerte. Constructos y No Muertos superan la tirada automáticamente.",
+        "Consume una carga solo si este efecto mata al objetivo; Robo de Vida termina cuando se agotan las cargas."
+      ]
+    },
+    "magic:immovable-rod": {
+      "sourceHash": "5efa5383fd2b89ecf7f2951cf2241b3ace212034adce84bedf38445ed26de23d",
+      "model": "editorial-review",
+      "evidence": [],
+      "en": [
+        "Utilize action: press the button to fix the rod in place, even against gravity.",
+        "Another Utilize action releases it.",
+        "Supports up to 8,000 lb; excess weight deactivates it and makes it fall.",
+        "Utilize action and a successful DC 30 Strength (Athletics) check move the fixed rod up to 10 feet."
+      ],
+      "pt": [
+        "Ação Utilizar: pressione o botão para fixar a haste no lugar, mesmo contra a gravidade.",
+        "Outra ação Utilizar libera a haste.",
+        "Suporta até 8,000 lb; peso excedente a desativa e faz cair.",
+        "Uma ação Utilizar e um teste de Força (Atletismo) CD 30 bem-sucedido movem a haste fixa em até 10 pés."
+      ],
+      "es": [
+        "Acción Utilizar: pulsa el botón para fijar la vara, incluso contra la gravedad.",
+        "Otra acción Utilizar libera la vara.",
+        "Soporta hasta 8,000 lb; el exceso de peso la desactiva y hace que caiga.",
+        "Una acción Utilizar y una tirada de Fuerza (Atletismo) CD 30 exitosa mueven la vara fija hasta 10 pies."
+      ]
+    },
+    "magic:rod-of-lordly-might": {
+      "sourceHash": "ef3777cf40cc8bd1ec4d4b79e40d7e05b7ecb7ddb15d03cf7714f1adbe49ad9e",
+      "model": "editorial-review",
+      "evidence": [],
+      "en": [
+        "Functions as a magic Mace with +3 to attack and damage rolls.",
+        "Bonus Action: select a weapon or tool form; pressing the same button again restores its normal form. See full rules for each form.",
+        "Drain Life, after a melee hit: Constitution save DC 17 or +4d6 Necrotic damage; you regain HP equal to half that damage.",
+        "Paralyze, after a melee hit: Constitution save DC 17 or Paralyzed for 1 minute; repeat the save at the end of each turn.",
+        "Terrify, Magic action: visible creatures within 30 feet make a Wisdom save DC 17 or are Frightened for 1 minute; repeat the save at the end of each turn.",
+        "Drain Life, Paralyze and Terrify can each be used once until the next dawn."
+      ],
+      "pt": [
+        "Funciona como uma Maça mágica com +3 nas jogadas de ataque e dano.",
+        "Ação Bônus: selecione uma forma de arma ou ferramenta; pressionar o mesmo botão novamente restaura a forma normal. Veja cada forma nas regras completas.",
+        "Drenar Vida, após um acerto corpo a corpo: resistência de Constituição CD 17 ou +4d6 de dano Necrótico; você recupera PV iguais à metade desse dano.",
+        "Paralisar, após um acerto corpo a corpo: resistência de Constituição CD 17 ou Paralisado por 1 minuto; repete a resistência ao final de cada turno.",
+        "Aterrorizar, ação de Magia: criaturas visíveis a até 30 pés fazem resistência de Sabedoria CD 17 ou ficam Amedrontadas por 1 minuto; repetem a resistência ao final de cada turno.",
+        "Drenar Vida, Paralisar e Aterrorizar podem ser usados uma vez cada até o próximo amanhecer."
+      ],
+      "es": [
+        "Funciona como una Maza mágica con +3 a las tiradas de ataque y daño.",
+        "Acción Adicional: selecciona una forma de arma o herramienta; pulsar el mismo botón de nuevo restaura la forma normal. Consulta cada forma en las reglas completas.",
+        "Drenar Vida, tras un impacto cuerpo a cuerpo: salvación de Constitución CD 17 o +4d6 de daño Necrótico; recuperas PV iguales a la mitad de ese daño.",
+        "Paralizar, tras un impacto cuerpo a cuerpo: salvación de Constitución CD 17 o Paralizado durante 1 minuto; repite la salvación al final de cada turno.",
+        "Aterrorizar, acción de Magia: criaturas visibles a 30 pies hacen salvación de Sabiduría CD 17 o quedan Asustadas durante 1 minuto; repiten la salvación al final de cada turno.",
+        "Drenar Vida, Paralizar y Aterrorizar pueden usarse una vez cada uno hasta el siguiente amanecer."
+      ]
+    },
+    "magic:potion-of-gaseous-form": {
+      "sourceHash": "a9586eaed3a12d3f810156b5243e1f51256843ec5e79bcbe2f91b2e6102673fb",
+      "model": "editorial-review",
+      "evidence": [],
+      "en": [
+        "The API record is incomplete or inconsistent; it does not provide enough information to summarize this potion's effects."
+      ],
+      "pt": [
+        "O registro da API está incompleto ou inconsistente; não fornece informações suficientes para resumir os efeitos desta poção."
+      ],
+      "es": [
+        "El registro de la API está incompleto o es inconsistente; no proporciona información suficiente para resumir los efectos de esta poción."
+      ]
+    }
+  }
+}
