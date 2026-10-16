@@ -60,9 +60,9 @@ export default async function Page({
           masteries: [],
           items: catalogue.items.map((item) => ({
             ...item,
-            desc: undefined,
-            description: undefined,
-            notes: undefined,
+            desc: item.desc,
+            description: item.description,
+            notes: item.notes,
             variants: undefined,
             contents: undefined,
           })),

@@ -2794,3 +2794,25 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 [data-rarity="variable"] { --rarity-border:#899496; --rarity-text:#c1cbcc; }
 .character-space .item-rarity-name { color:var(--rarity-text, var(--ink)); }
 :is(.item-thumbnail,.item-art-large)[data-rarity] { border:1px solid var(--rarity-border); border-radius:6px; overflow:hidden; }
+
+.item-tooltip-trigger { position:relative; min-width:0; }
+.item-tooltip-trigger > .item-card { height:100%; }
+.item-tooltip-inline { display:inline; }
+.item-tooltip-toggle { display:none; }
+.item-hover-tooltip { position:fixed; z-index:1000; width:min(330px,calc(100vw - 16px)); max-height:calc(100dvh - 16px); overflow-y:auto; padding:11px 12px; border:1px solid #787c88; border-radius:3px; background:#101421; color:#f2f1ed; box-shadow:0 6px 24px #0008; font:13px/1.45 var(--sans,Arial,sans-serif); overflow-wrap:anywhere; }
+.item-hover-tooltip p { margin:3px 0; }
+.item-tooltip-name { display:block; color:var(--rarity-text,#fff); font-size:14px; margin-bottom:4px; }
+.item-tooltip-kind { display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px 12px; }
+.item-tooltip-rarity { color:var(--rarity-text,#fff); }
+.item-tooltip-muted { color:#b7bec9; }
+.item-tooltip-description { color:#1eff00; margin:7px 0; }
+.item-hover-tooltip .rules-description { font:inherit; color:inherit; }
+.item-hover-tooltip .rules-description :is(p,li,strong,em,h1,h2,h3,h4) { font:inherit; color:inherit; }
+.item-hover-tooltip .rules-description strong { font-weight:700; }
+.item-hover-tooltip .rules-description p { margin:5px 0; }
+.item-hover-tooltip .rules-description :is(ul,ol) { padding-left:18px; }
+@media(hover:none) { .item-tooltip-toggle,.inventory-manager .item-tooltip-toggle { display:inline-flex; align-items:center; justify-content:center; min-width:32px; min-height:32px; padding:4px; border:1px solid var(--line); border-radius:4px; background:#171b1c; color:var(--gold); margin:4px; } }
+.inventory-add-results .item-tooltip-trigger > button:not(.item-tooltip-toggle) { width:100%; height:100%; }
+@media(hover:none) { .item-tooltip-toggle,.inventory-manager .item-tooltip-toggle { position:absolute; top:4px; right:4px; } .item-tooltip-inline > .item-tooltip-toggle { position:static; } }
+.item-hover-tooltip p { color:inherit; }
+.item-hover-tooltip .item-tooltip-muted { color:#b7bec9; }

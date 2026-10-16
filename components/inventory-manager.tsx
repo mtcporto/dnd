@@ -1,4 +1,5 @@
 "use client";
+import { ItemTooltip } from "@/components/item-tooltip";
 import { itemRarity } from "@/domain/item-rarity";
 import { WeaponEquipControl } from "@/components/weapon-equip-control";
 import { isMagicWeapon, weaponBases } from "@/domain/weapons";
@@ -174,18 +175,24 @@ export function InventoryManager({
               <h3>{slotNames[slot]}</h3>
               <p>
                 {inventory.state.equipment[slot] ? (
-                  <span
-                    className="item-rarity-name"
-                    data-rarity={
-                      byId.get(inventory.state.equipment[slot]!)
-                        ? itemRarity(
-                            byId.get(inventory.state.equipment[slot]!)!,
-                          )
-                        : undefined
-                    }
+                  <ItemTooltip
+                    inline
+                    item={byId.get(inventory.state.equipment[slot]!)!}
                   >
-                    {byId.get(inventory.state.equipment[slot]!)?.name}
-                  </span>
+                    <span
+                      tabIndex={0}
+                      className="item-rarity-name"
+                      data-rarity={
+                        byId.get(inventory.state.equipment[slot]!)
+                          ? itemRarity(
+                              byId.get(inventory.state.equipment[slot]!)!,
+                            )
+                          : undefined
+                      }
+                    >
+                      {byId.get(inventory.state.equipment[slot]!)?.name}
+                    </span>
+                  </ItemTooltip>
                 ) : (
                   t("Nenhum item equipado")
                 )}
@@ -423,24 +430,25 @@ export function InventoryManager({
         </label>
         <div className="inventory-add-results">
           {matching.map((item) => (
-            <button
-              key={item.id}
-              disabled={busy}
-              onClick={() =>
-                command({ action: "add", itemId: item.id, quantity: 1 })
-              }
-            >
-              <strong
-                className="item-rarity-name"
-                data-rarity={itemRarity(item)}
+            <ItemTooltip key={item.id} item={item}>
+              <button
+                disabled={busy}
+                onClick={() =>
+                  command({ action: "add", itemId: item.id, quantity: 1 })
+                }
               >
-                {item.name}
-              </strong>
-              <span>
-                {item.kind === "magic" ? t("Item mágico") : t("Equipamento")} ·{" "}
-                {t("Adicionar uma unidade")}
-              </span>
-            </button>
+                <strong
+                  className="item-rarity-name"
+                  data-rarity={itemRarity(item)}
+                >
+                  {item.name}
+                </strong>
+                <span>
+                  {item.kind === "magic" ? t("Item mágico") : t("Equipamento")}{" "}
+                  · {t("Adicionar uma unidade")}
+                </span>
+              </button>
+            </ItemTooltip>
           ))}
         </div>
         {search.trim() && !matching.length ? (
@@ -466,16 +474,18 @@ export function InventoryManager({
             return (
               <article className="inventory-row" key={entry.itemId}>
                 <div>
-                  <ItemArt item={item} image={item.image} name={item.name} />
-                  <h3>
-                    <Link
-                      className="item-rarity-name"
-                      data-rarity={itemRarity(item)}
-                      href={itemPath(item)}
-                    >
-                      {item.name}
-                    </Link>
-                  </h3>
+                  <ItemTooltip item={item}>
+                    <ItemArt item={item} image={item.image} name={item.name} />
+                    <h3>
+                      <Link
+                        className="item-rarity-name"
+                        data-rarity={itemRarity(item)}
+                        href={itemPath(item)}
+                      >
+                        {item.name}
+                      </Link>
+                    </h3>
+                  </ItemTooltip>
                   <p>
                     {item.weight !== undefined
                       ? `${item.weight} ${t("lb")} · `
