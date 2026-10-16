@@ -2833,3 +2833,21 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 @media (min-width: 761px) {
   .roster-guest-page .login-hero { min-height: max(540px, 33.333vw); padding-block: 40px 50px; }
 }
+
+/* Saved character selection uses the same visible card edges as the home carousel. */
+.roster-portrait .class-portrait {
+  top: 12px;
+  height: calc(100% - 100px);
+  max-width: calc(100% - 24px);
+  border: 1px solid #b49b68;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #151818;
+  box-shadow: 0 12px 28px #0006;
+}
+.roster-portrait .class-art {
+  object-fit: cover;
+  mask-image: none;
+}
+.roster-portrait::after { content: none; }
+.roster-portrait .portrait-caption { bottom: 8px; }
