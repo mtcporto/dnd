@@ -1,4 +1,5 @@
 "use client";
+import { itemRarity } from "@/domain/item-rarity";
 import { WeaponEquipControl } from "@/components/weapon-equip-control";
 import { isMagicWeapon, weaponBases } from "@/domain/weapons";
 import { ArmorEquipControl } from "@/components/armor-equip-control";
@@ -172,9 +173,22 @@ export function InventoryManager({
             <div className="inventory-slot" key={slot}>
               <h3>{slotNames[slot]}</h3>
               <p>
-                {inventory.state.equipment[slot]
-                  ? byId.get(inventory.state.equipment[slot]!)?.name
-                  : t("Nenhum item equipado")}
+                {inventory.state.equipment[slot] ? (
+                  <span
+                    className="item-rarity-name"
+                    data-rarity={
+                      byId.get(inventory.state.equipment[slot]!)
+                        ? itemRarity(
+                            byId.get(inventory.state.equipment[slot]!)!,
+                          )
+                        : undefined
+                    }
+                  >
+                    {byId.get(inventory.state.equipment[slot]!)?.name}
+                  </span>
+                ) : (
+                  t("Nenhum item equipado")
+                )}
                 {slot === "mainHand" &&
                 inventory.state.equipment.mainHand &&
                 inventory.state.grip === "two"
@@ -416,7 +430,12 @@ export function InventoryManager({
                 command({ action: "add", itemId: item.id, quantity: 1 })
               }
             >
-              {item.name}
+              <strong
+                className="item-rarity-name"
+                data-rarity={itemRarity(item)}
+              >
+                {item.name}
+              </strong>
               <span>
                 {item.kind === "magic" ? t("Item mágico") : t("Equipamento")} ·{" "}
                 {t("Adicionar uma unidade")}
@@ -447,9 +466,15 @@ export function InventoryManager({
             return (
               <article className="inventory-row" key={entry.itemId}>
                 <div>
-                  <ItemArt image={item.image} name={item.name} />
+                  <ItemArt item={item} image={item.image} name={item.name} />
                   <h3>
-                    <Link href={itemPath(item)}>{item.name}</Link>
+                    <Link
+                      className="item-rarity-name"
+                      data-rarity={itemRarity(item)}
+                      href={itemPath(item)}
+                    >
+                      {item.name}
+                    </Link>
                   </h3>
                   <p>
                     {item.weight !== undefined

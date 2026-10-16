@@ -2783,3 +2783,14 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 .inventory-manager .inventory-equip-action { background:var(--gold); color:#141718; font-weight:600; margin-block:10px; }
 .inventory-manager .inventory-equip-action:hover:not(:disabled) { color:#141718; filter:brightness(1.08); }
 .inventory-equipped-badge { color:var(--gold); font-size:12px; }
+
+/* WoW-inspired rarity hues, with brighter blue/purple text for the dark surface. */
+[data-rarity="common"] { --rarity-border:#ffffff; --rarity-text:#ffffff; }
+[data-rarity="uncommon"] { --rarity-border:#1eff00; --rarity-text:#1eff00; }
+[data-rarity="rare"] { --rarity-border:#0070dd; --rarity-text:#65adff; }
+[data-rarity="very-rare"] { --rarity-border:#a335ee; --rarity-text:#ce8bff; }
+[data-rarity="legendary"] { --rarity-border:#ff8000; --rarity-text:#ff9a36; }
+[data-rarity="artifact"] { --rarity-border:#e6cc80; --rarity-text:#e6cc80; }
+[data-rarity="variable"] { --rarity-border:#899496; --rarity-text:#c1cbcc; }
+.character-space .item-rarity-name { color:var(--rarity-text, var(--ink)); }
+:is(.item-thumbnail,.item-art-large)[data-rarity] { border:1px solid var(--rarity-border); border-radius:6px; overflow:hidden; }

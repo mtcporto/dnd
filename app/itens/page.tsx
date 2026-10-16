@@ -1,3 +1,4 @@
+import { itemRarity } from "@/domain/item-rarity";
 import { ItemArt } from "@/components/item-art";
 import Link from "next/link";
 import { getItems } from "@/lib/items";
@@ -125,12 +126,16 @@ export default async function Page({
             prefetch={false}
           >
             <div className="compendium-class-copy">
-              <ItemArt image={item.image} name={item.name} />
+              <ItemArt item={item} image={item.image} name={item.name} />
               <p className="stage-kicker">
                 {item.kind === "magic" ? t("Item mágico") : t("Equipamento")}
               </p>
-              <h2>{item.name}</h2>
-              <p>{item.rarity?.name || categoriesOf(item)[0]?.name}</p>
+              <h2 className="item-rarity-name" data-rarity={itemRarity(item)}>
+                {item.name}
+              </h2>
+              <p className="item-rarity-name" data-rarity={itemRarity(item)}>
+                {item.rarity?.name || categoriesOf(item)[0]?.name}
+              </p>
               <span className="compendium-card-action">{t("Ver item")} ↗</span>
             </div>
           </Link>

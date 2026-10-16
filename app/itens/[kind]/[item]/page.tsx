@@ -1,3 +1,4 @@
+import { itemRarity } from "@/domain/item-rarity";
 import { ItemArt } from "@/components/item-art";
 import { getSession } from "@/lib/session";
 import { getDb } from "@/lib/db";
@@ -51,7 +52,9 @@ export default async function Page({ params }: Props) {
         <p className="stage-kicker">
           {item.kind === "magic" ? t("Item mágico") : t("Equipamento")}
         </p>
-        <h1>{item.name}</h1>
+        <h1 className="item-rarity-name" data-rarity={itemRarity(item)}>
+          {item.name}
+        </h1>
         <p className="compendium-intro">
           {categoriesOf(item)
             .map((c) => c.name)
@@ -59,13 +62,15 @@ export default async function Page({ params }: Props) {
         </p>
       </header>
       {item.image ? (
-        <ItemArt image={item.image} name={item.name} large />
+        <ItemArt item={item} image={item.image} name={item.name} large />
       ) : null}
       <dl className="item-reference-stats">
         {item.rarity ? (
           <div>
             <dt>{t("Raridade")}</dt>
-            <dd>{item.rarity.name}</dd>
+            <dd className="item-rarity-name" data-rarity={itemRarity(item)}>
+              {item.rarity.name}
+            </dd>
           </div>
         ) : null}
         {item.cost ? (
