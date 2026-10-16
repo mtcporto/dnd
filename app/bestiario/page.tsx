@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { imageUrl } from "@/lib/image-assets";
 import Link from "next/link";
 import { getI18n } from "@/lib/i18n/server";
 import {
@@ -52,18 +54,29 @@ export default async function Page({
     queryHref({ ...query, page: String(result.page) }).split("?")[1] || "";
   return (
     <main id="main" className="character-space compendium-page bestiary-page">
-      <header className="bestiary-heading">
-        <p className="stage-kicker">{t("Bestiário · Regras de 2024")}</p>
-        <h1>{t("Criaturas para descobrir")}</h1>
-        <p className="compendium-intro">
-          {t(
-            "Explore as {0} criaturas do SRD: características, habilidades e ações para consultar durante suas aventuras.",
-            [bestiarySource.count],
-          )}
-        </p>
-        <Link className="back-link" href="/regras">
-          {t("← Compêndio")}
-        </Link>
+      <header className="compendium-hero catalogue-hero">
+        <div className="compendium-hero-art" aria-hidden="true">
+          <Image
+            src={imageUrl("/images/heroes/bestiary-wilderness-wide.webp")}
+            alt=""
+            fill
+            sizes="100vw"
+            preload
+          />
+        </div>
+        <div className="compendium-heading">
+          <p className="stage-kicker">{t("Bestiário · Regras de 2024")}</p>
+          <h1>{t("Criaturas para descobrir")}</h1>
+          <p className="compendium-intro">
+            {t(
+              "Explore as {0} criaturas do SRD: características, habilidades e ações para consultar durante suas aventuras.",
+              [bestiarySource.count],
+            )}
+          </p>
+          <Link className="back-link" href="/regras">
+            {t("← Compêndio")}
+          </Link>
+        </div>
       </header>
       <form
         key={queryHref(query)}

@@ -2824,3 +2824,6 @@ body:has(:is(.creation-page, .character-space)) .site-footer {
 .item-full-rules[open] summary { margin-bottom:12px; }
 .item-hover-tooltip .item-tooltip-description ul { margin:5px 0; padding-left:17px; }
 .item-hover-tooltip .item-tooltip-description li { margin-block:4px; }
+
+.catalogue-hero .compendium-heading > .compendium-intro { color: #bdc3c2; max-width: 480px; }
+.catalogue-hero .back-link { display: inline-block; margin-top: 16px; }

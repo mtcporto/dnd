@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "count": 29,
-  "originalBytes": 7708482,
-  "webpBytes": 7708482,
+  "count": 31,
+  "originalBytes": 8356000,
+  "webpBytes": 8356000,
   "assets": {
     "/images/backgrounds/acolyte.webp": {
       "sourceUrl": "/images/backgrounds/acolyte.webp",
@@ -264,6 +264,32 @@
       "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/arcane-library-wide-32346529e356f099.webp",
       "storage": "r2"
     },
+    "/images/heroes/armory-workshop-wide.webp": {
+      "sourceUrl": "/images/heroes/armory-workshop-wide.webp",
+      "sourceSha256": "7e53dc351f5e94c02224ec102b712c8008d28a7f42cd8ec58ada1d0583e8e8c4",
+      "objectKey": "site/heroes/armory-workshop-wide-7e53dc351f5e94c0.webp",
+      "sha256": "7e53dc351f5e94c02224ec102b712c8008d28a7f42cd8ec58ada1d0583e8e8c4",
+      "width": 2172,
+      "height": 724,
+      "originalBytes": 314722,
+      "webpBytes": 314722,
+      "quality": null,
+      "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/armory-workshop-wide-7e53dc351f5e94c0.webp",
+      "storage": "r2"
+    },
+    "/images/heroes/bestiary-wilderness-wide.webp": {
+      "sourceUrl": "/images/heroes/bestiary-wilderness-wide.webp",
+      "sourceSha256": "499cb050cc541e2f01024e6bc835fdd8605ec0b5a56aa72ff865df584bc91e51",
+      "objectKey": "site/heroes/bestiary-wilderness-wide-499cb050cc541e2f.webp",
+      "sha256": "499cb050cc541e2f01024e6bc835fdd8605ec0b5a56aa72ff865df584bc91e51",
+      "width": 2172,
+      "height": 724,
+      "originalBytes": 332796,
+      "webpBytes": 332796,
+      "quality": null,
+      "publicUrl": "https://dnd-images.mosaicoworkers.workers.dev/site/heroes/bestiary-wilderness-wide-499cb050cc541e2f.webp",
+      "storage": "r2"
+    },
     "/images/species/dragonborn.webp": {
       "sourceUrl": "/images/species/dragonborn.webp",
       "sourceSha256": "2b34cf9a8297862e64da0b4c9de1ca4ba8adda8270c991e63ecc8d61c72b298b",
@@ -382,5 +408,5 @@
       "storage": "r2"
     }
   },
-  "publishedAt": "2026-10-15T02:16:29.735Z"
+  "publishedAt": "2026-10-16T06:05:51.218Z"
 }

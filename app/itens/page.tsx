@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { imageUrl } from "@/lib/image-assets";
 import { ItemTooltip } from "@/components/item-tooltip";
 import { itemRarity } from "@/domain/item-rarity";
 import { ItemArt } from "@/components/item-art";
@@ -49,18 +51,29 @@ export default async function Page({
   };
   return (
     <main id="main" className="character-space compendium-page">
-      <header className="bestiary-heading">
-        <p className="stage-kicker">{t("Arsenal · Regras de 2024")}</p>
-        <h1>{t("Prepare sua próxima aventura")}</h1>
-        <p className="compendium-intro">
-          {t("{0} equipamentos e {1} registros de itens mágicos do SRD.", [
-            catalogue.equipmentCount,
-            catalogue.magicCount,
-          ])}
-        </p>
-        <Link className="back-link" href="/regras">
-          {t("← Compêndio")}
-        </Link>
+      <header className="compendium-hero catalogue-hero">
+        <div className="compendium-hero-art" aria-hidden="true">
+          <Image
+            src={imageUrl("/images/heroes/armory-workshop-wide.webp")}
+            alt=""
+            fill
+            sizes="100vw"
+            preload
+          />
+        </div>
+        <div className="compendium-heading">
+          <p className="stage-kicker">{t("Arsenal · Regras de 2024")}</p>
+          <h1>{t("Prepare sua próxima aventura")}</h1>
+          <p className="compendium-intro">
+            {t("{0} equipamentos e {1} registros de itens mágicos do SRD.", [
+              catalogue.equipmentCount,
+              catalogue.magicCount,
+            ])}
+          </p>
+          <Link className="back-link" href="/regras">
+            {t("← Compêndio")}
+          </Link>
+        </div>
       </header>
       <form
         key={JSON.stringify(query)}
