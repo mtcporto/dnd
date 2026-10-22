@@ -6,7 +6,7 @@ test("all image manifests contain verified content-addressed R2 URLs and preserv
   const site = require("../data/site-image-assets.json"),
     bestiary = require("../data/bestiary-assets.json"),
     items = require("../data/item-image-assets.json");
-  assert.equal(site.count, 29);
+  assert.equal(site.count, 35);
   assert.equal(bestiary.count, 294);
   assert.equal(items.count, 73);
   for (const m of [site, bestiary, items])
